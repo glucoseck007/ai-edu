@@ -1,122 +1,130 @@
 {
-    "explainMe": {
-        "header": {
-            "links": {
-                "futureMe": "Future Me"
-            },
-            "button": {
-                "futureMe": "Future Me",
-                "testMe": "Test Me",
-                "explainMe": "Explain Me",
-                "aboutUs": "Về chúng tôi",
-                "findJob": "Tìm nghề nghiệp"
-            },
-            "dropdown": "Tiếng Việt",
-            "dropdownOptions": {
-                "en": "Tiếng Anh",
-                "vi": "Tiếng Việt"
-            }
-        },
-        "hero": {
-            "title": "Giải Thích",
-            "description": "Hãy làm bài kiểm tra và xem Future Me mô tả chính xác về con người cũng như nghề nghiệp của bạn trong tương lai",
-            "search": {
-                "placeholder": "Tìm kiếm...",
-                "button": "Tìm kiếm",
-                "dropdown": "Topic"
-            }
-        },
-        "hotTopic": {
-            "title": "Chủ Đề Hot",
-            "cardTitle": "Tiêu đề",
-            "cardText": "Nội dung mẫu",
-            "showMore": "Xem thêm"
-        },
-        "video": {
-            "title": "Video của Future Me",
-            "cardTitle": "Tiêu đề video",
-            "cardText": "Mô tả video",
-            "showMore": "Xem thêm"
-        },
-        "faq": {
-            "title": "Câu Hỏi Thường Gặp",
-            "question": "Câu hỏi",
-            "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor."
-        },
-        "footer": {
-            "slogan": "Future Me - Hệ thống giáo dục trực tuyến theo định hướng nghề nghiệp.",
-            "description": "Hãy cũng tìm hiểu về định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân bạn nhé!",
-            "sections": {
-                "aboutUs": "Về Future Me",
-                "features": "Tính năng",
-                "articles": "Bài viết",
-                "policies": "Chính sách"
-            },
-            "aboutUs": {
-                "intro": "Giới thiệu",
-                "description": "Future Me là gì?"
-            },
-            "features": {
-                "futureMe": "Future Me",
-                "testMe": "Test Me",
-                "explainMe": "Explain Me"
-            },
-            "articles": {
-                "blog": "Blog",
-                "experience": "Kinh nghiệm",
-                "story": "Câu chuyện"
-            },
-            "policies": {
-                "terms": "Điều khoản sử dụng",
-                "privacy": "Chính sách bảo mật"
-            },
-            "copyright": "Bản quyền © Future Me"
-        }
-    },
-    "auth": {
-        "header": {
-            "createAccount": "Tạo tài khoản",
-            "login": "Đăng nhập",
-            "register": "Đăng ký",
-            "or": "Hoặc"
-        },
-        "inputLabel": {
-            "fullname": "Họ và tên",
-            "email": "Email",
-            "password": "Mật khẩu",
-            "phone": "Số điện thoại",
-            "role": "Tham gia với tư cách",
-            "school": "Đang học tại"
-        },
-        "buttonTitle": {
-            "login": "Đăng nhập",
-            "logout": "Đăng xuất",
-            "register": "Đăng ký",
-            "forgotPass": "Quên mật khẩu",
-            "ggLogin": "Đăng nhập với Google",
-            "fbLogin": "Đăng nhập với Facebook",
-            "student": "Học sinh",
-            "teacher": "Giáo viên"
-        },
-        "checkboxTitle": {
-            "rememberMe": "Nhớ mật khẩu",
-            "policyAcceptance": "Chấp nhận <a href='{{termsUrl}}' target='_blank'>Điều khoản sử dụng</a> và <a href='{{policyUrl}}' target='_blank'>Chính sách bảo mật</a> của Future Me."
-        },
-        "placeholder": {
-            "fullname": "Nhập họ và tên",
-            "email": "Nhập email",
-            "password": "Nhập mật khẩu",
-            "phone": "Số điện thoại",
-            "school": "Nhập trường học"
-        },
-        "error": {
-            "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ",
-            "invalidPassword": "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái viết hoa và ký tự đặc biệt",
-            "invalidPhone": "Số điện thoại không hợp lệ"
-        },
-        "paragraph": {
-            "lorem-login-page": "Hãy cùng Future Me bắt đầu tìm hiểu những khái niệm đầu tiên về việc định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân!",
-            "lorem-register-page": "Chào mừng bạn đến với Future Me. Hãy cùng chúng tôi bắt đầu hành trình khám phá bản thân!"
-        }
+  "homePage": {
+    "header": {
+      "home": "Trang chủ",
+      "test": "Kiểm tra",
+      "login": "Đăng nhập",
+      "register": "Đăng ký"
     }
+  },
+  "explainMe": {
+    "header": {
+      "links": {
+        "futureMe": "Future Me"
+      },
+      "button": {
+        "futureMe": "Future Me",
+        "testMe": "Test Me",
+        "explainMe": "Explain Me",
+        "aboutUs": "Về chúng tôi",
+        "findJob": "Tìm nghề nghiệp"
+      },
+      "dropdown": "Tiếng Việt",
+      "dropdownOptions": {
+        "en": "Tiếng Anh",
+        "vi": "Tiếng Việt"
+      }
+    },
+    "hero": {
+      "title": "Giải Thích",
+      "description": "Hãy làm bài kiểm tra và xem Future Me mô tả chính xác về con người cũng như nghề nghiệp của bạn trong tương lai",
+      "search": {
+        "placeholder": "Tìm kiếm...",
+        "button": "Tìm kiếm",
+        "dropdown": "Topic"
+      }
+    },
+    "hotTopic": {
+      "title": "Chủ Đề Hot",
+      "cardTitle": "Tiêu đề",
+      "cardText": "Nội dung mẫu",
+      "showMore": "Xem thêm"
+    },
+    "video": {
+      "title": "Video của Future Me",
+      "cardTitle": "Tiêu đề video",
+      "cardText": "Mô tả video",
+      "showMore": "Xem thêm"
+    },
+    "faq": {
+      "title": "Câu Hỏi Thường Gặp",
+      "question": "Câu hỏi",
+      "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor."
+    },
+    "footer": {
+      "slogan": "Future Me - Hệ thống giáo dục trực tuyến theo định hướng nghề nghiệp.",
+      "description": "Hãy cũng tìm hiểu về định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân bạn nhé!",
+      "sections": {
+        "aboutUs": "Về Future Me",
+        "features": "Tính năng",
+        "articles": "Bài viết",
+        "policies": "Chính sách"
+      },
+      "aboutUs": {
+        "intro": "Giới thiệu",
+        "description": "Future Me là gì?"
+      },
+      "features": {
+        "futureMe": "Future Me",
+        "testMe": "Test Me",
+        "explainMe": "Explain Me"
+      },
+      "articles": {
+        "blog": "Blog",
+        "experience": "Kinh nghiệm",
+        "story": "Câu chuyện"
+      },
+      "policies": {
+        "terms": "Điều khoản sử dụng",
+        "privacy": "Chính sách bảo mật"
+      },
+      "copyright": "Bản quyền © Future Me"
+    }
+  },
+  "auth": {
+    "header": {
+      "createAccount": "Tạo tài khoản",
+      "login": "Đăng nhập",
+      "register": "Đăng ký",
+      "or": "Hoặc"
+    },
+    "inputLabel": {
+      "fullname": "Họ và tên",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "phone": "Số điện thoại",
+      "role": "Tham gia với tư cách",
+      "school": "Đang học tại"
+    },
+    "buttonTitle": {
+      "login": "Đăng nhập",
+      "logout": "Đăng xuất",
+      "register": "Đăng ký",
+      "forgotPass": "Quên mật khẩu",
+      "ggLogin": "Đăng nhập với Google",
+      "fbLogin": "Đăng nhập với Facebook",
+      "student": "Học sinh",
+      "teacher": "Giáo viên"
+    },
+    "checkboxTitle": {
+      "rememberMe": "Nhớ mật khẩu",
+      "policyAcceptance": "Chấp nhận <a href='{{termsUrl}}' target='_blank'>Điều khoản sử dụng</a> và <a href='{{policyUrl}}' target='_blank'>Chính sách bảo mật</a> của Future Me."
+    },
+    "placeholder": {
+      "fullname": "Nhập họ và tên",
+      "email": "Nhập email",
+      "password": "Nhập mật khẩu",
+      "phone": "Số điện thoại",
+      "school": "Nhập trường học"
+    },
+    "error": {
+      "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ",
+      "invalidPassword": "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái viết hoa và ký tự đặc biệt",
+      "invalidPhone": "Số điện thoại không hợp lệ"
+    },
+    "paragraph": {
+      "lorem-login-page": "Hãy cùng Future Me bắt đầu tìm hiểu những khái niệm đầu tiên về việc định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân!",
+      "lorem-register-page": "Chào mừng bạn đến với Future Me. Hãy cùng chúng tôi bắt đầu hành trình khám phá bản thân!"
+    }
+  }
 }
