@@ -1,4 +1,4 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import CustomButton from "../../../components/common/button/custom-button/Custom-Button";
 import "../QuestionBank/question-bank.css";
 import { useTranslation } from "react-i18next";
@@ -33,7 +33,7 @@ function QuestionBank() {
   return (
     <div className="question-bank-container">
       <h1>
-        {titleParts.map((part, index) => (
+        {(Array.isArray(titleParts) ? titleParts : []).map((part, index) => (
           <span key={index} className={part.className}>
             {part.text}
           </span>

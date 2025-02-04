@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
-import test from '../../../data/test.json'
-import ReadingWritingModule from './ReadandWrite/ReadandWrite';
-import MathModule from './Math/Math';
+import { useEffect, useState } from "react";
+import test from "../../../data/test.json";
+import ReadingWritingModule from "./ReadandWrite/ReadandWrite";
+import MathModule from "./Math/Math";
 
 const TestScreen: React.FC = () => {
-  const { test: { section, totalTime } } = test;
+  const {
+    test: { section, totalTime },
+  } = test;
   const [time, setTime] = useState<number>(totalTime);
   const [currentSection, setCurrentSection] = useState<number>(0);
   const [currentPart, setCurrentPart] = useState<number>(0);
 
   // Tính toán thời gian cho mỗi section và part
-  const sectionTimings = section.map(sect => ({
+  const sectionTimings = section.map((sect) => ({
     name: sect.name,
     totalTime: sect.part.reduce((acc, part) => acc + part.time, 0),
-    parts: sect.part.map(part => part.time)
+    parts: sect.part.map((part) => part.time),
   }));
 
   // Xác định section và part hiện tại dựa trên thời gian còn lại
@@ -61,7 +63,9 @@ const TestScreen: React.FC = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   // Render current module based on section and part
@@ -73,17 +77,15 @@ const TestScreen: React.FC = () => {
     const currentSectionData = section[currentSection];
     const currentPartData = currentSectionData.part[currentPart];
 
-
     switch (currentSectionData.name.toLowerCase()) {
-      case 'readingwriting':
+      case "readingwriting":
         return <ReadingWritingModule part={currentPartData} />;
-      case 'math':
+      case "math":
         return <MathModule part={currentPartData} />;
       default:
         return <div>Không tìm thấy phần thi</div>;
     }
   };
-
   return (
     <div className="p-4">
       <div className="mb-4">

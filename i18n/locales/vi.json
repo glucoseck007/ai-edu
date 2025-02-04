@@ -134,5 +134,39 @@
       "lorem-login-page": "Hãy cùng Future Me bắt đầu tìm hiểu những khái niệm đầu tiên về việc định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân!",
       "lorem-register-page": "Chào mừng bạn đến với Future Me. Hãy cùng chúng tôi bắt đầu hành trình khám phá bản thân!"
     }
+  },
+  "questionSpecific": {
+    "module": [
+      {
+        "name": "Đọc và Viết",
+        "domain": [
+          {
+            "name": "Thủ pháp và Cấu trúc",
+            "skill": [
+              "Từ ngữ trong Ngữ cảnh",
+              "Cấu trúc và Mục đích của Văn bản",
+              "Kết nối giữa Các Văn bản"
+            ]
+          },
+          {
+            "name": "Thông tin và Ý tưởng",
+            "skill": [
+              "Ý chính và Chi tiết",
+              "Khả năng Sử dụng Bằng chứng Văn bản",
+              "Khả năng Sử dụng Bằng chứng Định lượng",
+              "Suy luận"
+            ]
+          },
+          {
+            "name": "Quy tắc Tiếng Anh Chuẩn",
+            "skill": ["Hình thức, Cấu trúc và Ý nghĩa", "Giới hạn"]
+          },
+          {
+            "name": "Diễn đạt Ý tưởng",
+            "skill": ["Chuyển tiếp", "Tổng hợp Lập luận"]
+          }
+        ]
+      }
+    ]
   }
 }
