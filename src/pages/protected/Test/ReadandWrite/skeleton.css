@@ -47,3 +47,9 @@
       border-color: #eee;
     }
   }
+  .hover-effect:hover .flex-grow-1 {
+    background-color: #f8d7da; /* Màu nền khi hover */
+    border-color: #dc3545; /* Màu viền khi hover */
+    transition: all 0.3s ease-in-out; /* Hiệu ứng mượt */
+  }
+  

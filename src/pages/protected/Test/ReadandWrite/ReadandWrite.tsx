@@ -9,14 +9,78 @@ import { numberToLetter } from '../../../../utils/Converters';
 const ReadingWritingModule: React.FC = () => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState<boolean>(true);
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<{ [key: number]: boolean }>({});
+
   const [isConfused, setIsConfused] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [selectedConfused, setSelectedConfused] = useState<number[]>([]);
   const [showDirections, setShowDirections] = useState(false);
   const [show, setShow] = useState<boolean>(false);
   const target = useRef(null);
-
+ const data = {
+    "quiz": [
+    {
+      "Question": "Ai đã chỉ huy cuộc tấn công vào năm 1282 chống lại Đế quốc Chiêm?",
+      "Answers": [
+        "Hốt Tất Liệt",
+        "Toa Đô",
+        "Trần Nhân Tông"
+      ],
+      "Correct Answer": "Toa Đô",
+      "Reference": "Năm 1282, nhà Nguyên sai Toa Đô mang quân vượt biển đánh Chiêm Thành ở phía nam Đại Việt.",
+      "Question Type": "MCQ"
+    },
+    {
+      "Question": "Là đúng hay sai rằng Hốt Tất Liệt trực tiếp chỉ huy cuộc tấn công vào năm 1282 chống lại Đế quốc Chiêm?",
+      "Answers": [
+        "Đúng",
+        "Sai"
+      ],
+      "Correct Answer": "Sai",
+      "Reference": "Năm 1282, nhà Nguyên sai Toa Đô mang quân vượt biển đánh Chiêm Thành ở phía nam Đại Việt.",
+      "Question Type": "TF"
+    },
+    {
+      "Question": "Trần Hưng Đạo được thăng quan gì để chuẩn bị kháng chiến lần hai?",
+      "Answers": [
+        "Tướng quân",
+        "Binh bộ thượng thư",
+        "Thượng tướng"
+      ],
+      "Correct Answer": "Tướng quân",
+      "Reference": "Tháng Mười (âm lịch) năm 1283, Trần Hưng Đạo được phong làm Quốc công tiết chế thống lĩnh chư quân.",
+      "Question Type": "MCQ"
+    },
+    {
+      "Question": "Trần Hưng Đạo đã chia các đơn vị quân đội như thế nào?",
+      "Answers": [
+        "Chia theo cấp độ",
+        "Phân cho các quân hiệu tài giỏi",
+        "Kết hợp cả hai"
+      ],
+      "Correct Answer": "Phân cho các quân hiệu tài giỏi",
+      "Reference": "Ông chọn các quân hiệu tài giỏi, cho chia nhau chỉ huy các đơn vị quân đội.",
+      "Question Type": "MCQ"
+    },
+    {
+      "Question": "Ai đã cho duyệt quân ở bến Đông Bộ Đầu?",
+      "Answers": [
+        "Trần Hưng Đạo",
+        "Hồ Quý Ly",
+        "Lê Lợi"
+      ],
+      "Correct Answer": "Trần Hưng Đạo",
+      "Reference": "Tháng Tám (âm lịch) năm sau (1284), ông cho duyệt quân ở bến Đông Bộ Đầu.",
+      "Question Type": "MCQ"
+    }
+    ]
+  }
+useEffect(()=>{
+  data.quiz.map((value,index)=>{
+    return console.log(value);
+    
+  })  
+},[])
   useEffect(() => {
     let interval: number;
     if (isRunning) {
@@ -34,9 +98,13 @@ const ReadingWritingModule: React.FC = () => {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const toggleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
+  const toggleBookmark = (questionIndex: number) => {
+    setBookmarkedQuestions(prev => ({
+      ...prev,
+      [questionIndex]: !prev[questionIndex], // Đảo trạng thái của câu hỏi đang bấm
+    }));
   };
+  
 
   const toggleConfusion = () => {
     setIsConfused(!isConfused);
@@ -100,104 +168,108 @@ const ReadingWritingModule: React.FC = () => {
 
       {/* Main Content */}
       <Container className="flex-grow-1">
-        <Row className="py-4">
-          <Col md={6} className="border-end">
-            <p className='text-dark'>
-              According to education reform advocate William Lee, incorporating hands-on
-              learning in school curricula can _____ student engagement and understanding; he
-              contends that experiential learning encourages active participation and deeper
-              comprehension.
-            </p>
-          </Col>
-          <Col md={6} className='px-4 d-flex flex-column'>
-            {/* Question Header */}
-            <div className="d-flex justify-content-between align-items-center mb-3 bg-secondary-subtle rounded-pill px-3 py-2">
-              <div className="d-flex align-items-center gap-2">
-                <div className="d-flex align-items-center justify-content-center rounded-circle bg-dark text-white"
-                  style={{ width: '28px', height: '28px', fontSize: '14px' }}>
-                  1
+        {data.quiz.map((value,index)=>{
+          
+          return (
+            <Row className="py-4" key={index}>
+            <Col md={6} className="border-end">
+              <p className='text-dark'>
+               {value.Question}
+              </p>
+            </Col>
+            <Col md={6} className='px-4 d-flex flex-column'>
+              {/* Question Header */}
+              <div className="d-flex justify-content-between align-items-center mb-3 bg-secondary-subtle rounded-pill px-3 py-2">
+                <div className="d-flex align-items-center gap-2">
+                  <div className="d-flex align-items-center justify-content-center rounded-circle bg-dark text-white"
+                    style={{ width: '28px', height: '28px', fontSize: '14px' }}>
+                    {index+1}
+                  </div>
+                  <Button
+                    variant="link"
+                    className="text-dark text-decoration-none d-flex align-items-center gap-2 p-0"
+                    onClick={()=>toggleBookmark(index)}
+                  >
+                    <FontAwesomeIcon icon={bookmarkedQuestions[index] ? faBookmarkSolid : faBookmarkRegular}/>
+                    <span>Mark for Review</span>
+                  </Button>
                 </div>
                 <Button
-                  variant="link"
-                  className="text-dark text-decoration-none d-flex align-items-center gap-2 p-0"
-                  onClick={toggleBookmark}
+                  variant="outline-secondary"
+                  size="sm"
+                  className="rounded-pill px-3 position-relative custom-slash"
+                  onClick={toggleConfusion}
                 >
-                  <FontAwesomeIcon icon={isBookmarked ? faBookmarkSolid : faBookmarkRegular} />
-                  <span>Mark for Review</span>
+                  <span className="text-dark fw-bold">ABC</span>
                 </Button>
               </div>
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                className="rounded-pill px-3 position-relative custom-slash"
-                onClick={toggleConfusion}
-              >
-                <span className="text-dark fw-bold">ABC</span>
-              </Button>
-            </div>
-
-            {/* Main Question Content */}
-            <div className="flex-grow-1">
-              <p className='text-dark'>Which choice completes the text with the most logical and precise word or phrase?</p>
-              <div className="mb-3 px-2">
-                {['diminish', 'example', 'neglect', 'restrict'].map((option, index) => (
-                  <div
-                    key={index}
-                    className={`d-flex align-items-center gap-3 mb-3`}
-                    onClick={() => handleOptionClick(index)}>
-                    <div className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 ${selectedConfused.includes(index)
-                      ? 'border-secondary slashed'
-                      : selectedOption === index
-                        ? 'border-primary'
-                        : 'border-black'
-                      } rounded-pill px-3 py-2`}>
-                      <div className="d-flex align-items-center gap-2">
-                        <div
-                          className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-dark"
-                          style={{ width: '28px', height: '28px', fontSize: '14px' }}
-                        >
-                          {numberToLetter(index + 1)}
+  
+              {/* Main Question Content */}
+              <div className="flex-grow-1">
+                <p className='text-dark'>Which choice completes the text with the most logical and precise word or phrase?</p>
+                <div className="mb-3 px-2">
+                  {value.Answers.map((option, index) => (
+                    <div
+                     style={{ cursor: 'pointer' }}
+                      key={index}
+                      className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
+                      onClick={() => handleOptionClick(index)}>
+                      <div className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 ${selectedConfused.includes(index)
+                        ? 'border-secondary slashed'
+                        : selectedOption === index
+                          ? 'border-primary'
+                          : 'border-black'
+                        } rounded-pill px-3 py-2`}>
+                        <div className="d-flex align-items-center gap-2">
+                          <div
+                            className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-dark"
+                            style={{ width: '28px', height: '28px', fontSize: '14px' }}
+                          >
+                            {numberToLetter(index + 1)}
+                          </div>
+                          <span className={selectedOption === index && selectedConfused.includes(index) ? 'text-secondary' : ''}>
+                            {option}
+                          </span>
                         </div>
-                        <span className={selectedOption === index && selectedConfused.includes(index) ? 'text-secondary' : ''}>
-                          {option}
-                        </span>
                       </div>
+                      {isConfused && (
+                        selectedConfused.includes(index) ? (
+                          <div
+                            style={{ fontSize: '12px', cursor: 'pointer' }}
+                            onClick={toggleConfusedOption(index)}
+                          >
+                            <span style={{ textDecoration: 'underline', fontWeight: 'bold' }}>Undo</span>
+                          </div>
+                        ) : (
+                          <div
+                            className={`d-flex align-items-center justify-content-center rounded-circle bg-white text-dark border border-2 border-black position-relative ${isConfused ? 'slashed' : ''}`}
+                            style={{ width: '30px', height: '30px', fontSize: '14px' }}
+                            onClick={toggleConfusedOption(index)}
+                          >
+                            {numberToLetter(index + 1)}
+                          </div>
+                        )
+                      )}
                     </div>
-                    {isConfused && (
-                      selectedConfused.includes(index) ? (
-                        <div
-                          style={{ fontSize: '12px', cursor: 'pointer' }}
-                          onClick={toggleConfusedOption(index)}
-                        >
-                          <span style={{ textDecoration: 'underline', fontWeight: 'bold' }}>Undo</span>
-                        </div>
-                      ) : (
-                        <div
-                          className={`d-flex align-items-center justify-content-center rounded-circle bg-white text-dark border border-2 border-black position-relative ${isConfused ? 'slashed' : ''}`}
-                          style={{ width: '30px', height: '30px', fontSize: '14px' }}
-                          onClick={toggleConfusedOption(index)}
-                        >
-                          {numberToLetter(index + 1)}
-                        </div>
-                      )
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-
-            {/* Report Error Button */}
-            <div className="d-flex justify-content-end mt-auto pt-3">
-              <Button
-                variant="link"
-                className="text-secondary text-decoration-none d-flex align-items-center gap-2 p-0"
-              >
-                <FontAwesomeIcon icon={faCircleExclamation} />
-                <span>Report Error</span>
-              </Button>
-            </div>
-          </Col>
-        </Row>
+  
+              {/* Report Error Button */}
+              <div className="d-flex justify-content-end mt-auto pt-3">
+                <Button
+                  variant="link"
+                  className="text-secondary text-decoration-none d-flex align-items-center gap-2 p-0"
+                >
+                  <FontAwesomeIcon icon={faCircleExclamation} />
+                  <span>Report Error</span>
+                </Button>
+              </div>
+            </Col>
+          </Row>
+          )
+        })}
+       
       </Container >
 
       {/* Footer */}
@@ -206,15 +278,7 @@ const ReadingWritingModule: React.FC = () => {
           <div className="p-3 d-flex justify-content-between align-items-center">
             <span>DSAT Practice Test 1</span>
             <div className="d-flex align-items-center gap-2">
-              <Button
-                ref={target}
-                variant="outline-secondary"
-                size="sm"
-                className="rounded-pill"
-                onClick={togglePopover}
-              >
-                Question 1 of 27 ▲
-              </Button>
+            
 
               <Overlay
                 target={target.current}
@@ -279,13 +343,7 @@ const ReadingWritingModule: React.FC = () => {
                 </Popover>
               </Overlay>
             </div>
-            <Button
-              variant="primary"
-              className="rounded-pill px-4 d-flex align-items-center gap-2"
-            >
-              <span>Next</span>
-              <FontAwesomeIcon icon={faChevronRight} />
-            </Button>
+        
           </div>
         </Container>
       </div >

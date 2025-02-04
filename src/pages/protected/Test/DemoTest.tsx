@@ -17,6 +17,7 @@ const ReadingWritingModule: React.FC = () => {
   const [showDirections, setShowDirections] = useState(false);
   const [show, setShow] = useState<boolean>(false);
   const target = useRef(null);
+ 
 
   useEffect(() => {
     let interval: number;
@@ -129,10 +130,7 @@ const ReadingWritingModule: React.FC = () => {
         <Row className="py-4">
           <Col md={6} className="border-end">
             <p className="text-dark">
-              According to education reform advocate William Lee, incorporating
-              hands-on learning in school curricula can _____ student engagement
-              and understanding; he contends that experiential learning
-              encourages active participation and deeper comprehension.
+            aaaa
             </p>
           </Col>
           <Col md={6} className="px-4 d-flex flex-column">
