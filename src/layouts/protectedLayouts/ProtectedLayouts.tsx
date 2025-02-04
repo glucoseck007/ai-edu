@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
-import HeaderComponent from '../../components/header/Header';
-import FooterComponent from '../../components/footer/Footer';
+import HeaderComponent from '../../components/layout/header/Header';
+import FooterComponent from '../../components/layout/footer/Footer';
 
 const ProtectedLayouts: React.FC = () => {
     return (

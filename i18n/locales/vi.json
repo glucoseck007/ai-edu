@@ -4,7 +4,12 @@
       "home": "Trang chủ",
       "test": "Kiểm tra",
       "login": "Đăng nhập",
-      "register": "Đăng ký"
+      "register": "Đăng ký",
+      "chatBot": "Chat Bot"
+    },
+    "dropdown": {
+      "logout": "Đăng xuất",
+      "profile": "Tài khoản"
     }
   },
   "explainMe": {
@@ -120,7 +125,10 @@
     "error": {
       "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ",
       "invalidPassword": "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái viết hoa và ký tự đặc biệt",
-      "invalidPhone": "Số điện thoại không hợp lệ"
+      "invalidPhone": "Số điện thoại không hợp lệ",
+      "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
+      "passwordUppercase": "Mật khẩu phải có ít nhất 1 chữ cái viết hoa",
+      "passwordSpecial": "Mật khẩu phải có ít nhất 1 ký tự đặc biệt"
     },
     "paragraph": {
       "lorem-login-page": "Hãy cùng Future Me bắt đầu tìm hiểu những khái niệm đầu tiên về việc định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân!",

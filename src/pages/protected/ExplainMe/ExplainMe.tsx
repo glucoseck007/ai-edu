@@ -25,7 +25,7 @@ const ExplainMe: React.FC = () => {
                             <Card.Body>
                                 <Card.Title className="h6">{t('explainMe.hotTopic.cardTitle')}</Card.Title>
                                 <Card.Text className="small text-muted">
-                                    {t('explainMe.hotTopic.cardText')}
+                                    {t('explainMe.hotTopic.showMore')}
                                 </Card.Text>
                             </Card.Body>
                         </Card>
@@ -33,7 +33,7 @@ const ExplainMe: React.FC = () => {
                 ))}
             </Row>
             <div className="text-center mb-5">
-                <Button variant="outline-primary">{t('expalinMe.hotTopic.showMore')}</Button>
+                <Button variant="outline-primary">{t('explainMe.hotTopic.showMore')}</Button>
             </div>
         </>
     );

@@ -13,13 +13,13 @@
 .register-left-inner {
     width: 80%;
     margin: 0 0 auto auto;
-    padding: 25px;
+    padding: 10px;
     height: 100%;
 }
 
 .register-left {
     flex: 1;
-    padding: 25px;
+    padding: 10px;
 }
 
 .register-right {
@@ -43,4 +43,8 @@
 
 .policy label {
     color: #333;
+}
+
+.paragraph {
+    margin-bottom: 25px;
 }

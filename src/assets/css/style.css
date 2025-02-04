@@ -3187,51 +3187,106 @@ p {
 /*=====================================================
     27. BLOG PAGE css 
 ======================================================*/
-
-.singel-blog{
-    overflow: hidden;
-    border-radius: 5px;
-}
-.singel-blog .blog-thum img{
-    width: 100%;
-}
-
-.singel-blog .blog-cont{
-    padding: 40px 50px;
-    background-color: #fff;
-}
-.singel-blog .blog-cont a{
-    display: block;
-}
-.singel-blog .blog-cont h3{
-    font-size: 36px;
-    color: #000;
-    -webkit-transition: all 0.4s linear;
-    transition: all 0.4s linear;
-}
-.singel-blog .blog-cont a:hover h3{
-    color: #ffc600;
-}
-
-.singel-blog .blog-cont ul {
-    padding: 20px 0;
-}
-.singel-blog .blog-cont ul li{
-    display: inline-block;
-    margin-right: 30px;
-}
-.singel-blog .blog-cont ul li:last-child{
-    margin-right: 0;
-}
-.singel-blog .blog-cont ul li a{
-    font-size: 15px;
-    color: #8a8a8a;
-}
-.singel-blog .blog-cont ul li a i{
-    color: #ffc600;
-    margin-right: 5px;
-}
-.singel-blog .blog-cont p{}
+#blog-page a {
+    text-decoration: none;
+  }
+  
+  #blog-page .btn-category-containter {
+      padding: 2rem 0;
+  }
+  #blog-page .btn-category-active {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      border-radius: 50px;
+      margin-left: 0.75rem;
+      background-color: transparent;
+      color: #000;
+  }
+  
+  #blog-page .btn-category {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      border-radius: 50px;
+      margin-left: 0.75rem;
+      border: none;
+      font-weight: 500;
+  }
+  
+  
+  
+  .singel-blog {
+      overflow: hidden;
+      border-radius: 5px;
+  }
+  
+  .singel-blog .blog-thum img {
+      width: 100%;
+  }
+  
+  .singel-blog .blog-cont {
+      padding-top: 20px;
+      /* padding: 40px 50px; */
+      /* background-color: #fff; */
+  }
+  
+  .singel-blog .blog-cont .blog-category {
+      font-size: 22px;
+      text-transform: uppercase;
+  
+  }
+  
+  .singel-blog .blog-cont a {
+      display: block;
+  }
+  
+  .singel-blog .blog-cont h3 {
+      font-size: 36px;
+      color: #000;
+      -webkit-transition: all 0.4s linear;
+      transition: all 0.4s linear;
+      font-weight: 700;
+  }
+  
+  .singel-blog .blog-cont a:hover h3 {
+      color: #ffc600;
+  }
+  
+  .singel-blog .blog-cont h4 {
+      color: #000;
+      -webkit-transition: all 0.4s linear;
+      transition: all 0.4s linear;
+      font-weight: 600;
+  }
+  
+  .singel-blog .blog-cont a:hover h4 {
+      color: #ffc600;
+  }
+  
+  .singel-blog .blog-cont ul {
+      padding: 20px 0;
+  }
+  
+  .singel-blog .blog-cont ul li {
+      display: inline-block;
+      margin-right: 30px;
+  }
+  
+  .singel-blog .blog-cont ul li:last-child {
+      margin-right: 0;
+  }
+  
+  .singel-blog .blog-cont ul li a {
+      font-size: 15px;
+      color: #8a8a8a;
+  }
+  
+  .singel-blog .blog-cont ul li a i {
+      color: #ffc600;
+      margin-right: 5px;
+  }
+  
+  .singel-blog .blog-cont p {}
+  
 
 
 .saidbar{}
@@ -3788,9 +3843,32 @@ p.form-message.error {
 	padding-bottom: 15px;
 }
 
+/*=====================================================
+    32. EXAM LIST PAGE css 
+======================================================*/
 
+#exam-list a {
+    text-decoration: none;
+}
 
+#exam-list .text-yellow {
+    color: #ffc600;
+}
 
+#exam-list .blog-cont h3 {
+    font-size: 36px;
+    color: #000;
+    font-weight: 700;
+}
+
+#exam-list .dropdown-menu.show {
+    /* border: none; */
+    border-radius: 1rem;
+}
+
+#exam-list .dropdown-menu .dropdown-item :focus {
+    background-color: #302f2f;
+}
 
 
 
