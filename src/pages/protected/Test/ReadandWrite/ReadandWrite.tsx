@@ -99,6 +99,7 @@ useEffect(()=>{
   };
 
   const toggleBookmark = (questionIndex: number) => {
+    console.log(bookmarkedQuestions);
     setBookmarkedQuestions(prev => ({
       ...prev,
       [questionIndex]: !prev[questionIndex], // Đảo trạng thái của câu hỏi đang bấm
@@ -122,8 +123,6 @@ useEffect(()=>{
   };
 
   const handleDirectionsClose = () => setShowDirections(false);
-  const handleDirectionsShow = () => setShowDirections(true);
-  const togglePopover = () => setShow(!show);
 
   return (
     <div className="min-vh-100 d-flex flex-column">
@@ -131,14 +130,8 @@ useEffect(()=>{
       <Container className="px-0">
         <header className="bg-white p-3 d-flex justify-content-between align-items-center border border-top-0 border-secondary-subtle rounded-bottom-4 border-3">
           <div>
-            <h1 className="h5 mb-0 fs-6">Reading and Writing: Module 1</h1>
-            <Button
-              variant="link"
-              className="p-0 text-decoration-none text-secondary fs-6"
-              onClick={handleDirectionsShow}
-            >
-              Directions ▼
-            </Button>
+           
+          
           </div>
           <div
             className="d-flex flex-column align-items-center"
