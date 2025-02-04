@@ -16,6 +16,7 @@ import Chatbot from "../pages/protected/ChatBot/Chatbot";
 import ChatLayouts from "../layouts/chatLayouts/ChatLayouts";
 import Upload from "../pages/protected/Upload/Upload";
 import AddClass from "../pages/protected/AddClass/AddClass";
+import Classroom from "../pages/protected/Classroom/Classroom";
 
 const AppRoute: React.FC = () => {
   return (
@@ -35,6 +36,7 @@ const AppRoute: React.FC = () => {
         <Route path="/exam-list" element={<ExamList />} />
         <Route path="upload" element={<Upload />} />
         <Route path="/question-bank" element={<QuestionBank />} />
+        <Route path="/classroom" element={<Classroom />} />
         <Route path="/add-class" element={<AddClass />} />
       </Route>
 

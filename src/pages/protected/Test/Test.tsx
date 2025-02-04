@@ -90,8 +90,6 @@ const TestScreen: React.FC = () => {
     <div className="p-4">
       <div className="mb-4">
         <h1>Thời gian còn lại: {formatTime(time)}</h1>
-        <p>Section hiện tại: {section[currentSection]?.name}</p>
-        <p>Part hiện tại: {section[currentSection]?.part[currentPart]?.name}</p>
       </div>
       {renderCurrentModule()}
     </div>

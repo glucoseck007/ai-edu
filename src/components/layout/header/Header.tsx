@@ -98,12 +98,10 @@ function Header() {
                           <div className="dropdown">
                             <LoadingLink to="/classroom">Lớp học</LoadingLink>
                             <div className="dropdown-content">
-                              <LoadingLink to="/classroom/join">
+                              <LoadingLink to="/join-class">
                                 Tham gia
                               </LoadingLink>
-                              <LoadingLink to="/classroom/create">
-                                Tạo mới
-                              </LoadingLink>
+                              <LoadingLink to="/add-class">Tạo mới</LoadingLink>
                             </div>
                           </div>
                         </li>

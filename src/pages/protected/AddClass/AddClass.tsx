@@ -16,10 +16,10 @@ const AddClass: React.FC = () => {
 
   return (
     <div className="add-classroom-form">
-      <h2>Add New Classroom</h2>
+      <h2>Tạo một lớp học mới</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Classroom Name</label>
+          <label htmlFor="name">Tên lớp học</label>
           <input
             type="text"
             id="name"
@@ -29,7 +29,7 @@ const AddClass: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="section">Section</label>
+          <label htmlFor="section">Học phần</label>
           <input
             type="text"
             id="section"
@@ -39,7 +39,7 @@ const AddClass: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="subject">Subject</label>
+          <label htmlFor="subject">Môn học</label>
           <input
             type="text"
             id="subject"
@@ -49,16 +49,15 @@ const AddClass: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="room">Room</label>
+          <label htmlFor="room">Phòng</label>
           <input
             type="text"
             id="room"
             value={room}
             onChange={(e) => setRoom(e.target.value)}
-            required
           />
         </div>
-        <button type="submit">Add Classroom</button>
+        <button type="submit">Tạo</button>
       </form>
     </div>
   );
