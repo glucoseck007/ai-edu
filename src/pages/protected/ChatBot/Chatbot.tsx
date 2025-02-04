@@ -3,7 +3,12 @@ import "../ChatBot/chatbot.css";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { fetchChatbotResponse } from "../../../redux/slices/chatbotSlice";
+import {
+  closeWebSocket,
+  fetchChatbotResponse,
+  initializeWebSocket,
+  sendAudioMessage,
+} from "../../../redux/slices/chatbotSlice";
 
 import BotMessage from "./chatbot/BotMessage";
 import Messages from "./chatbot/Message";
@@ -22,19 +27,45 @@ function Chatbot() {
       ]);
     }
     loadWelcomeMessage();
-  }, []);
 
-  const send = async (text: string) => {
+    dispatch(initializeWebSocket());
+
+    return () => {
+      dispatch(closeWebSocket());
+    };
+  }, [dispatch]);
+
+  // const send = async (text: string | Blob) => {
+  //   const student_code = auth.user?.id;
+  //   const response = await dispatch(
+  //     fetchChatbotResponse({ student_code: student_code, question: text })
+  //   );
+  //   const newMessages: JSX.Element[] = [
+  //     ...messages,
+  //     <UserMessage key={messages.length + 1} content={text} />,
+  //     <BotMessage key={messages.length + 2} userMessage={response.payload} />,
+  //   ];
+  //   setMessages(newMessages);
+  // };
+
+  const send = async (text: string | Blob) => {
     const student_code = auth.user?.id;
-    const response = await dispatch(
-      fetchChatbotResponse({ student_code: student_code, question: text })
-    );
-    const newMessages: JSX.Element[] = [
-      ...messages,
-      <UserMessage key={messages.length + 1} text={text} />,
-      <BotMessage key={messages.length + 2} userMessage={response.payload} />,
-    ];
-    setMessages(newMessages);
+
+    if (text instanceof Blob) {
+      // If it's an audio message, send via WebSocket
+      dispatch(sendAudioMessage(text));
+    } else {
+      // If it's a text-based message, fetch chatbot response via API
+      const response = await dispatch(
+        fetchChatbotResponse({ student_code: student_code, question: text })
+      );
+      const newMessages: JSX.Element[] = [
+        ...messages,
+        <UserMessage key={messages.length + 1} content={text} />,
+        <BotMessage key={messages.length + 2} userMessage={response.payload} />,
+      ];
+      setMessages(newMessages);
+    }
   };
 
   return (
@@ -44,5 +75,4 @@ function Chatbot() {
     </div>
   );
 }
-
 export default Chatbot;

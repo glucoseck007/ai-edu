@@ -1,7 +1,18 @@
-import React, { useState } from "react";
+import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState, useRef } from "react";
 
-export default function Input({ onSend }: { onSend: (text: string) => void }) {
+export default function Input({
+  onSend,
+}: {
+  onSend: (text: string | Blob) => void;
+}) {
   const [text, setText] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null); // Ref for storing the media stream
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -9,8 +20,54 @@ export default function Input({ onSend }: { onSend: (text: string) => void }) {
 
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSend(text);
-    setText("");
+    if (text.trim() !== "") {
+      onSend(text);
+      setText("");
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream; // Store the media stream for later use
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
+        console.log("Audio Blob:", audioBlob);
+
+        // Send the recorded audio Blob to the parent
+        onSend(audioBlob);
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error accessing microphone: ", error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+
+    // Stop the media stream (to fully release the microphone)
+    if (mediaStreamRef.current) {
+      const tracks = mediaStreamRef.current.getTracks();
+      tracks.forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
   };
 
   return (
@@ -19,10 +76,19 @@ export default function Input({ onSend }: { onSend: (text: string) => void }) {
         <input
           type="text"
           onChange={handleInputChange}
-          value={text}
+          value={isRecording ? "Đang ghi âm..." : text}
           placeholder="Enter your message here"
         />
-        <button>
+        <button
+          type="button"
+          onClick={isRecording ? stopRecording : startRecording}
+        >
+          <FontAwesomeIcon
+            icon={faMicrophone}
+            color={isRecording ? "red" : "black"}
+          />
+        </button>
+        <button type="submit">
           <svg
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
@@ -38,6 +104,9 @@ export default function Input({ onSend }: { onSend: (text: string) => void }) {
           </svg>
         </button>
       </form>
+
+      {/* Audio playback for verification */}
+      <audio ref={audioRef} controls hidden></audio>
     </div>
   );
 }

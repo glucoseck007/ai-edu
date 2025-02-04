@@ -93,15 +93,32 @@ function Header() {
                       </LoadingLink>
                     </li>
                     {auth.user?.roles.includes("teacher") && (
-                      <li className="nav-item">
-                        <LoadingLink
-                          to="/upload"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <FontAwesomeIcon icon={faUpload} />
-                          <span className="description">Tải tài liệu lên</span>
-                        </LoadingLink>
-                      </li>
+                      <>
+                        <li className="nav-item">
+                          <div className="dropdown">
+                            <LoadingLink to="/classroom">Lớp học</LoadingLink>
+                            <div className="dropdown-content">
+                              <LoadingLink to="/classroom/join">
+                                Tham gia
+                              </LoadingLink>
+                              <LoadingLink to="/classroom/create">
+                                Tạo mới
+                              </LoadingLink>
+                            </div>
+                          </div>
+                        </li>
+                        <li className="nav-item">
+                          <LoadingLink
+                            to="/upload"
+                            style={{ textDecoration: "none" }}
+                          >
+                            <FontAwesomeIcon icon={faUpload} />
+                            <span className="description">
+                              Tải tài liệu lên
+                            </span>
+                          </LoadingLink>
+                        </li>
+                      </>
                     )}
                     <li className="nav-item px-0">
                       <div className="veritical-line-sm"></div>

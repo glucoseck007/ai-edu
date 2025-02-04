@@ -23,5 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .prettierrc.json
+.env
+ai-edu-be/src/main/resources/application.yml 
 
 
