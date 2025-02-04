@@ -12,7 +12,7 @@ const ReadingWritingModule: React.FC = () => {
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<{ [key: number]: boolean }>({});
 
   const [isConfused, setIsConfused] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] =  useState<{ [key: number]: number | null }>({});
   const [selectedConfused, setSelectedConfused] = useState<number[]>([]);
   const [showDirections, setShowDirections] = useState(false);
   const [show, setShow] = useState<boolean>(false);
@@ -75,12 +75,7 @@ const ReadingWritingModule: React.FC = () => {
     }
     ]
   }
-useEffect(()=>{
-  data.quiz.map((value,index)=>{
-    return console.log(value);
-    
-  })  
-},[])
+
   useEffect(() => {
     let interval: number;
     if (isRunning) {
@@ -111,8 +106,11 @@ useEffect(()=>{
     setIsConfused(!isConfused);
   }
 
-  const handleOptionClick = (index: number) => {
-    setSelectedOption(index);
+  const handleOptionClick = (questionIndex: number, optionIndex: number) => {
+    setSelectedOption(prev => ({
+      ...prev,
+      [questionIndex]: optionIndex, // Chỉ thay đổi trạng thái của câu hỏi đang bấm
+    }));
   };
 
   const toggleConfusedOption = (index: number) => (e: React.MouseEvent) => {
@@ -123,6 +121,8 @@ useEffect(()=>{
   };
 
   const handleDirectionsClose = () => setShowDirections(false);
+  const handleDirectionsShow = () => setShowDirections(true);
+  const togglePopover = () => setShow(!show);
 
   return (
     <div className="min-vh-100 d-flex flex-column">
@@ -130,8 +130,14 @@ useEffect(()=>{
       <Container className="px-0">
         <header className="bg-white p-3 d-flex justify-content-between align-items-center border border-top-0 border-secondary-subtle rounded-bottom-4 border-3">
           <div>
-           
-          
+            <h1 className="h5 mb-0 fs-6">Reading and Writing: Module 1</h1>
+            <Button
+              variant="link"
+              className="p-0 text-decoration-none text-secondary fs-6"
+              onClick={handleDirectionsShow}
+            >
+              Directions ▼
+            </Button>
           </div>
           <div
             className="d-flex flex-column align-items-center"
@@ -201,15 +207,15 @@ useEffect(()=>{
               <div className="flex-grow-1">
                 <p className='text-dark'>Which choice completes the text with the most logical and precise word or phrase?</p>
                 <div className="mb-3 px-2">
-                  {value.Answers.map((option, index) => (
+                  {value.Answers.map((option, Answerindex) => (
                     <div
                      style={{ cursor: 'pointer' }}
                       key={index}
                       className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
-                      onClick={() => handleOptionClick(index)}>
+                      onClick={() => handleOptionClick(index,Answerindex)}>
                       <div className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 ${selectedConfused.includes(index)
                         ? 'border-secondary slashed'
-                        : selectedOption === index
+                        : selectedOption[index] === Answerindex
                           ? 'border-primary'
                           : 'border-black'
                         } rounded-pill px-3 py-2`}>
@@ -220,7 +226,7 @@ useEffect(()=>{
                           >
                             {numberToLetter(index + 1)}
                           </div>
-                          <span className={selectedOption === index && selectedConfused.includes(index) ? 'text-secondary' : ''}>
+                          <span className={selectedOption[index] === Answerindex && selectedConfused.includes(Answerindex) ? 'text-secondary' : ''}>
                             {option}
                           </span>
                         </div>
