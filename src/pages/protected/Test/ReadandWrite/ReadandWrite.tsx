@@ -224,7 +224,7 @@ const ReadingWritingModule: React.FC = () => {
                             className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-dark"
                             style={{ width: '28px', height: '28px', fontSize: '14px' }}
                           >
-                            {numberToLetter(index + 1)}
+                            {numberToLetter(Answerindex + 1)}
                           </div>
                           <span className={selectedOption[index] === Answerindex && selectedConfused.includes(Answerindex) ? 'text-secondary' : ''}>
                             {option}
