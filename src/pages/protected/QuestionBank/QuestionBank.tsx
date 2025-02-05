@@ -1,18 +1,39 @@
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row,Modal, Form } from "react-bootstrap";
 import CustomButton from "../../../components/common/button/custom-button/Custom-Button";
 import "../QuestionBank/question-bank.css";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 
 function QuestionBank() {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSubjects, setSelectedSubjects] = useState<
+  { name: string; level: string }[]
+>([]);
   const { t, i18n } = useTranslation();
+
   const titleParts = t("questionBank.title", { returnObjects: true }) as Array<{
     className: string;
     text: string;
   }>;
-  
+  const handleSubjectChange = (subject: string, level: string) => {
+    setSelectedSubjects((prev) => {
+      const existingIndex = prev.findIndex((s) => s.name === subject);
+      if (existingIndex !== -1) {
+        const updatedSubjects = [...prev];
+        updatedSubjects[existingIndex].level = level;
+        return updatedSubjects;
+      } else {
+        return [...prev, { name: subject, level }];
+      }
+    });
+  };
+  const subjects=["Đọc và viết", "Thông tin và Ý tưởng", "Quy tắc Tiếng Anh Chuẩn", "Diễn đạt Ý tưởng"]
+  const levels = ["Dễ", "Trung bình", "Khó"];
   const [skills, setSkills] = useState<string[]>([]);
-
+  const handleCreateExam = () => {
+    console.log("Danh sách môn học đã chọn:", selectedSubjects);
+    setShowModal(false);
+  };
   useEffect(() => {
     const fetchSkills = async () => {
       try {
@@ -39,6 +60,8 @@ function QuestionBank() {
           </span>
         ))}
       </h1>
+      <Button onClick={() => setShowModal(true)}>Tạo đề thi</Button>
+
       <h6 style={{ fontWeight: "lighter", marginBottom: 24 }}>
         Write anything here if you want
       </h6>
@@ -59,6 +82,37 @@ function QuestionBank() {
           <Col className="skill-item">{skill}</Col>
         ))}
       </Row>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Chọn môn học và mức độ</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            {subjects.map((subject) => (
+              <div key={subject} className="mb-3">
+                <h5>{subject}</h5>
+                {levels.map((level) => (
+                  <Form.Check
+                    key={level}
+                    type="radio"
+                    name={subject} 
+                    label={level}
+                    onChange={() => handleSubjectChange(subject, level)}
+                  />
+                ))}
+              </div>
+            ))}
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Đóng
+          </Button>
+          <Button variant="primary" onClick={handleCreateExam}>
+            Tạo đề thi
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
