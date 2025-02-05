@@ -4,12 +4,11 @@ import { AuthState } from "../../types/data.interfaces";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState: AuthState = {
-  user: null,
+  user: JSON.parse(sessionStorage.getItem("user") ?? "null"),
   token: localStorage.getItem("authenticationToken") ?? "",
   isLoading: false,
   error: null,
 };
-
 const storeUser = (user: any) => {
   localStorage.setItem("user", JSON.stringify(user));
   sessionStorage.setItem("user", JSON.stringify(user));

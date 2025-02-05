@@ -119,7 +119,7 @@ const Upload: React.FC = () => {
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={handleFileSelect}>
                     <span className="fs-5">
-                      <FontAwesomeIcon icon={faFolderClosed} /> From my computer
+                      <FontAwesomeIcon icon={faFolderClosed} /> <input type="file"  />
                     </span>
                   </Dropdown.Item>
                   <Dropdown.Item href="#/action-2">

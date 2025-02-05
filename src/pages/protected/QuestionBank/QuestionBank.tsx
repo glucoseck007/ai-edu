@@ -10,7 +10,7 @@ function QuestionBank() {
     className: string;
     text: string;
   }>;
-
+  
   const [skills, setSkills] = useState<string[]>([]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function QuestionBank() {
       <h6 style={{ fontWeight: "lighter", marginBottom: 24 }}>
         Write anything here if you want
       </h6>
-      <div className="module-title">
+      <div className="modul e-title" >
         <h2>{t("questionSpecific.module.0.name")}</h2>
         <CustomButton
           width="400px"

@@ -12,4 +12,7 @@ public class ClassroomDTO {
     private String subject;
     private String room;
     private String accountId;
+
+    public ClassroomDTO(String id, String name, String section, String subject, String room, String id1) {
+    }
 }

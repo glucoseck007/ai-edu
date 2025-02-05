@@ -39,7 +39,37 @@ public class ClassroomService {
         return classroomRepository.save(classroom);
     }
 
-    public List<Classroom> getAllClasses() {
-        return classroomRepository.findAll();
+    public List<ClassroomDTO> getClassesByAccountId(String accountId) {
+        // Check if the account exists
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found with id: " + accountId));
+
+        // Retrieve classrooms associated with the account
+        List<Classroom> classrooms = classroomRepository.findByAccount(account);
+
+        // Convert the entity list to DTO list
+        return classrooms.stream().map(classroom -> new ClassroomDTO(
+                classroom.getId(),
+                classroom.getName(),
+                classroom.getSection(),
+                classroom.getSubject(),
+                classroom.getRoom(),
+                accountId
+        )).toList();
     }
+
+
+    public List<ClassroomDTO> getAllClasses() {
+        List<Classroom> classrooms = classroomRepository.findAll();
+
+        return classrooms.stream().map(classroom -> new ClassroomDTO(
+                classroom.getId(),
+                classroom.getName(),
+                classroom.getSection(),
+                classroom.getSubject(),
+                classroom.getRoom(),
+                classroom.getAccount().getId() // Avoids full serialization of Account
+        )).toList();
+    }
+
 }

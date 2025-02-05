@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET,
-                                "api/classroom/list_classes",
+                                "/api/classroom/list_classes",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**").permitAll()

@@ -24,8 +24,14 @@ public class ClassroomController {
     }
 
     @GetMapping("/list_classes")
-    public ResponseEntity<List<Classroom>> getAllClasses() {
-        List<Classroom> classrooms = classroomService.getAllClasses();
+    public ResponseEntity<List<ClassroomDTO>> getClassesByAccountId(@RequestParam String accountId) {
+        List<ClassroomDTO> classrooms = classroomService.getClassesByAccountId(accountId);
         return ResponseEntity.ok(classrooms);
     }
+
+//    @GetMapping("/list_classes")
+//    public ResponseEntity<List<ClassroomDTO>> getAllClasses() {
+//        List<ClassroomDTO> classrooms = classroomService.getAllClasses();
+//        return ResponseEntity.ok(classrooms);
+//    }
 }

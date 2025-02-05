@@ -25,9 +25,9 @@ public class Classroom extends BaseEntity {
     String subject;
     String room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false) // Foreign key to Account entity
-    private Account account;  // The account associated with this classroom
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
     @Lob
     @Column(name = "file_data")
