@@ -24,7 +24,7 @@ export const fetchChatbotResponse = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API}/ask-question`,
+        `${import.meta.env.VITE_API}/ask_question`,
         { student_code, question },
         {
           headers: {

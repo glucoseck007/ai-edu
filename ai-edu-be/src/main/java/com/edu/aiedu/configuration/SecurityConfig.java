@@ -33,7 +33,7 @@ public class SecurityConfig {
             "/api/auth/logout",
             "/api/auth/outbound/authentication",
             "/api/accounts/create-account",
-            "api/ask-question",
+            "api/ask_question",
             "/api/upload",
             "api/classroom/add_class",
     };
