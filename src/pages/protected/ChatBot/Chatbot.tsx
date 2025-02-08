@@ -68,10 +68,41 @@ function Chatbot() {
     }
   };
 
+  const subjects = ["Toán học", "Vật lý", "Hóa học", "Văn học"];
+
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+
+  const handleSelect = (subject: string) => {
+    setSelectedSubject(subject);
+  };
+
   return (
-    <div className="chatbot">
-      <Messages messages={messages} />
-      <Input onSend={send} />
+    <div className="chatbot-container">
+      <div className="subject-selection">
+        <ul className="subject-list">
+          {subjects.map((subject) => (
+            <li
+              key={subject}
+              className="subject-item"
+              onClick={() => handleSelect(subject)}
+              style={{
+                backgroundColor:
+                  selectedSubject === subject ? "#add8e6" : "transparent",
+                cursor: "pointer",
+                padding: "10px",
+                borderRadius: "5px",
+                transition: "background-color 0.3s",
+              }}
+            >
+              {subject}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="chatbot">
+        <Messages messages={messages} />
+        <Input onSend={send} />
+      </div>
     </div>
   );
 }

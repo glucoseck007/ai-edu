@@ -1,0 +1,14 @@
+.form-input-container {
+    display: flex;
+    justify-content: center;
+}
+
+.submit-icon {
+
+    button {
+        background-color: transparent;
+    }
+
+    display: flex;
+    background-color: transparent;
+}

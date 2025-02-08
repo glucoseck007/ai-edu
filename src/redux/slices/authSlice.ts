@@ -20,6 +20,11 @@ const storeAuthenticationToken = (jwt: string, rememberMe: boolean) => {
   sessionStorage.setItem("authenticationToken", jwt);
 };
 
+const clearUser = () => {
+  localStorage.removeItem("user");
+  sessionStorage.removeItem("user");
+};
+
 const clearAuthenticationToken = () => {
   localStorage.removeItem("authenticationToken");
   sessionStorage.removeItem("authenticationToken");
@@ -125,9 +130,11 @@ export const logout = createAsyncThunk(
         }
       );
       clearAuthenticationToken();
+      clearUser();
       return;
     } catch (error: any) {
       clearAuthenticationToken();
+      clearUser();
       return rejectWithValue(
         error?.response?.data?.message || "An error occurred during logout"
       );

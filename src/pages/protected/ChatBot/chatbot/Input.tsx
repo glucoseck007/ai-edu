@@ -1,6 +1,7 @@
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useRef } from "react";
+import "./input.css";
 
 export default function Input({
   onSend,
@@ -72,37 +73,40 @@ export default function Input({
 
   return (
     <div className="input">
-      <form onSubmit={handleSend}>
+      <form className="form-input-container" onSubmit={handleSend}>
         <input
           type="text"
           onChange={handleInputChange}
+          style={{ width: "50%" }}
           value={isRecording ? "Đang ghi âm..." : text}
           placeholder="Enter your message here"
         />
-        <button
-          type="button"
-          onClick={isRecording ? stopRecording : startRecording}
-        >
-          <FontAwesomeIcon
-            icon={faMicrophone}
-            color={isRecording ? "red" : "black"}
-          />
-        </button>
-        <button type="submit">
-          <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 500 500"
+        <div className="submit-icon">
+          <button
+            type="button"
+            onClick={isRecording ? stopRecording : startRecording}
           >
-            <g>
+            <FontAwesomeIcon
+              icon={faMicrophone}
+              color={isRecording ? "red" : "black"}
+            />
+          </button>
+          <button type="submit">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 500 500"
+            >
               <g>
-                <polygon points="0,497.25 535.5,267.75 0,38.25 0,216.75 382.5,267.75 0,318.75" />
+                <g>
+                  <polygon points="0,497.25 535.5,267.75 0,38.25 0,216.75 382.5,267.75 0,318.75" />
+                </g>
               </g>
-            </g>
-          </svg>
-        </button>
+            </svg>
+          </button>
+        </div>
       </form>
 
       {/* Audio playback for verification */}

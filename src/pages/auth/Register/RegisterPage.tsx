@@ -86,7 +86,7 @@ function RegisterPage() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_IDENTITY_API}/accounts/create-account`,
+        `${import.meta.env.VITE_API}/accounts/create-account`,
         {
           username: email,
           password,
