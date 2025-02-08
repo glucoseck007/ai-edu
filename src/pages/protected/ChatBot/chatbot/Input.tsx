@@ -1,5 +1,5 @@
-import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMicrophone, faPaperPlane, faFile } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useRef } from "react";
 import "./input.css";
 
@@ -74,6 +74,7 @@ export default function Input({
   return (
     <div className="input">
       <form className="form-input-container" onSubmit={handleSend}>
+     
         <input
           type="text"
           onChange={handleInputChange}
@@ -90,6 +91,15 @@ export default function Input({
               icon={faMicrophone}
               color={isRecording ? "red" : "black"}
             />
+          </button> 
+          <button
+            type="button" 
+          >
+            <FontAwesomeIcon
+              icon={faFile} color="black"
+            />
+          <input type="file" onChange={handleInputChange} hidden />
+
           </button>
           <button type="submit">
             <svg
