@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../redux/slices/authSlice";
 import { AppDispatch, RootState } from "../../../redux/store";
+import { useTranslation } from "react-i18next";
 
 import LoadingLink from "../../common/links/LoadingLink";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { useTranslation } from "react-i18next";
 
 function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,7 +38,7 @@ function Header() {
                   <li>
                     <LoadingLink to="/" style={{ textDecoration: "none" }}>
                       <img
-                        src="./src/assets/images/logo-future-me.png"
+                        src="/src/assets/images/logo-future-me.png"
                         alt="Logo"
                         width="120px"
                       />
@@ -78,7 +78,7 @@ function Header() {
                     </li>
                     <li className="nav-item">
                       <LoadingLink
-                        to="/test"
+                        to="/tests"
                         style={{ textDecoration: "none" }}
                       >
                         {t("homePage.header.test")}
@@ -92,20 +92,19 @@ function Header() {
                         {t("homePage.header.chatBot")}
                       </LoadingLink>
                     </li>
-                    {auth.user?.roles.includes("teacher") && (
-                      <>
-                        <li className="nav-item">
-                          <div className="dropdown">
-                            <LoadingLink to="/classroom">Lớp học</LoadingLink>
-                            <div className="dropdown-content">
-                              <LoadingLink to="/join-class">
-                                Tham gia
-                              </LoadingLink>
+                    <>
+                      <li className="nav-item">
+                        <div className="dropdown">
+                          <LoadingLink to="/classroom">Lớp học</LoadingLink>
+                          <div className="dropdown-content">
+                            <LoadingLink to="/join-class">Tham gia</LoadingLink>
+                            {auth.user?.roles.includes("teacher") && (
                               <LoadingLink to="/add-class">Tạo mới</LoadingLink>
-                            </div>
+                            )}
                           </div>
-                        </li>
-                        <li className="nav-item">
+                        </div>
+                      </li>
+                      {/* <li className="nav-item">
                           <LoadingLink
                             to="/upload"
                             style={{ textDecoration: "none" }}
@@ -115,9 +114,8 @@ function Header() {
                               Tải tài liệu lên
                             </span>
                           </LoadingLink>
-                        </li>
-                      </>
-                    )}
+                        </li> */}
+                    </>
                     <li className="nav-item px-0">
                       <div className="veritical-line-sm"></div>
                     </li>

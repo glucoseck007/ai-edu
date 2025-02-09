@@ -11,11 +11,10 @@ import { useParams, useLocation } from "react-router-dom";
 import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
 import axios from "axios";
 
-const Upload: React.FC = () => {
+const UploadQuiz: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [subject, setSubject] = useState("");
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   console.log(query);
@@ -64,8 +63,7 @@ const Upload: React.FC = () => {
 
     const requestBody = {
       classroomId: classroomId, // Replace with actual classroom ID
-      title: title,
-      content: description,
+      subject: subject,
       fileData: atob(base64Data)
         .split("")
         .map((char) => char.charCodeAt(0)), // Convert Base64 to byte[]
@@ -75,7 +73,7 @@ const Upload: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API}/classroom-content/upload`,
+        `${import.meta.env.VITE_API}/classroom-content/upload_for_quiz`,
         requestBody,
         {
           headers: {
@@ -104,30 +102,20 @@ const Upload: React.FC = () => {
           <Col lg={6} className="d-flex align-items-center">
             <div>
               <h3>
-                <span className="text-yellow">Đăng</span> tài liệu cho lớp học
+                <span className="text-yellow">Đăng</span> khung tài liệu cho đề
+                thi
               </h3>
 
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="title">Tiêu đề</label>
+                  <label htmlFor="title">Môn học</label>
                   <input
                     type="text"
-                    id="title"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    id="subject"
+                    name="subjectt"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
                     required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="description">Miêu tả</label>
-                  <input
-                    type="text"
-                    id="description"
-                    name="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
 
@@ -194,4 +182,4 @@ const Upload: React.FC = () => {
   );
 };
 
-export default Upload;
+export default UploadQuiz;

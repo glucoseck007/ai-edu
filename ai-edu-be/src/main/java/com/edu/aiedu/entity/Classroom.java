@@ -1,10 +1,11 @@
 package com.edu.aiedu.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -24,15 +25,21 @@ public class Classroom extends BaseEntity {
     String section;
     String subject;
     String room;
+    String classroomCode;
 
+    // Classroom creator (teacher)
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
+    @JsonBackReference
     private Account account;
 
-    @Lob
-    @Column(name = "file_data")
-    private byte[] fileData;
+    // Contents of the classroom
+    @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<ClassroomContent> contents;
 
-    @Column(name = "file_name")
-    private String fileName;
+    // Members who joined this classroom
+    @ManyToMany(mappedBy = "joinedClassrooms")
+    @JsonManagedReference
+    private Set<Account> members;
 }

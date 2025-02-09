@@ -42,8 +42,8 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.2",
     "react-slick": "^0.30.3",
+    "react-toastify": "^11.0.3",
     "remark-gfm": "^4.0.0",
-    "sass": "^1.84.0",
     "slick-carousel": "^1.8.1",
     "sonner": "^1.7.4",
     "tailwind-merge": "^3.0.1",
@@ -64,6 +64,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "sass": "^1.84.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }

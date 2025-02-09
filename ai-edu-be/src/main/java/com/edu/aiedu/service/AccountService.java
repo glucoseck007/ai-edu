@@ -1,16 +1,19 @@
 package com.edu.aiedu.service;
 
 import com.edu.aiedu.Utils.SecurityUtil;
+import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.dto.request.account.AccountCreationRequest;
 import com.edu.aiedu.dto.request.account.AccountUpdateRequest;
 import com.edu.aiedu.dto.request.account.PasswordChangeRequest;
 import com.edu.aiedu.dto.request.account.PasswordCreationRequest;
 import com.edu.aiedu.dto.response.AccountResponse;
 import com.edu.aiedu.entity.Account;
+import com.edu.aiedu.entity.Classroom;
 import com.edu.aiedu.enums.Role;
 import com.edu.aiedu.exception.AppException;
 import com.edu.aiedu.exception.ErrorCode;
 import com.edu.aiedu.mapper.AccountMapper;
+import com.edu.aiedu.repository.AccountClassroomRepository;
 import com.edu.aiedu.repository.AccountRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +30,14 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountService {
     AccountRepository accountRepository;
+    private final AccountClassroomRepository accountClassroomRepository;
     AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
 
@@ -142,5 +147,20 @@ public class AccountService {
         account.setIsDeleted(true);
         account.setLastModifiedDate(LocalDateTime.now());
         account.setLastModifiedBy(SecurityUtil.getCurrentUsername());
+    }
+
+    public List<ClassroomDTO> getClassesForAccount(String accountId) {
+        List<Classroom> classrooms = accountClassroomRepository.findClassroomsByAccountId(accountId);
+
+        return classrooms.stream().map(
+                classroom -> ClassroomDTO.builder()
+                        .id(classroom.getId())
+                        .name(classroom.getName())
+                        .section(classroom.getSection())
+                        .subject(classroom.getSubject())
+                        .room(classroom.getRoom())
+                        .accountId(classroom.getAccount().getId())
+                        .classroomCode(classroom.getClassroomCode())
+                        .build()).collect(Collectors.toList());
     }
 }

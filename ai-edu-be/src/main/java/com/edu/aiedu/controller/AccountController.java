@@ -1,17 +1,20 @@
 package com.edu.aiedu.controller;
 
+import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.dto.request.account.AccountCreationRequest;
 import com.edu.aiedu.dto.request.account.AccountUpdateRequest;
 import com.edu.aiedu.dto.request.account.PasswordChangeRequest;
 import com.edu.aiedu.dto.request.account.PasswordCreationRequest;
 import com.edu.aiedu.dto.response.AccountResponse;
 import com.edu.aiedu.dto.response.ApiResponse;
+import com.edu.aiedu.entity.Classroom;
 import com.edu.aiedu.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,5 +93,11 @@ public class AccountController {
         return ApiResponse.<String>builder()
                 .result("Account deleted")
                 .build();
+    }
+
+    @GetMapping("/{accountId}/classes")
+    public ResponseEntity<List<ClassroomDTO>> getClassesForAccount(@PathVariable String accountId) {
+        List<ClassroomDTO> classrooms = accountService.getClassesForAccount(accountId);
+        return ResponseEntity.ok(classrooms);
     }
 }
