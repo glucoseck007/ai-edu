@@ -19,13 +19,13 @@ const initialState: ChatbotState = {
 export const fetchChatbotResponse = createAsyncThunk(
   "chatbot/fetchResponse",
   async (
-    { student_code, question }: { student_code: any; question: string | Blob },
+    { student_code, subject, question }: { student_code: any; subject: String; question: string | Blob },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API}/ask_question`,
-        { student_code, question },
+        { student_code, question, subject },
         {
           headers: {
             "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export const fetchChatbotResponse = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(
         error?.response?.data?.message ||
-          "An error occurred while fetching chatbot response"
+        "An error occurred while fetching chatbot response"
       );
     }
   }

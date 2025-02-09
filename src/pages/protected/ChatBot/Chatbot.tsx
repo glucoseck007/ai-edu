@@ -53,34 +53,30 @@ const ChatBot = () => {
 
     const student_code = auth.user?.id;
     // Include selected subjects in the message
-    const selectedSubjectNames = Array.from(selectedSubjects)
-      .map(id => subjects.find(s => s.id === id)?.name)
-      .filter(Boolean);
+    const selectedSubjectName = subjects.find(s => s.id === selectedSubject)?.name;
 
     const newMessage = {
       id: messages.length + 1,
       content: input,
-      subjects: selectedSubjectNames,
+      subject: selectedSubjectName,
       isBot: false
     };
 
     setMessages(prev => [...prev, newMessage]);
     setInput('');
 
-    const selectedSubjectName = subjects.find(s => s.id === selectedSubject)?.name;
-
     const response = await dispatch(
-      fetchChatbotResponse({
-        student_code,
+      fetchChatbotResponse({ 
+        student_code, 
         question: input,
-        subjects: selectedSubjectName ? [selectedSubjectName] : []
+        subject: selectedSubjectName??""
       })
     );
 
     const botResponse = {
       id: messages.length + 2,
       content: response.payload,
-      subjects: selectedSubjectNames,
+      subject: selectedSubjectName,
       isBot: true
     };
 
