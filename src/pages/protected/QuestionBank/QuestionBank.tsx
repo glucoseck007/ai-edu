@@ -1,4 +1,4 @@
-import { Button, Col, Row,Modal, Form } from "react-bootstrap";
+import { Button, Col, Row, Modal, Form } from "react-bootstrap";
 import CustomButton from "../../../components/common/button/custom-button/Custom-Button";
 import "../QuestionBank/question-bank.css";
 import { useTranslation } from "react-i18next";
@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 function QuestionBank() {
   const [showModal, setShowModal] = useState(false);
   const [selectedSubjects, setSelectedSubjects] = useState<
-  { name: string; level: string }[]
->([]);
+    { name: string; level: string }[]
+  >([]);
   const { t, i18n } = useTranslation();
 
   const titleParts = t("questionBank.title", { returnObjects: true }) as Array<{
@@ -27,7 +27,12 @@ function QuestionBank() {
       }
     });
   };
-  const subjects=["Đọc và viết", "Thông tin và Ý tưởng", "Quy tắc Tiếng Anh Chuẩn", "Diễn đạt Ý tưởng"]
+  const subjects = [
+    "Đọc và viết",
+    "Thông tin và Ý tưởng",
+    "Quy tắc Tiếng Anh Chuẩn",
+    "Diễn đạt Ý tưởng",
+  ];
   const levels = ["Dễ", "Trung bình", "Khó"];
   const [skills, setSkills] = useState<string[]>([]);
   const handleCreateExam = () => {
@@ -65,7 +70,7 @@ function QuestionBank() {
       <h6 style={{ fontWeight: "lighter", marginBottom: 24 }}>
         Write anything here if you want
       </h6>
-      <div className="modul e-title" >
+      <div className="modul e-title">
         <h2>{t("questionSpecific.module.0.name")}</h2>
         <CustomButton
           width="400px"
@@ -74,7 +79,7 @@ function QuestionBank() {
           title={t("questionBank.button.title.purchase")}
           color="black"
           backgroundColor="transparent"
-          icon="../src//assets/images/all-icon/lock.svg"
+          icon="../src/assets/images/all-icon/lock.svg"
         />
       </div>
       <Row className="skill-container">
@@ -95,7 +100,7 @@ function QuestionBank() {
                   <Form.Check
                     key={level}
                     type="radio"
-                    name={subject} 
+                    name={subject}
                     label={level}
                     onChange={() => handleSubjectChange(subject, level)}
                   />

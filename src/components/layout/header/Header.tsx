@@ -78,7 +78,7 @@ function Header() {
                     </li>
                     <li className="nav-item">
                       <LoadingLink
-                        to="/test"
+                        to="/tests"
                         style={{ textDecoration: "none" }}
                       >
                         {t("homePage.header.test")}

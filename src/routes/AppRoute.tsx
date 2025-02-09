@@ -15,6 +15,7 @@ import QuestionBank from "../pages/protected/QuestionBank/QuestionBank";
 import StudentChatBot from "../pages/protected/ChatBot/Chatbot";
 import ChatLayouts from "../layouts/chatLayouts/ChatLayouts";
 import Upload from "../pages/protected/Upload/Upload";
+import UploadQuiz from "../pages/protected/Upload/UploadQuiz";
 import AddClass from "../pages/protected/AddClass/AddClass";
 import Classroom from "../pages/protected/Classroom/Classroom";
 import ClassroomDetail from "../pages/protected/Classroom/ClassroomDetail/ClassroomDetail";
@@ -41,6 +42,7 @@ const AppRoute: React.FC = () => {
         <Route path="/exam-list" element={<ExamList />} />
         <Route path="/tests" element={<TestList />} />
         <Route path="upload" element={<Upload />} />
+        <Route path="upload-quiz" element={<UploadQuiz />} />
         <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/classroom" element={<Classroom />} />
         <Route
