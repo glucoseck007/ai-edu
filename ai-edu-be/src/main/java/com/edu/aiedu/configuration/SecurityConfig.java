@@ -34,8 +34,8 @@ public class SecurityConfig {
             "/api/auth/outbound/authentication",
             "/api/accounts/create-account",
             "api/ask_question",
-            "/api/upload",
-            "api/classroom/add_class",
+            "/api/classroom-content/upload",
+            "api/classroom/add_class"
     };
 
     private CustomJwtDecoder jwtDecoder;
@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/classroom/list_classes",
+                                "/api/classroom/classroom-detail",
+                                "/api/classroom-content/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**").permitAll()

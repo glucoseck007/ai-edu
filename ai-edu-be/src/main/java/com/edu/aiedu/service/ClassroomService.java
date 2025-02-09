@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ClassroomService {
@@ -23,41 +24,48 @@ public class ClassroomService {
     }
 
     public Classroom addClass(ClassroomDTO classroomDTO) {
-        // Fetch the Account associated with the given accountId
         Account account = accountRepository.findById(classroomDTO.getAccountId())
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        // Create and save the Classroom entity
         Classroom classroom = Classroom.builder()
                 .name(classroomDTO.getName())
                 .section(classroomDTO.getSection())
                 .subject(classroomDTO.getSubject())
                 .room(classroomDTO.getRoom())
-                .account(account) // Associate the account
+                .account(account)
+                .classroomCode(generateUniqueClassroomCode())
                 .build();
 
         return classroomRepository.save(classroom);
     }
 
     public List<ClassroomDTO> getClassesByAccountId(String accountId) {
-        // Check if the account exists
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found with id: " + accountId));
+        List<Classroom> classrooms = classroomRepository.findClassroomByAccountId(accountId);
 
-        // Retrieve classrooms associated with the account
-        List<Classroom> classrooms = classroomRepository.findByAccount(account);
-
-        // Convert the entity list to DTO list
         return classrooms.stream().map(classroom -> new ClassroomDTO(
                 classroom.getId(),
                 classroom.getName(),
                 classroom.getSection(),
                 classroom.getSubject(),
                 classroom.getRoom(),
-                accountId
+                accountId,
+                classroom.getClassroomCode()
         )).toList();
     }
 
+    public ClassroomDTO getClassById(String id) {
+        Classroom classroom = classroomRepository.findClassroomById(id);
+
+        return classroom != null ? new ClassroomDTO(
+                classroom.getId(),
+                classroom.getName(),
+                classroom.getSection(),
+                classroom.getSubject(),
+                classroom.getRoom(),
+                classroom.getAccount().getId(),
+                classroom.getClassroomCode()
+        ) : null;
+    }
 
     public List<ClassroomDTO> getAllClasses() {
         List<Classroom> classrooms = classroomRepository.findAll();
@@ -68,8 +76,25 @@ public class ClassroomService {
                 classroom.getSection(),
                 classroom.getSubject(),
                 classroom.getRoom(),
-                classroom.getAccount().getId() // Avoids full serialization of Account
+                classroom.getAccount().getId(),
+                classroom.getClassroomCode()
         )).toList();
     }
 
+    private String generateUniqueClassroomCode() {
+        String characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        String code;
+
+        do {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < 6; i++) {
+                int index = random.nextInt(characters.length());
+                result.append(characters.charAt(index));
+            }
+            code = result.toString();
+        } while (classroomRepository.existsByClassroomCode(code));
+
+        return code;
+    }
 }

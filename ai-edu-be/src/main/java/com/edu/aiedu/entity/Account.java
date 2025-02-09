@@ -1,5 +1,6 @@
 package com.edu.aiedu.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,5 +31,6 @@ public class Account extends BaseEntity {
     Set<String> roles;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Classroom> classrooms;
 }

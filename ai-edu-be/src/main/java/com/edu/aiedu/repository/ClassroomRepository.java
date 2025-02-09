@@ -9,5 +9,8 @@ import java.util.List;
 
 @Repository
 public interface ClassroomRepository extends JpaRepository<Classroom, String> {
+    Classroom findClassroomById(String id);
+    List<Classroom> findClassroomByAccountId(String accountId);
     List<Classroom> findByAccount(Account account);
+    boolean existsByClassroomCode(String classroomCode);
 }
