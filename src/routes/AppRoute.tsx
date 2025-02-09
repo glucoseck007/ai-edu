@@ -12,13 +12,15 @@ import Blog from "../pages/protected/Blog/Blog";
 import ExamList from "../pages/protected/Exam/ExamList";
 import TestScreen from "../pages/protected/Test/Test";
 import QuestionBank from "../pages/protected/QuestionBank/QuestionBank";
-import Chatbot from "../pages/protected/ChatBot/Chatbot";
+import StudentChatBot from "../pages/protected/ChatBot/Chatbot";
 import ChatLayouts from "../layouts/chatLayouts/ChatLayouts";
 import Upload from "../pages/protected/Upload/Upload";
 import AddClass from "../pages/protected/AddClass/AddClass";
 import Classroom from "../pages/protected/Classroom/Classroom";
 import TestList from "../pages/protected/Test/TestList/TestList";
 import JoinClass from "../pages/protected/Classroom/Join/JoinClassroom";
+import TeacherChatBot from "../pages/protected/ChatBot/teacher/TeacherChatBot";
+import SuperAdminDashboard from "../pages/protected/Admin/Dashboard/Dashboard";
 
 const AppRoute: React.FC = () => {
   return (
@@ -42,6 +44,7 @@ const AppRoute: React.FC = () => {
         <Route path="/classroom" element={<Classroom />} />
         <Route path="/add-class" element={<AddClass />} />
         <Route path="join-class" element={<JoinClass />} />
+        <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
       </Route>
 
       {/* Test Routes */}
@@ -50,7 +53,8 @@ const AppRoute: React.FC = () => {
       </Route>
 
       <Route element={<ChatLayouts />}>
-        <Route path="/chat-bot" element={<Chatbot />}></Route>
+        <Route path="student/chat-bot" element={<StudentChatBot />}></Route>
+        <Route path="teacher/chat-bot" element={<TeacherChatBot />} />
       </Route>
     </Routes>
   );

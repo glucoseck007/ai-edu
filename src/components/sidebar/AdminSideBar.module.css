@@ -1,0 +1,52 @@
+.sidebar {
+    height: 100vh;
+    border-right: 1px solid #dee2e6;
+    transition: all 0.3s;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    position: relative;
+}
+
+.collapsed {
+    width: 4rem;
+}
+
+.sidebarNav {
+    margin-top: 1rem;
+}
+
+.navLink {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.navLink:hover {
+    background-color: #e9ecef;
+}
+
+.navLink.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.navLink span {
+    margin-left: 0.5rem;
+}
+
+.toggleButton {
+    position: absolute;
+    top: 0.5rem;
+    right: -1rem;
+    z-index: 1000;
+    padding: 0.25rem;
+    margin: 0.5rem;
+    background-color: #525151;
+}
+
+.collapsed .toggleButton {
+    right: -1.5rem;
+}

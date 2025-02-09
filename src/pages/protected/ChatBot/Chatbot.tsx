@@ -1,160 +1,122 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store";
-import {
-  closeWebSocket,
-  fetchChatbotResponse,
-  initializeWebSocket,
-  sendAudioMessage,
-} from "../../../redux/slices/chatbotSlice";
-import { Send, Mic } from 'lucide-react';
-import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootstrap';
+import { useState, useEffect, useRef } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import type { AppDispatch, RootState } from "../../../redux/store"
+import { closeWebSocket, fetchChatbotResponse, initializeWebSocket } from "../../../redux/slices/chatbotSlice"
+import { Mic, Send, Square } from "lucide-react"
+import { Container, Row, Col, Card, Form, Button, Nav } from "react-bootstrap"
+import "./StudentChatBot.scss"
 
-const ChatBot = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState<number | null>(null);
+interface Message {
+  id: number
+  content: string
+  subject?: string
+  isBot: boolean
+  isAudio?: boolean
+}
+
+const StudentChatBot: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState("")
+  const [selectedSubject, setSelectedSubject] = useState<string>("math")
+  const [showAudioRecorder, setShowAudioRecorder] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const dispatch = useDispatch<AppDispatch>()
+  const auth = useSelector((state: RootState) => state.auth)
 
   const subjects = [
-    { id: 1, name: "Toán học" },
-    { id: 2, name: "Vật lý" },
-    { id: 3, name: "Hóa học" },
-    { id: 4, name: "Văn học" }
-  ];
-
-  const messagesEndRef = useRef(null);
-  const auth = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch<AppDispatch>();
+    { id: "math", name: "Toán học" },
+    { id: "physics", name: "Vật lý" },
+    { id: "chemistry", name: "Hóa học" },
+    { id: "literature", name: "Văn học" },
+    { id: "history", name: "Lịch sử" },
+  ]
 
   useEffect(() => {
-    dispatch(initializeWebSocket());
-
-    // Load welcome message
-    setMessages([
-      { id: 0, content: "Tôi có thể giúp gì cho bạn?", isBot: true }
-    ]);
-
+    dispatch(initializeWebSocket())
+    setMessages([{ id: 0, content: "Tôi có thể giúp gì cho bạn?", isBot: true }])
     return () => {
-      dispatch(closeWebSocket());
-    };
-  }, [dispatch]);
+      dispatch(closeWebSocket())
+    }
+  }, [dispatch])
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    scrollToBottom()
+  }, []) //Corrected dependency array
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!input.trim()) return
 
-    const student_code = auth.user?.id;
-    // Include selected subjects in the message
-    const selectedSubjectName = subjects.find(s => s.id === selectedSubject)?.name;
+    const student_code = auth.user?.id
+    const selectedSubjectName = subjects.find((s) => s.id === selectedSubject)?.name
 
-    const newMessage = {
+    const newMessage: Message = {
       id: messages.length + 1,
       content: input,
       subject: selectedSubjectName,
-      isBot: false
-    };
+      isBot: false,
+    }
 
-    setMessages(prev => [...prev, newMessage]);
-    setInput('');
+    setMessages((prev) => [...prev, newMessage])
+    setInput("")
 
     const response = await dispatch(
-      fetchChatbotResponse({ 
-        student_code, 
+      fetchChatbotResponse({
+        student_code,
         question: input,
-        subject: selectedSubjectName??""
-      })
-    );
+        subject: selectedSubjectName ?? "",
+      }),
+    )
 
-    const botResponse = {
+    const botResponse: Message = {
       id: messages.length + 2,
       content: response.payload,
       subject: selectedSubjectName,
-      isBot: true
-    };
+      isBot: true,
+    }
 
-    setMessages(prev => [...prev, botResponse]);
-  };
-
-  const handleSubjectSelect = (subjectId: number) => {
-    setSelectedSubject(subjectId);
-  };
+    setMessages((prev) => [...prev, botResponse])
+  }
 
   return (
-    <Container fluid className="vh-100 p-0">
-      <Row className="h-100 m-0">
-        {/* Sidebar */}
-        <Col md={3} className="p-2 border-end bg-light">
-          <Card className="h-100 border-0 rounded-0">
-            <Card.Header className="bg-primary text-white">
-              <h5 className="mb-0">Select Subjects</h5>
+    <Container fluid className="chat-container">
+      <Row className="h-100">
+        <Col md={12} className="p-0">
+          <Card className="chat-card">
+            <Card.Header>
+              <h4 className="mb-0">Student Chat Bot</h4>
             </Card.Header>
-            <Card.Body className="p-0">
-              <ListGroup variant="flush">
-                {subjects.map((subject) => (
-                  <ListGroup.Item
-                    key={subject.id}
-                    action
-                    // active={selectedSubjects.has(subject.id)}
-                    onClick={() => handleSubjectSelect(subject.id)}
-                    className="d-flex align-items-center"
-                  >
-                    <Form.Check
-                      type="radio"
-                      checked={selectedSubject === subject.id}
-                      onChange={() => { }}
-                      label={subject.name}
-                      className="w-100"
-                    />
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* Main Chat Area */}
-        <Col md={9} className="p-2 d-flex flex-column">
-          <Card className="h-100 border-0 rounded-0">
-            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">Current Chat</h5>
-            </Card.Header>
-
-            {/* Messages Area */}
-            <Card.Body className="p-3" style={{ overflowY: 'auto', height: '75vh' }}>
-              {messages.map((message) => (
-                <Row key={message.id} className="mb-3">
-                  <Col className={message.isBot ? 'text-start' : 'text-end'}>
-                    <Card
-                      className={`d-inline-block ${message.isBot ? 'bg-light' : 'bg-primary text-white'}`}
-                      style={{ maxWidth: '70%' }}
-                    >
-                      <Card.Body className="p-2">
-                        {message.content}
-                        {message.subjects?.length > 0 && (
-                          <div className={`mt-1 ${message.isBot ? 'text-muted' : 'text-white'}`} style={{ fontSize: '0.8em' }}>
-                            Subjects: {message.subjects.join(', ')}
-                          </div>
-                        )}
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
+            <Nav variant="tabs" activeKey={selectedSubject} onSelect={(k) => setSelectedSubject(k || "math")}>
+              {subjects.map((subject) => (
+                <Nav.Item key={subject.id}>
+                  <Nav.Link eventKey={subject.id}>{subject.name}</Nav.Link>
+                </Nav.Item>
               ))}
-              <div ref={messagesEndRef} />
+            </Nav>
+            <Card.Body className="chat-body">
+              <div className="messages-container">
+                {messages.map((message) => (
+                  <div key={message.id} className={`message ${message.isBot ? "bot" : "user"}`}>
+                    <div className="avatar">{message.isBot ? "B" : "U"}</div>
+                    <div className="content">
+                      {message.isAudio ? (
+                        <audio controls src={message.content} className="w-100" />
+                      ) : (
+                        <p>{message.content}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
             </Card.Body>
-
-            {/* Input Area */}
-            <Card.Footer className="bg-white">
+            <Card.Footer>
               <Form onSubmit={handleSubmit}>
-                <Row className="d-flex gap-2 align-items-center">
+                <Row className="align-items-center">
                   <Col>
                     <Form.Control
                       type="text"
@@ -163,15 +125,17 @@ const ChatBot = () => {
                       placeholder="Type your message..."
                     />
                   </Col>
-                  <Col xs="auto" className='d-flex gap-2'>
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      disabled={!selectedSubject|| !input.trim()}
-                    >
+                  <Col xs="auto">
+                    <Button type="submit" disabled={!selectedSubject || !input.trim()}>
                       <Send size={20} />
                     </Button>
-                    <Button variant="light" onClick={() => {/* Add voice input handling */ }}>
+                  </Col>
+                  <Col xs="auto">
+                    <Button
+                      variant="outline-secondary"
+                      onClick={() => setShowAudioRecorder(true)}
+                      disabled={!selectedSubject}
+                    >
                       <Mic size={20} />
                     </Button>
                   </Col>
@@ -181,8 +145,150 @@ const ChatBot = () => {
           </Card>
         </Col>
       </Row>
+      {showAudioRecorder && (
+        <AudioRecorderPopover
+          setShowAudioRecorder={setShowAudioRecorder}
+          setMessages={setMessages}
+          selectedSubject={selectedSubject}
+          subjects={subjects}
+        />
+      )}
     </Container>
-  );
-};
+  )
+}
 
-export default ChatBot;
+interface AudioRecorderPopoverProps {
+  setShowAudioRecorder: React.Dispatch<React.SetStateAction<boolean>>
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  selectedSubject: string
+  subjects: { id: string; name: string }[]
+}
+
+interface Message {
+  id: number
+  content: string
+  subject?: string
+  isBot: boolean
+  isAudio?: boolean
+}
+
+const AudioRecorderPopover: React.FC<AudioRecorderPopoverProps> = ({
+  setShowAudioRecorder,
+  setMessages,
+  selectedSubject,
+  subjects,
+}) => {
+  const [isRecording, setIsRecording] = useState(false)
+  const [audioURL, setAudioURL] = useState<string | null>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const audioChunksRef = useRef<Blob[]>([])
+  const dispatch = useDispatch<AppDispatch>()
+  const auth = useSelector((state: RootState) => state.auth)
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      audioChunksRef.current = []
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data)
+        }
+      }
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" })
+        const audioUrl = URL.createObjectURL(audioBlob)
+        setAudioURL(audioUrl)
+      }
+
+      mediaRecorder.start()
+      setIsRecording(true)
+    } catch (error) {
+      console.error("Error accessing microphone:", error)
+    }
+  }
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop()
+      mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop())
+      setIsRecording(false)
+    }
+  }
+
+  const handleSendAudio = async () => {
+    if (audioURL && selectedSubject) {
+      const selectedSubjectName = subjects.find((s) => s.id === selectedSubject)?.name
+      const student_code = auth.user?.id
+
+      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" })
+
+      const audioMessage: Message = {
+        id: Date.now(),
+        content: audioURL,
+        subject: selectedSubjectName,
+        isBot: false,
+        isAudio: true,
+      }
+
+      setMessages((prev) => [...prev, audioMessage])
+
+      try {
+        const response = await dispatch(
+          fetchChatbotResponse({
+            student_code,
+            question: audioBlob,
+            subject: selectedSubjectName ?? "",
+          }),
+        )
+
+        const botResponse: Message = {
+          id: Date.now() + 1,
+          content: response.payload,
+          subject: selectedSubjectName,
+          isBot: true,
+        }
+
+        setMessages((prev) => [...prev, botResponse])
+      } catch (error) {
+        console.error("Error sending audio message:", error)
+      }
+
+      setShowAudioRecorder(false)
+    }
+  }
+
+  return (
+    <Card className="audio-recorder-popover">
+      <Card.Body>
+        {isRecording ? (
+          <Button onClick={stopRecording} variant="danger" className="w-100 mb-2">
+            <Square className="me-2" size={16} />
+            Stop Recording
+          </Button>
+        ) : (
+          <Button onClick={startRecording} variant="primary" className="w-100 mb-2">
+            <Mic className="me-2" size={16} />
+            Start Recording
+          </Button>
+        )}
+
+        {audioURL && (
+          <div className="mt-2">
+            <audio controls src={audioURL} className="w-100 mb-2" />
+            <Button onClick={handleSendAudio} variant="success" className="w-100">
+              <Send className="me-2" size={16} />
+              Send Audio
+            </Button>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
+  )
+}
+
+export default StudentChatBot
+
