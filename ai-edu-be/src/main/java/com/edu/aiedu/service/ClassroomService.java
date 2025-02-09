@@ -5,11 +5,14 @@ import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Classroom;
 import com.edu.aiedu.repository.AccountRepository;
 import com.edu.aiedu.repository.ClassroomRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class ClassroomService {
@@ -52,6 +55,24 @@ public class ClassroomService {
                 classroom.getClassroomCode()
         )).toList();
     }
+
+    public List<ClassroomDTO> getClassroomsByAccountId(String accountId) {
+        Optional<Account> accountOpt = accountRepository.findById(accountId);
+        if (accountOpt.isEmpty()) {
+            throw new RuntimeException("Account not found");
+        }
+        Account account = accountOpt.get();
+        return account.getClassrooms().stream()
+                .map(classroom -> ClassroomDTO.builder()
+                        .id(classroom.getId())
+                        .name(classroom.getName())
+                        .subject(classroom.getSubject())
+                        .section(classroom.getSection())
+                        .room(classroom.getRoom())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 
     public ClassroomDTO getClassById(String id) {
         Classroom classroom = classroomRepository.findClassroomById(id);
@@ -96,5 +117,33 @@ public class ClassroomService {
         } while (classroomRepository.existsByClassroomCode(code));
 
         return code;
+    }
+
+    @Transactional
+    public void addAccountToClassroom(String accountId, String classroomCode) {
+        Optional<Account> accountOpt = accountRepository.findById(accountId);
+        Optional<Classroom> classroomOpt = classroomRepository.findByClassroomCode(classroomCode);
+
+        if (accountOpt.isEmpty()) {
+            throw new RuntimeException("Account not found with ID: " + accountId);
+        }
+        if (classroomOpt.isEmpty()) {
+            throw new RuntimeException("Classroom not found with code: " + classroomCode);
+        }
+
+        Account account = accountOpt.get();
+        Classroom classroom = classroomOpt.get();
+
+        if (classroom.getMembers().contains(account)) {
+            throw new RuntimeException("Account already joined this classroom.");
+        }
+
+        // Add account to classroom members
+        classroom.getMembers().add(account);
+        account.getJoinedClassrooms().add(classroom);
+
+        // Save both entities to maintain consistency
+        classroomRepository.save(classroom);
+        accountRepository.save(account);
     }
 }

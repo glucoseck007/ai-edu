@@ -4,6 +4,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 public class ClassroomDTO {
     private String id;

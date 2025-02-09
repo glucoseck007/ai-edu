@@ -11,11 +11,13 @@ type Classroom = {
   id: string;
   name: string;
   section: string;
+  classroomCode: string;
 };
 
 const Classroom = () => {
   const auth = useSelector((state: RootState) => state.auth);
   const accountId = auth.user?.id;
+  const permission = auth.user?.roles.includes("teacher");
   const [classes, setClasses] = useState<Classroom[]>([]);
   const navigate = useNavigate();
 
@@ -24,7 +26,9 @@ const Classroom = () => {
     const fetchClasses = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API}/classroom/list_classes`,
+          permission
+            ? `${import.meta.env.VITE_API}/classroom/list_classes_owner`
+            : `${import.meta.env.VITE_API}/classroom/list_classes_member`,
           {
             params: {
               accountId: accountId,
@@ -77,6 +81,10 @@ const Classroom = () => {
                     <Card.Title>{classroom.name}</Card.Title>
                     <Card.Text>
                       {classroom.section || "Thông tin lớp học."}
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>Mã lớp học:</strong>{" "}
+                      {classroom.classroomCode || "Mã lớp học."}
                     </Card.Text>
                     <LoadingLink
                       to={`/classroom/classroom-detail?classroomId=${classroom.id}`}

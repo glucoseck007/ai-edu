@@ -80,10 +80,15 @@ function ClassroomDetail() {
             Hoạt động lớp học {classroomData.name}
           </h1>
         </div>
-        <LoadingLink className="upload-button" to={`/upload?classroomId=${id}`}>
-          <FontAwesomeIcon icon={faUpload} />
-          <span className="description">Tải tài liệu lên</span>
-        </LoadingLink>
+        <div>
+          <LoadingLink
+            className="upload-button"
+            to={`/upload?classroomId=${id}`}
+          >
+            <FontAwesomeIcon icon={faUpload} />
+            <span className="description">Tải tài liệu lên</span>
+          </LoadingLink>
+        </div>
       </div>
 
       <div className="classroom-detail-container">

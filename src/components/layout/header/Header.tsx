@@ -98,7 +98,9 @@ function Header() {
                           <LoadingLink to="/classroom">Lớp học</LoadingLink>
                           <div className="dropdown-content">
                             <LoadingLink to="/join-class">Tham gia</LoadingLink>
-                            <LoadingLink to="/add-class">Tạo mới</LoadingLink>
+                            {auth.user?.roles.includes("teacher") && (
+                              <LoadingLink to="/add-class">Tạo mới</LoadingLink>
+                            )}
                           </div>
                         </div>
                       </li>

@@ -1,6 +1,4 @@
-import "../ChatBot/chatbot.css";
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import {
@@ -9,101 +7,182 @@ import {
   initializeWebSocket,
   sendAudioMessage,
 } from "../../../redux/slices/chatbotSlice";
+import { Send, Mic } from 'lucide-react';
+import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootstrap';
 
-import BotMessage from "./chatbot/BotMessage";
-import Messages from "./chatbot/Message";
-import Input from "./chatbot/Input";
-import UserMessage from "./chatbot/UserMessage";
+const ChatBot = () => {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState<number | null>(null);
 
-function Chatbot() {
-  const [messages, setMessages] = useState<JSX.Element[]>([]);
+  const subjects = [
+    { id: 1, name: "Toán học" },
+    { id: 2, name: "Vật lý" },
+    { id: 3, name: "Hóa học" },
+    { id: 4, name: "Văn học" }
+  ];
+
+  const messagesEndRef = useRef(null);
   const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    async function loadWelcomeMessage() {
-      setMessages([
-        <BotMessage key="0" userMessage="Tôi có thể giúp gì cho bạn?" />,
-      ]);
-    }
-    loadWelcomeMessage();
-
     dispatch(initializeWebSocket());
+
+    // Load welcome message
+    setMessages([
+      { id: 0, content: "Tôi có thể giúp gì cho bạn?", isBot: true }
+    ]);
 
     return () => {
       dispatch(closeWebSocket());
     };
   }, [dispatch]);
 
-  // const send = async (text: string | Blob) => {
-  //   const student_code = auth.user?.id;
-  //   const response = await dispatch(
-  //     fetchChatbotResponse({ student_code: student_code, question: text })
-  //   );
-  //   const newMessages: JSX.Element[] = [
-  //     ...messages,
-  //     <UserMessage key={messages.length + 1} content={text} />,
-  //     <BotMessage key={messages.length + 2} userMessage={response.payload} />,
-  //   ];
-  //   setMessages(newMessages);
-  // };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-  const send = async (text: string | Blob) => {
-    const student_code = auth.user?.id;
-
-    if (text instanceof Blob) {
-      // If it's an audio message, send via WebSocket
-      dispatch(sendAudioMessage(text));
-    } else {
-      // If it's a text-based message, fetch chatbot response via API
-      const response = await dispatch(
-        fetchChatbotResponse({ student_code: student_code, question: text })
-      );
-      const newMessages: JSX.Element[] = [
-        ...messages,
-        <UserMessage key={messages.length + 1} content={text} />,
-        <BotMessage key={messages.length + 2} userMessage={response.payload} />,
-      ];
-      setMessages(newMessages);
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const subjects = ["Toán học", "Vật lý", "Hóa học", "Văn học"];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
 
-  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+    const student_code = auth.user?.id;
+    // Include selected subjects in the message
+    const selectedSubjectName = subjects.find(s => s.id === selectedSubject)?.name;
 
-  const handleSelect = (subject: string) => {
-    setSelectedSubject(subject);
+    const newMessage = {
+      id: messages.length + 1,
+      content: input,
+      subject: selectedSubjectName,
+      isBot: false
+    };
+
+    setMessages(prev => [...prev, newMessage]);
+    setInput('');
+
+    const response = await dispatch(
+      fetchChatbotResponse({ 
+        student_code, 
+        question: input,
+        subject: selectedSubjectName??""
+      })
+    );
+
+    const botResponse = {
+      id: messages.length + 2,
+      content: response.payload,
+      subject: selectedSubjectName,
+      isBot: true
+    };
+
+    setMessages(prev => [...prev, botResponse]);
+  };
+
+  const handleSubjectSelect = (subjectId: number) => {
+    setSelectedSubject(subjectId);
   };
 
   return (
-    <div className="chatbot-container">
-      <div className="subject-selection">
-        <ul className="subject-list">
-          {subjects.map((subject) => (
-            <li
-              key={subject}
-              className="subject-item"
-              onClick={() => handleSelect(subject)}
-              style={{
-                backgroundColor:
-                  selectedSubject === subject ? "#add8e6" : "transparent",
-                cursor: "pointer",
-                padding: "10px",
-                borderRadius: "5px",
-                transition: "background-color 0.3s",
-              }}
-            >
-              {subject}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="chatbot">
-        <Messages messages={messages} />
-        <Input onSend={send} />
-      </div>
-    </div>
+    <Container fluid className="vh-100 p-0">
+      <Row className="h-100 m-0">
+        {/* Sidebar */}
+        <Col md={3} className="p-2 border-end bg-light">
+          <Card className="h-100 border-0 rounded-0">
+            <Card.Header className="bg-primary text-white">
+              <h5 className="mb-0">Select Subjects</h5>
+            </Card.Header>
+            <Card.Body className="p-0">
+              <ListGroup variant="flush">
+                {subjects.map((subject) => (
+                  <ListGroup.Item
+                    key={subject.id}
+                    action
+                    // active={selectedSubjects.has(subject.id)}
+                    onClick={() => handleSubjectSelect(subject.id)}
+                    className="d-flex align-items-center"
+                  >
+                    <Form.Check
+                      type="radio"
+                      checked={selectedSubject === subject.id}
+                      onChange={() => { }}
+                      label={subject.name}
+                      className="w-100"
+                    />
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Main Chat Area */}
+        <Col md={9} className="p-2 d-flex flex-column">
+          <Card className="h-100 border-0 rounded-0">
+            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Current Chat</h5>
+            </Card.Header>
+
+            {/* Messages Area */}
+            <Card.Body className="p-3" style={{ overflowY: 'auto', height: '75vh' }}>
+              {messages.map((message) => (
+                <Row key={message.id} className="mb-3">
+                  <Col className={message.isBot ? 'text-start' : 'text-end'}>
+                    <Card
+                      className={`d-inline-block ${message.isBot ? 'bg-light' : 'bg-primary text-white'}`}
+                      style={{ maxWidth: '70%' }}
+                    >
+                      <Card.Body className="p-2">
+                        {message.content}
+                        {message.subjects?.length > 0 && (
+                          <div className={`mt-1 ${message.isBot ? 'text-muted' : 'text-white'}`} style={{ fontSize: '0.8em' }}>
+                            Subjects: {message.subjects.join(', ')}
+                          </div>
+                        )}
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              ))}
+              <div ref={messagesEndRef} />
+            </Card.Body>
+
+            {/* Input Area */}
+            <Card.Footer className="bg-white">
+              <Form onSubmit={handleSubmit}>
+                <Row className="d-flex gap-2 align-items-center">
+                  <Col>
+                    <Form.Control
+                      type="text"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      placeholder="Type your message..."
+                    />
+                  </Col>
+                  <Col xs="auto" className='d-flex gap-2'>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={!selectedSubject|| !input.trim()}
+                    >
+                      <Send size={20} />
+                    </Button>
+                    <Button variant="light" onClick={() => {/* Add voice input handling */ }}>
+                      <Mic size={20} />
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </Card.Footer>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
-}
-export default Chatbot;
+};
+
+export default ChatBot;

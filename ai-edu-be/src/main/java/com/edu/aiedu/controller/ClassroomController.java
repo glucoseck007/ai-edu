@@ -1,7 +1,9 @@
 package com.edu.aiedu.controller;
 
 import com.edu.aiedu.dto.request.ClassroomDTO;
+import com.edu.aiedu.dto.request.JoinClassroomRequest;
 import com.edu.aiedu.entity.Classroom;
+import com.edu.aiedu.service.AccountService;
 import com.edu.aiedu.service.ClassroomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +13,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/classroom")
 public class ClassroomController {
+    private final AccountService accountService;
     private final ClassroomService classroomService;
 
-    public ClassroomController(ClassroomService classroomService) {
+    public ClassroomController(ClassroomService classroomService, AccountService accountService) {
         this.classroomService = classroomService;
+        this.accountService = accountService;
     }
 
     @PostMapping("/add_class")
@@ -32,9 +36,15 @@ public class ClassroomController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/list_classes")
-    public ResponseEntity<List<ClassroomDTO>> getClassesByAccountId(@RequestParam String accountId) {
+    @GetMapping("/list_classes_owner")
+    public ResponseEntity<List<ClassroomDTO>> getOwnClassesByAccountId(@RequestParam String accountId) {
         List<ClassroomDTO> classrooms = classroomService.getClassesByAccountId(accountId);
+        return ResponseEntity.ok(classrooms);
+    }
+
+    @GetMapping("/list_classes_member")
+    public ResponseEntity<List<ClassroomDTO>> getMemberClassesByAccountId(@RequestParam String accountId) {
+        List<ClassroomDTO> classrooms = accountService.getClassesForAccount(accountId);
         return ResponseEntity.ok(classrooms);
     }
 
@@ -46,6 +56,22 @@ public class ClassroomController {
 //    @GetMapping("/list_classes")
 //    public ResponseEntity<List<ClassroomDTO>> getAllClasses() {
 //        List<ClassroomDTO> classrooms = classroomService.getAllClasses();
+//        return ResponseEntity.ok(classrooms);
+//    }
+
+    @PostMapping("/join")
+    public ResponseEntity<String> joinClassroom(@RequestBody JoinClassroomRequest request) {
+        try {
+            classroomService.addAccountToClassroom(request.getAccountId(), request.getClassroomCode());
+            return ResponseEntity.ok("Account added to classroom successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+//    @GetMapping("/list_classes")
+//    public ResponseEntity<List<ClassroomDTO>> getClassroomsByAccountId(@RequestParam String accountId) {
+//        List<ClassroomDTO> classrooms = classroomService.getClassroomsByAccountId(accountId);
 //        return ResponseEntity.ok(classrooms);
 //    }
 }
