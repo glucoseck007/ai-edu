@@ -17,6 +17,8 @@ import ChatLayouts from "../layouts/chatLayouts/ChatLayouts";
 import Upload from "../pages/protected/Upload/Upload";
 import AddClass from "../pages/protected/AddClass/AddClass";
 import Classroom from "../pages/protected/Classroom/Classroom";
+import TestList from "../pages/protected/Test/TestList/TestList";
+import JoinClass from "../pages/protected/Classroom/Join/JoinClassroom";
 
 const AppRoute: React.FC = () => {
   return (
@@ -34,15 +36,17 @@ const AppRoute: React.FC = () => {
         <Route path="/explain-me" element={<ExplainMe />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/exam-list" element={<ExamList />} />
+        <Route path="/tests" element={<TestList />} />
         <Route path="upload" element={<Upload />} />
         <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/classroom" element={<Classroom />} />
         <Route path="/add-class" element={<AddClass />} />
+        <Route path="join-class" element={<JoinClass />} />
       </Route>
 
       {/* Test Routes */}
       <Route element={<TestLayouts />}>
-        <Route path="/test" element={<TestScreen />} />
+        <Route path="/test/:id" element={<TestScreen />} />
       </Route>
 
       <Route element={<ChatLayouts />}>
