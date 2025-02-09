@@ -2,7 +2,7 @@
     height: 100vh;
     border-right: 1px solid #dee2e6;
     transition: all 0.3s;
-    background-color: #f8f9fa;
+    background-color: #1e45f7;
     padding: 1rem;
     position: relative;
 }
@@ -15,11 +15,11 @@
     margin-top: 1rem;
 }
 
-.navLink {
+.navLink {  
     display: flex;
     align-items: center;
     padding: 0.5rem 1rem;
-    color: #333;
+    color: #ffffff;
     text-decoration: none;
     transition: all 0.3s;
 }
@@ -29,7 +29,7 @@
 }
 
 .navLink.active {
-    background-color: #007bff;
+    background-color: #b7b9bb;
     color: white;
 }
 

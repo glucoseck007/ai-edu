@@ -6,6 +6,7 @@ interface ChatbotState {
   loading: boolean;
   error: string | null;
   ws: WebSocket | null;
+  errorStatus: number | null;
 }
 
 const initialState: ChatbotState = {
@@ -13,13 +14,14 @@ const initialState: ChatbotState = {
   loading: false,
   error: null,
   ws: null,
+  errorStatus: null,
 };
 
 // Async Thunk for Text-Based Chat
 export const fetchChatbotResponse = createAsyncThunk(
   "chatbot/fetchResponse",
   async (
-    { student_code, subject, question }: { student_code: any; subject: String; question: string | Blob },
+    { student_code, subject, question }: { student_code: any; subject: string; question: string | Blob },
     { rejectWithValue }
   ) => {
     try {
@@ -38,13 +40,16 @@ export const fetchChatbotResponse = createAsyncThunk(
       if (chatbotResponse) {
         return chatbotResponse;
       } else {
-        return rejectWithValue("No response from chatbot");
+        return rejectWithValue({
+          message: "No response from chatbot",
+          status: 404
+        });
       }
     } catch (error: any) {
-      return rejectWithValue(
-        error?.response?.data?.message ||
-        "An error occurred while fetching chatbot response"
-      );
+      return rejectWithValue({
+        message: error?.response?.data?.message || "An error occurred while fetching chatbot response",
+        status: error?.response?.status || 500
+      });
     }
   }
 );
@@ -72,6 +77,7 @@ const chatbotSlice = createSlice({
         ws.onerror = (error) => {
           console.error("WebSocket Error:", error);
           state.error = "WebSocket error occurred";
+          state.errorStatus = 1006;
         };
 
         ws.onclose = () => {
@@ -89,6 +95,7 @@ const chatbotSlice = createSlice({
       } else {
         console.error("WebSocket not connected");
         state.error = "WebSocket not connected";
+        state.errorStatus = 1015;
       }
     },
     closeWebSocket: (state) => {
@@ -103,6 +110,7 @@ const chatbotSlice = createSlice({
       .addCase(fetchChatbotResponse.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.errorStatus = null;
       })
       .addCase(
         fetchChatbotResponse.fulfilled,
@@ -110,6 +118,7 @@ const chatbotSlice = createSlice({
           console.log("Bot Response Received:", action.payload);
           state.loading = false;
           state.response = action.payload;
+          state.errorStatus = null;
         }
       )
       .addCase(fetchChatbotResponse.rejected, (state, action) => {
