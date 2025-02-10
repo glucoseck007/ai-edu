@@ -1,3 +1,5 @@
+import Logo from "../../assets/images/logo.png";
+
 function Footer() {
     return (
         <footer id="footer-part">
@@ -7,7 +9,7 @@ function Footer() {
                         <div className="col-lg-4 col-md-6">
                             <div className="footer-about mt-40">
                                 <div className="logo">
-                                    <a href="#"><img src="./src/assets/images/logo-future-me.png" alt="Logo" /></a>
+                                    <a href="#"><img src={Logo}/></a>
                                 </div>
                                 <p>Gravida nibh vel velit auctor aliquetn quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate.</p>
                                 <ul className="mt-20">

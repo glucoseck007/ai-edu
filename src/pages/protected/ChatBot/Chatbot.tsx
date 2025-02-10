@@ -6,8 +6,9 @@ import { Mic, Send, Square } from "lucide-react"
 import { Container, Row, Col, Card, Form, Button, Nav, Image } from "react-bootstrap"
 import "./StudentChatBot.scss"
 import ChatBotImg from "../../../assets/images/Chatbot.jpg";
-import StudentImg from "../../../assets/images/Student.jpg";
+import StudentImg from "../../../assets/images/student.jpg";
 import { Calculator, Atom, FlaskConical, BookOpen, Landmark } from "lucide-react";
+import ChatBotSidebarComponent from "../../../components/sidebar/ChatbotSideBar"
 
 interface Message {
   id: number
@@ -30,12 +31,16 @@ const StudentChatBot: React.FC = () => {
   const [loadingResponse, setLoadingResponse] = useState<boolean>(false);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
+  //Sửa
+
   const subjects = [
     { id: "math", name: "Toán học", icon: <Calculator /> },
-    { id: "physics", name: "Vật lý", icon: <Atom /> },
-    { id: "chemistry", name: "Hóa học", icon: <FlaskConical /> },
-    { id: "literature", name: "Văn học", icon: <BookOpen /> },
     { id: "history", name: "Lịch sử", icon: <Landmark /> },
+    { id: "english", name: "Tiêng anh", icon: <Landmark /> },
+    { id: "geography", name: "Địa lý", icon: <Landmark /> },
+    { id: "physics", name: "Khoa học", icon: <Atom /> },
+    { id: "literature", name: "Văn học", icon: <BookOpen /> },
+    
   ]
 
   useEffect(() => {
@@ -203,8 +208,12 @@ const StudentChatBot: React.FC = () => {
 
   return (
     <Container fluid className="chat-container">
+      //Sửa
       <Row className="h-100">
-        <Col md={12} className="p-0">
+        <Col md={2}>
+          <ChatBotSidebarComponent />
+        </Col>
+        <Col md={10} className="p-0">
           <Card className="chat-card">
             <Card.Header>
               <h4 className="mb-0">Student Chat Bot</h4>

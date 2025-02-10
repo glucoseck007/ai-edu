@@ -17,7 +17,7 @@ function WhyChooseUs({ title, subtitle, features }: WhyChooseUsProps) {
   return (
     <div className="container text-center my-5 whychooseus" style={{ height: "80vh" }}>
       <h2 className="fw-bold">
-        {title} <span className="text-warning">Future Me</span>
+        {title} <span className="text-warning">Smart Kids</span>
       </h2>
       <p className="text-muted">{subtitle}</p>
       <div className="row g-4 mt-4">

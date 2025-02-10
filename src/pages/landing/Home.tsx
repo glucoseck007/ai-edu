@@ -7,7 +7,7 @@ function Home() {
   const whyChooseUsData = {
     title: "Vì sao bạn nên chọn",
     subtitle:
-      "Với những tính năng hữu ích và thú vị, Future Me tin rằng bạn sẽ có một trải nghiệm tuyệt vời.",
+      "Với những tính năng hữu ích và thú vị, Smart Kids tin rằng bạn sẽ có một trải nghiệm tuyệt vời.",
     features: [
       {
         id: 1,

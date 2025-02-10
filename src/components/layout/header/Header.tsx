@@ -10,7 +10,8 @@ import { useTranslation } from "react-i18next";
 
 import LoadingLink from "../../common/links/LoadingLink";
 import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
+import {DropdownButton} from "react-bootstrap";  
+import AppLogo from "../../../assets/images/logo.png";
 
 function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,7 +39,7 @@ function Header() {
                   <li>
                     <LoadingLink to="/" style={{ textDecoration: "none" }}>
                       <img
-                        src="/src/assets/images/logo-future-me.png"
+                        src={AppLogo}
                         alt="Logo"
                         width="120px"
                       />
@@ -86,7 +87,7 @@ function Header() {
                     </li>
                     <li className="nav-item">
                       <LoadingLink
-                        to="/chat-bot"
+                        to="/student/chat-bot"
                         style={{ textDecoration: "none" }}
                       >
                         {t("homePage.header.chatBot")}
