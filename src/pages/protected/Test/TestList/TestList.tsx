@@ -4,32 +4,36 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import CustomButton from "../../../../components/common/button/custom-button/Custom-Button";
 
 import "./testlist.css";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/store";
 
 const TestList: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const auth = useSelector((state: RootState) => state.auth);
   const [tests] = useState([
     {
       id: 1,
-      title: "Test 1",
-      createdBy: "John Doe",
+      title: "Bài thi 1",
+      createdBy: "Nguyễn Văn A",
       totalTime: 60, // in minutes
-      subject: "Mathematics",
-      grade: "10",
+      subject: "Toán",
+      grade: "3",
     },
     {
       id: 2,
-      title: "Test 2",
-      createdBy: "Jane Smith",
+      title: "Bài thi 2",
+      createdBy: "Nguyễn Văn B",
       totalTime: 45,
-      subject: "Physics",
-      grade: "11",
+      subject: "Tiếng Anh",
+      grade: "4",
     },
     {
       id: 3,
-      title: "Test 3",
-      createdBy: "Mike Johnson",
+      title: "Bài thi 3",
+      createdBy: "Nguyễn Văn C",
       totalTime: 90,
-      subject: "Chemistry",
-      grade: "12",
+      subject: "Lịch sử",
+      grade: "5",
     },
   ]);
   const navigate = useNavigate();
@@ -61,23 +65,24 @@ const TestList: React.FC = () => {
                 <Card.Title>{test.title}</Card.Title>
                 <Card.Text>
                   <div className="mb-2">
-                    <strong>Created by:</strong> {test.createdBy}
+                    <strong>Tạo bởi:</strong> {test.createdBy}
                   </div>
                   <div className="mb-2">
-                    <strong>Total Time:</strong> {test.totalTime} minutes
+                    <strong>Thời gian:</strong> {test.totalTime} phút
                   </div>
                   <div className="mb-2">
-                    <strong>Subject:</strong> {test.subject}
+                    <strong>Môn học:</strong> {test.subject}
                   </div>
                   <div className="mb-2">
-                    <strong>Grade:</strong> {test.grade}
+                    <strong>Lớp:</strong> {test.grade}
                   </div>
                 </Card.Text>
                 <Button
                   variant="primary"
                   onClick={() => navigate(`/test/${test.id}`)}
                 >
-                  Take Test
+                  {auth.user?.roles[0]==="teacher"?"Đánh giá":"Tham gia"}
+                  
                 </Button>
               </Card.Body>
             </Card>

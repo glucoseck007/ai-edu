@@ -60,38 +60,20 @@ const UploadQuiz: React.FC = () => {
     if (!selectedFile) {
       alert("Please select a file to upload.");
       return;
-    }
-
-    // Convert file to Base64
-    const fileToBase64 = (file: File) => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-      });
     };
 
-    const base64File = await fileToBase64(selectedFile);
-    const base64Data = base64File.split(",")[1]; // Remove the data URL prefix
-
-    const requestBody = {
-      classroomId: classroomId, // Replace with actual classroom ID
-      subject: subject,
-      fileData: atob(base64Data)
-        .split("")
-        .map((char) => char.charCodeAt(0)), // Convert Base64 to byte[]
-      fileName: selectedFile.name,
-      fileType: selectedFile.type,
-    };
+    const formData = new FormData();
+    formData.append("file",selectedFile);
+    formData.append("classroomId",classroomId??"");
+    formData.append("subject",subject);
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API}/classroom-content/upload_for_quiz`,
-        requestBody,
+        `${import.meta.env.VITE_AI_API}/upload_for_quiz`,
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -99,6 +81,7 @@ const UploadQuiz: React.FC = () => {
       console.log("File uploaded successfully:", response.data);
       alert("File uploaded successfully.");
       setSelectedFile(null);
+      console.log("Check response:",response.data);
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("There was an error uploading the file.");
@@ -127,8 +110,8 @@ const UploadQuiz: React.FC = () => {
                     <Dropdown.Toggle variant="primary" id="dropdown-basic">
                       {subject ? (
                         <>
-                          {subjects.find((s) => s.id === subject)?.icon} &nbsp;
-                          {subjects.find((s) => s.id === subject)?.name}
+                          {subjects.find((s) => s.name === subject)?.icon} &nbsp;
+                          {subjects.find((s) => s.name === subject)?.name}
                         </>
                       ) : (
                         "Chọn môn học"
@@ -137,7 +120,7 @@ const UploadQuiz: React.FC = () => {
 
                     <Dropdown.Menu>
                       {subjects.map((subj) => (
-                        <Dropdown.Item key={subj.id} onClick={() => handleSubjectSelect(subj.id)}>
+                        <Dropdown.Item key={subj.id} onClick={() => handleSubjectSelect(subj.name)}>
                           {subj.icon} &nbsp; {subj.name}
                         </Dropdown.Item>
                       ))}

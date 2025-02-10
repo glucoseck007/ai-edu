@@ -86,7 +86,7 @@ function Header() {
                     </li>
                     <li className="nav-item">
                       <LoadingLink
-                        to="/student/chat-bot"
+                        to={auth.user?.roles[0]==="teacher"?"/teacher/chat-bot":"/student/chat-bot"}
                         style={{ textDecoration: "none" }}
                       >
                         {t("homePage.header.chatBot")}
