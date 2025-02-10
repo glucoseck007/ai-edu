@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "../../../redux/store"
 import { closeWebSocket, fetchChatbotResponse, initializeWebSocket } from "../../../redux/slices/chatbotSlice"
-import { Mic, Send, Square } from "lucide-react"
+import { Book, Globe, Library, Mic, Send, Square } from "lucide-react"
 import { Container, Row, Col, Card, Form, Button, Nav, Image } from "react-bootstrap"
 import "./StudentChatBot.scss"
 import ChatBotImg from "../../../assets/images/Chatbot.jpg";
@@ -31,16 +31,13 @@ const StudentChatBot: React.FC = () => {
   const [loadingResponse, setLoadingResponse] = useState<boolean>(false);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
-  //Sửa
-
   const subjects = [
     { id: "math", name: "Toán học", icon: <Calculator /> },
     { id: "history", name: "Lịch sử", icon: <Landmark /> },
-    { id: "english", name: "Tiêng anh", icon: <Landmark /> },
-    { id: "geography", name: "Địa lý", icon: <Landmark /> },
-    { id: "physics", name: "Khoa học", icon: <Atom /> },
-    { id: "literature", name: "Văn học", icon: <BookOpen /> },
-    
+    { id: "english", name: "Tiếng Anh", icon: <Book /> },
+    { id: "geography", name: "Địa lý", icon: <Globe /> },
+    { id: "physics", name: "Khoa học", icon: <FlaskConical /> },
+    { id: "literature", name: "Văn học", icon: <Library /> },
   ]
 
   useEffect(() => {
@@ -208,12 +205,9 @@ const StudentChatBot: React.FC = () => {
 
   return (
     <Container fluid className="chat-container">
-      //Sửa
-      <Row className="h-100">
-        <Col md={2}>
-          <ChatBotSidebarComponent />
-        </Col>
-        <Col md={10} className="p-0">
+      <Row className="h-100 gx-0">
+        <ChatBotSidebarComponent />
+        <Col className="p-0 m-0">
           <Card className="chat-card">
             <Card.Header>
               <h4 className="mb-0">Student Chat Bot</h4>
@@ -255,7 +249,7 @@ const StudentChatBot: React.FC = () => {
                                 size="sm"
                                 // className="ms-2"
                                 onClick={() => handleRetry(message)}
-                                style={{ width: "20%"}}
+                                style={{ width: "20%" }}
                               >
                                 Retry
                               </Button>

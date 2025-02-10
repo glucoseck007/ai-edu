@@ -7,6 +7,7 @@ import { Container, Row, Col, Card, Form, Button, Image } from "react-bootstrap"
 import "../StudentChatBot.scss"
 import ChatBotImg from "../../../../assets/images/Chatbot.jpg";
 import TeacherImg from "../../../../assets/images/teacher.jpg";
+import ChatBotSidebarComponent from "../../../../components/sidebar/ChatbotSideBar"
 
 interface Message {
     id: number
@@ -192,8 +193,9 @@ const StudentChatBot: React.FC = () => {
 
     return (
         <Container fluid className="chat-container">
-            <Row className="h-100">
-                <Col md={12} className="p-0">
+            <Row className="h-100 gx-0">
+                <ChatBotSidebarComponent />
+                <Col className="p-0 m-0">
                     <Card className="chat-card">
                         <Card.Header>
                             <h4 className="mb-0">Student Chat Bot</h4>
@@ -261,7 +263,7 @@ const StudentChatBot: React.FC = () => {
                     </Card>
                 </Col>
             </Row>
-        </Container>
+        </Container >
     )
 }
 

@@ -36,15 +36,14 @@ function Header() {
             <div className="col-lg-2 col-md-2 col-sm-3 col-4">
               <div className="right-icon">
                 <ul>
-                  <li>
                     <LoadingLink to="/" style={{ textDecoration: "none" }}>
                       <img
                         src={AppLogo}
                         alt="Logo"
                         width="120px"
+                        className="mt-2"
                       />
                     </LoadingLink>
-                  </li>
                 </ul>
               </div>
             </div>

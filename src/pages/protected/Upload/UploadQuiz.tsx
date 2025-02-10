@@ -10,6 +10,7 @@ import React, { useRef, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
 import axios from "axios";
+import { Book, Calculator, FlaskConical, Globe, Landmark, Library } from "lucide-react";
 
 const UploadQuiz: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -19,6 +20,19 @@ const UploadQuiz: React.FC = () => {
   const query = useQuery();
   console.log(query);
   const classroomId = query.get("classroomId");
+
+  const subjects = [
+    { id: "math", name: "Toán học", icon: <Calculator /> },
+    { id: "history", name: "Lịch sử", icon: <Landmark /> },
+    { id: "english", name: "Tiếng Anh", icon: <Book /> },
+    { id: "geography", name: "Địa lý", icon: <Globe /> },
+    { id: "physics", name: "Khoa học", icon: <FlaskConical /> },
+    { id: "literature", name: "Văn học", icon: <Library /> },
+  ]
+
+  const handleSubjectSelect = (subjectName: string) => {
+    setSubject(subjectName);
+  };
 
   const handleFileSelect = () => {
     if (fileInputRef.current) {
@@ -105,18 +119,30 @@ const UploadQuiz: React.FC = () => {
                 <span className="text-yellow">Đăng</span> khung tài liệu cho đề
                 thi
               </h3>
-              //Dropdown môn như chatbot
+
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="title">Môn học</label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subjectt"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    required
-                  />
+                  <Dropdown>
+                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                      {subject ? (
+                        <>
+                          {subjects.find((s) => s.id === subject)?.icon} &nbsp;
+                          {subjects.find((s) => s.id === subject)?.name}
+                        </>
+                      ) : (
+                        "Chọn môn học"
+                      )}
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      {subjects.map((subj) => (
+                        <Dropdown.Item key={subj.id} onClick={() => handleSubjectSelect(subj.id)}>
+                          {subj.icon} &nbsp; {subj.name}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
 
                 <Dropdown>

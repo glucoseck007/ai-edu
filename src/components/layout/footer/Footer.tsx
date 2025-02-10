@@ -11,7 +11,7 @@ function Footer() {
                                 <div className="logo">
                                     <a href="#" className="text-decoration-none"><img src={Logo} alt="Logo" /></a>
                                 </div>
-                                <p>Hỗ trợ học sinh cấp 1 học tập</p>
+                                <p className="text-center">Hỗ trợ học sinh cấp 1 học tập</p>
                                 <ul className="mt-20">
                                     <li><a href="#" className="text-decoration-none"><i className="fa fa-facebook-f"></i></a></li>
                                     <li><a href="#" className="text-decoration-none"><i className="fa fa-twitter"></i></a></li>
@@ -66,7 +66,7 @@ function Footer() {
                                             <i className="fa fa-home"></i>
                                         </div>
                                         <div className="cont">
-                                            <p>143 castle road 517 district, kiyev port south Canada</p>
+                                            <p>Smart Kids</p>
                                         </div>
                                     </li>
                                     <li>

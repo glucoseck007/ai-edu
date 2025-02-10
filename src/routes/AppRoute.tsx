@@ -57,11 +57,12 @@ const AppRoute: React.FC = () => {
       {/* Test Routes */}
       <Route element={<TestLayouts />}>
         <Route path="/test/:id" element={<TestScreen />} />
+        <Route path="student/chat-bot" element={<StudentChatBot />}></Route>
+        <Route path="teacher/chat-bot" element={<TeacherChatBot />} />
       </Route>
 
       <Route element={<ChatLayouts />}>
-        <Route path="student/chat-bot" element={<StudentChatBot />}></Route>
-        <Route path="teacher/chat-bot" element={<TeacherChatBot />} />
+
       </Route>
     </Routes>
   );

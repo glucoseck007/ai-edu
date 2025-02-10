@@ -57,7 +57,7 @@ function Carousel() {
     <section id="slider-part" className="slider-active">
       <div
         className="single-slider bg_cover pt-150"
-        style={{ backgroundImage: "url(./src/assets/images/slider/s-1.jpg)" }}
+        style={{ backgroundImage: "url(./src/assets/images/bg1.png)" }}
         data-overlay="4"
       >
         <div className="container">
@@ -81,30 +81,7 @@ function Carousel() {
 
       <div
         className="single-slider bg_cover pt-150"
-        style={{ backgroundImage: "url(./src/assets/images/slider/s-2.jpg)" }}
-        data-overlay="4"
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-xl-7 col-lg-9">
-              <div className="slider-cont">
-                <h1 data-animation="bounceInLeft" data-delay="1s">
-                  Học Vui – Chơi Hay, Bé Thông Minh Mỗi Ngày!
-                </h1>
-                <p data-animation="fadeInUp" data-delay="1.3s">
-                  Website học tập cho trẻ – Nơi bé vừa học vừa chơi, phát triển
-                  tư duy sáng tạo với bài giảng sinh động, trò chơi trí tuệ và
-                  hoạt động tương tác thú vị!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="single-slider bg_cover pt-150"
-        style={{ backgroundImage: "url(./src/assets/images/slider/s-3.jpg)" }}
+        style={{ backgroundImage: "url(./src/assets/images/bg2.png)" }}
         data-overlay="4"
       >
         <div className="container">
