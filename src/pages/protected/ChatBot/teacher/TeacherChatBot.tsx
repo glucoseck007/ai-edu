@@ -198,7 +198,7 @@ const StudentChatBot: React.FC = () => {
                 <Col className="p-0 m-0">
                     <Card className="chat-card">
                         <Card.Header>
-                            <h4 className="mb-0">Student Chat Bot</h4>
+                            <h4 className="mb-0">Teacher Chat Bot</h4>
                         </Card.Header>
                         <Card.Body className="chat-body">
                             <div className="messages-container">

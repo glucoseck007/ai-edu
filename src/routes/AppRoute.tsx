@@ -23,6 +23,7 @@ import TestList from "../pages/protected/Test/TestList/TestList";
 import JoinClass from "../pages/protected/Classroom/Join/JoinClassroom";
 import TeacherChatBot from "../pages/protected/ChatBot/teacher/TeacherChatBot";
 import SuperAdminDashboard from "../pages/protected/Admin/Dashboard/Dashboard";
+import ReviewTest from "../pages/protected/Test/ReviewTest/ReviewTest";
 
 const AppRoute: React.FC = () => {
   return (
@@ -45,6 +46,7 @@ const AppRoute: React.FC = () => {
         <Route path="upload-quiz" element={<UploadQuiz />} />
         <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/classroom" element={<Classroom />} />
+        <Route path="/teacher/review-test" element={<ReviewTest />} />
         <Route
           path="/classroom/classroom-detail"
           element={<ClassroomDetail />}

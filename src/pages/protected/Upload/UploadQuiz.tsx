@@ -79,6 +79,7 @@ const UploadQuiz: React.FC = () => {
       );
 
       console.log("File uploaded successfully:", response.data);
+      localStorage.setItem("quiz", JSON.stringify(response.data));
       alert("File uploaded successfully.");
       setSelectedFile(null);
       console.log("Check response:",response.data);
