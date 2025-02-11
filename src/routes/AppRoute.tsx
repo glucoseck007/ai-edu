@@ -24,6 +24,8 @@ import JoinClass from "../pages/protected/Classroom/Join/JoinClassroom";
 import TeacherChatBot from "../pages/protected/ChatBot/teacher/TeacherChatBot";
 import SuperAdminDashboard from "../pages/protected/Admin/Dashboard/Dashboard";
 import ReviewTest from "../pages/protected/Test/ReviewTest/ReviewTest";
+import StudentProfile from "../pages/protected/User/Student/StudentProfile";
+import TeacherProfile from "../pages/protected/User/Teacher/TeacherProfile";
 
 const AppRoute: React.FC = () => {
   return (
@@ -47,6 +49,8 @@ const AppRoute: React.FC = () => {
         <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/classroom" element={<Classroom />} />
         <Route path="/teacher/review-test" element={<ReviewTest />} />
+        <Route path="/student/profile/:id" element={<StudentProfile />} />
+        <Route path="/teacher/profile/:id" element={<TeacherProfile />} />
         <Route
           path="/classroom/classroom-detail"
           element={<ClassroomDetail />}
