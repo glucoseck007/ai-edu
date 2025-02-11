@@ -7,7 +7,7 @@ import {
 import { faGoogleDrive } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
 import axios from "axios";
 import { Book, Calculator, FlaskConical, Globe, Landmark, Library } from "lucide-react";
@@ -19,6 +19,7 @@ const UploadQuiz: React.FC = () => {
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   const classroomId = query.get("classroomId");
+  const navigate = useNavigate();
 
   const subjects = [
     { id: "math", name: "Toán học", icon: <Calculator /> },
@@ -82,6 +83,7 @@ const UploadQuiz: React.FC = () => {
       localStorage.setItem("quiz", JSON.stringify(response.data));
       alert("File uploaded successfully.");
       setSelectedFile(null);
+      navigate("/teacher/review-test");
       console.log("Check response:",response.data);
     } catch (error) {
       console.error("Error uploading file:", error);

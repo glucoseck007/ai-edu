@@ -4,18 +4,7 @@ import {
   Row,
   Col,
   Button,
-  Overlay,
-  Popover,
 } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBookmark as faBookmarkSolid,
-  faCircleExclamation,
-  faClock,
-  faFileHalfDashed,
-  faLocationDot,
-} from "@fortawesome/free-solid-svg-icons";
-import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
 import { numberToLetter } from "../../../../utils/Converters";
 
 const ReadingWritingModule: React.FC = () => {
@@ -156,7 +145,6 @@ const ReadingWritingModule: React.FC = () => {
                     <span className="text-dark">{value.Question}</span>
                   </div>
                 </div>
-
               </Col>
               <Col md={6} className="px-4 d-flex flex-column">
                 {/* Main Question Content */}
