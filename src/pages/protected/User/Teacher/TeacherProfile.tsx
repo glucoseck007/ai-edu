@@ -83,7 +83,7 @@ const TeacherProfile = () => {
                                     <Tab.Pane eventKey="classes">
                                         <ListGroup variant="flush">
                                             {instructor.classes.map((class_) => (
-                                                <ListGroup.Item key={class_.id} className="class-item" onClick={() => { navigate(`/classroom/classroom-detail?classroomId=${class_.id}`); }}>
+                                                <ListGroup.Item key={class_.id} className="class-item" onClick={() => { navigate(`/teacher/class-detail?classroomId=${class_.id}`); }}>
                                                     <div className="d-flex justify-content-between align-items-center">
                                                         <div>
                                                             <h5 className="mb-1">{class_.title}</h5>

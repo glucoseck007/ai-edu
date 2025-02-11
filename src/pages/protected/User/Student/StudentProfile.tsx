@@ -3,8 +3,10 @@ import { Container, Row, Col, Card, Badge, Tabs, Tab, Nav } from "react-bootstra
 import { BookOpen, CheckCircle, ClipboardList } from "lucide-react";
 import { format } from "date-fns";
 import "./StudentProfile.scss";
+import { useNavigate } from "react-router-dom";
 
 const StudentProfile = () => {
+    const navigate = useNavigate();
     const student = {
         name: "Sarah Smith",
         grade: "Grade 3",
@@ -71,7 +73,7 @@ const StudentProfile = () => {
                     <Tab.Pane eventKey="classes">
                         <div className="mb-4">
                             {student.classes.map((classItem) => (
-                                <Card key={classItem.id} className="mb-3 class-card">
+                                <Card key={classItem.id} className="mb-3 class-card" onClick={() => { navigate(`/student/class-detail?classroomId=${classItem.id}`); }}>
                                     <Card.Body>
                                         <div className="d-flex justify-content-between align-items-center mb-2">
                                             <h5 className="class-title">{classItem.title}</h5>
