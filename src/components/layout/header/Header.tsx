@@ -23,10 +23,13 @@ function Header() {
     try {
       await dispatch(logout()).unwrap();
       navigate("/login");
+      window.location.reload();
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
+
+  console.log("Check user id: ",auth.user?.id??"Not exist");
 
   return (
     <header id="header-part">
@@ -125,7 +128,7 @@ function Header() {
                         className="user-dropdown"
                         title={<FontAwesomeIcon icon={faUser} />}
                       >
-                        <Dropdown.Item href={auth.user?.roles[0] === "teacher" ? "/teacher/profile/" : "/student/profile/"+ auth.user?.id}>
+                        <Dropdown.Item href={auth.user?.roles[0] === "teacher" ? `/teacher/profile/${auth.user.id}` : `/student/profile/${auth.user.id}` }>
                           {t("homePage.dropdown.profile")}
                         </Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}>

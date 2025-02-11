@@ -110,7 +110,7 @@ const UploadQuiz: React.FC = () => {
                 <div className="form-group">
                   <label htmlFor="title">Môn học</label>
                   <Dropdown>
-                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                    <Dropdown.Toggle style={{backgroundColor:"rgb(45, 100, 159)"}} id="dropdown-basic">
                       {subject ? (
                         <>
                           {subjects.find((s) => s.name === subject)?.icon} &nbsp;
@@ -132,7 +132,7 @@ const UploadQuiz: React.FC = () => {
                 </div>
 
                 <Dropdown>
-                  <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  <Dropdown.Toggle style={{backgroundColor:"rgb(45, 100, 159)"}} id="dropdown-basic">
                     <FontAwesomeIcon icon={faPaperclip} className="me-2" />
                     Chọn Tệp
                   </Dropdown.Toggle>
@@ -178,7 +178,7 @@ const UploadQuiz: React.FC = () => {
                 )}
 
                 <Button
-                  variant="primary"
+                  style={{backgroundColor:"rgb(45, 100, 159)"}}
                   type="submit"
                   className="mt-3"
                   disabled={!selectedFile}

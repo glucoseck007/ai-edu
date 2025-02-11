@@ -207,11 +207,11 @@ function TeacherClassroomDetail() {
 
       {/* Tab Navigation */}
       <Tabs defaultActiveKey="classroom-data" id="classroom-tabs" className="mb-3">
-        <Tab eventKey="classroom-data" title="Classroom Data">
+        <Tab eventKey="classroom-data" title="Classroom Data" style={{borderBottom:"2px solidrgb(41, 119, 202)"}}>
           <div className="classroom-detail-container my-2">
             <Button
               className="mb-3"
-              variant="primary"
+              style={{backgroundColor:"#07294d"}}
               onClick={() => setShowAddModal(true)}
             >
               <FontAwesomeIcon icon={faPlus} className="me-2" />

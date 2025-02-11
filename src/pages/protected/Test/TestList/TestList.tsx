@@ -78,7 +78,7 @@ const TestList: React.FC = () => {
                   </div>
                 </Card.Text>
                 <Button
-                  variant="primary"
+                  style={{backgroundColor:"rgb(45, 100, 159)"}}
                   onClick={() => navigate(`/test/${test.id}`)}
                 >
                   {auth.user?.roles[0]==="teacher"?"Đánh giá":"Tham gia"}
