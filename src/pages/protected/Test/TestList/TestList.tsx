@@ -44,18 +44,21 @@ const TestList: React.FC = () => {
 
   return (
     <Container className="my-4">
-      <div className="button-create-test">
-        <CustomButton
-          width="400px"
-          height="31px"
-          border="1px solid #1A61CF;"
-          title="Tạo đề thi với AI"
-          color="black"
-          backgroundColor="transparent"
-          icon="../src/assets/images/all-icon/lock.svg"
-          onClick={handleCreateTest}
-        />
-      </div>
+      {auth.user?.roles[0] === "teacher" && (
+        <div className="button-create-test">
+          <CustomButton
+            width="400px"
+            height="31px"
+            border="1px solid #1A61CF;"
+            title="Tạo đề thi với AI"
+            color="black"
+            backgroundColor="transparent"
+            icon="../src/assets/images/all-icon/lock.svg"
+            onClick={handleCreateTest}
+          />
+        </div>
+      )}
+
 
       <Row xs={1} md={3} className="g-4">
         {tests.map((test) => (
@@ -78,18 +81,18 @@ const TestList: React.FC = () => {
                   </div>
                 </Card.Text>
                 <Button
-                  style={{backgroundColor:"rgb(45, 100, 159)"}}
+                  style={{ backgroundColor: "rgb(45, 100, 159)" }}
                   onClick={() => navigate(`/test/${test.id}`)}
                 >
-                  {auth.user?.roles[0]==="teacher"?"Đánh giá":"Tham gia"}
-                  
+                  {auth.user?.roles[0] === "teacher" ? "Đánh giá" : "Tham gia"}
+
                 </Button>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
-    </Container>
+    </Container >
   );
 };
 

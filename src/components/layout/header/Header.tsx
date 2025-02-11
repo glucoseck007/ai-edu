@@ -101,15 +101,62 @@ function Header() {
                   <div className="collapse navbar-collapse sub-menu-bar justify-content-end">
                     <ul className="navbar-nav align-items-center">
                       <li className="nav-item">
-                        <LoadingLink className="active" to="/" style={{ textDecoration: "none" }}>
+                        <LoadingLink to="/" style={{ textDecoration: "none" }}>
                           {t("homePage.header.home")}
                         </LoadingLink>
                       </li>
-                      <li className="nav-item">
-                        <Button variant="white" onClick={() => setShowModal(true)}>
-                          Tham gia lớp học
-                        </Button>
-                      </li>
+                      {
+                        auth.user?.roles[0] !== "student" && (
+                          <>
+                            <li>
+                              <LoadingLink to="/tests">
+                                Kiểm tra
+                              </LoadingLink>
+                            </li>
+                            <li>
+                              <LoadingLink to="/teacher/chat-bot">
+                                Chat Bot
+                              </LoadingLink>
+                            </li>
+                            <li className="nav-item">
+                              <div className="dropdown">
+                                <LoadingLink to="/classroom">Lớp học</LoadingLink>
+                                <div className="dropdown-content">
+                                  {/* <LoadingLink to="/join-class">Tham gia</LoadingLink> */}
+                                  <Button variant="white" onClick={() => setShowModal(true)}>
+                                    Tham gia lớp học
+                                  </Button>
+                                </div>
+                              </div>
+                            </li>
+                          </>
+                        )}
+                      {auth.user?.roles[0] === "teacher" && (
+                        <>
+                          <li>
+                            <LoadingLink to="/tests">
+                              Tạo bài thi
+                            </LoadingLink>
+                          </li>
+                          <li>
+                            <LoadingLink to="/teacher/chat-bot">
+                              Chat Bot
+                            </LoadingLink>
+                          </li>
+                          <li className="nav-item">
+                            <div className="dropdown">
+                              <LoadingLink to="/classroom">Lớp học</LoadingLink>
+                              <div className="dropdown-content">
+                                <LoadingLink to="/join-class">Tham gia</LoadingLink>
+                                {auth.user?.roles.includes("teacher") && (
+                                  <LoadingLink to="/add-class">Tạo mới</LoadingLink>
+                                )}
+                              </div>
+                            </div>
+                          </li>
+                        </>
+                      )
+                      }
                       {auth.user ? (
                         <DropdownButton id="dropdown-basic-button" className="user-dropdown" title={<FontAwesomeIcon icon={faUser} />}>
                           <Dropdown.Item href={`/profile/${auth.user?.id}`}>{t("homePage.dropdown.profile")}</Dropdown.Item>
