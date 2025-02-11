@@ -28,6 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "classix": "^2.2.1",
     "cmdk": "^1.0.4",
+    "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
     "flag-icons": "^7.2.3",
     "framer-motion": "^12.0.6",

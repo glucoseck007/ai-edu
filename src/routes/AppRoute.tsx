@@ -18,7 +18,7 @@ import Upload from "../pages/protected/Upload/Upload";
 import UploadQuiz from "../pages/protected/Upload/UploadQuiz";
 import AddClass from "../pages/protected/AddClass/AddClass";
 import Classroom from "../pages/protected/Classroom/Classroom";
-import ClassroomDetail from "../pages/protected/Classroom/ClassroomDetail/ClassroomDetail";
+import StudentClassroomDetail from "../pages/protected/Classroom/StudentClassroomDetail/StudentClassroomDetail";
 import TestList from "../pages/protected/Test/TestList/TestList";
 import JoinClass from "../pages/protected/Classroom/Join/JoinClassroom";
 import TeacherChatBot from "../pages/protected/ChatBot/teacher/TeacherChatBot";
@@ -26,6 +26,7 @@ import SuperAdminDashboard from "../pages/protected/Admin/Dashboard/Dashboard";
 import ReviewTest from "../pages/protected/Test/ReviewTest/ReviewTest";
 import StudentProfile from "../pages/protected/User/Student/StudentProfile";
 import TeacherProfile from "../pages/protected/User/Teacher/TeacherProfile";
+import TeacherClassroomDetail from "../pages/protected/Classroom/TeacherClassroomDetail/TeacherClassroomDetail";
 
 const AppRoute: React.FC = () => {
   return (
@@ -52,8 +53,12 @@ const AppRoute: React.FC = () => {
         <Route path="/student/profile/:id" element={<StudentProfile />} />
         <Route path="/teacher/profile/:id" element={<TeacherProfile />} />
         <Route
-          path="/classroom/classroom-detail"
-          element={<ClassroomDetail />}
+          path="/student/class-detail"
+          element={<StudentClassroomDetail />}
+        />
+        <Route
+          path="/teacher/class-detail"
+          element={<TeacherClassroomDetail />}
         />
         <Route path="/add-class" element={<AddClass />} />
         <Route path="join-class" element={<JoinClass />} />

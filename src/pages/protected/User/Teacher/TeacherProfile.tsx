@@ -2,22 +2,24 @@ import React from "react";
 import { Container, Row, Col, Card, ProgressBar, Badge, Button, ListGroup, Tab, Nav } from "react-bootstrap";
 import { Users, BookOpen, Calendar, Award, Bell, BarChart2, Clock } from "lucide-react";
 import "./TeacherProfile.scss";
+import { useNavigate } from "react-router-dom";
 
 const TeacherProfile = () => {
+    const navigate = useNavigate();
     const instructor = {
         name: "Mrs. Emily Johnson",
         subject: "Primary Education",
         yearsExperience: 8,
         totalStudents: 25,
-        upcomingClasses: [
+        classes: [
             { id: 1, title: "Mathematics", time: "09:00 AM", grade: "Grade 3", studentsCount: 22 },
             { id: 2, title: "Reading", time: "10:30 AM", grade: "Grade 3", studentsCount: 23 },
             { id: 3, title: "Science", time: "01:00 PM", grade: "Grade 3", studentsCount: 21 }
         ],
-        classPerformance: [
-            { subject: "Mathematics", averageScore: 85, improvement: "+5%" },
-            { subject: "Reading", averageScore: 78, improvement: "+3%" },
-            { subject: "Science", averageScore: 82, improvement: "+4%" }
+        tests: [
+            { id: 1, subject: "Mathematics", description: "Algebra and Geometry test", date: "Feb 15, 2025" },
+            { id: 2, subject: "Reading", description: "Comprehension and Analysis test", date: "Feb 20, 2025" },
+            { id: 3, subject: "Science", description: "Physics and Chemistry test", date: "Feb 25, 2025" }
         ],
         notifications: [
             { id: 1, type: "assignment", message: "New homework submissions to review", time: "1 hour ago" },
@@ -28,7 +30,6 @@ const TeacherProfile = () => {
 
     return (
         <Container className="py-4">
-            {/* Instructor Header */}
             <Card className="instructor-header mb-4">
                 <Card.Body>
                     <Row className="align-items-center">
@@ -59,36 +60,35 @@ const TeacherProfile = () => {
 
             <Row>
                 <Col lg={8}>
-                    <Tab.Container defaultActiveKey="schedule">
+                    <Tab.Container defaultActiveKey="classes">
                         <Card className="mb-4">
                             <Card.Header>
                                 <Nav variant="tabs">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="schedule">
+                                        <Nav.Link eventKey="classes">
                                             <Calendar size={16} className="me-1" />
-                                            Today's Schedule
+                                            Classes
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="performance">
+                                        <Nav.Link eventKey="tests">
                                             <BarChart2 size={16} className="me-1" />
-                                            Class Performance
+                                            Test List
                                         </Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </Card.Header>
                             <Card.Body>
                                 <Tab.Content>
-                                    <Tab.Pane eventKey="schedule">
+                                    <Tab.Pane eventKey="classes">
                                         <ListGroup variant="flush">
-                                            {instructor.upcomingClasses.map((class_) => (
-                                                <ListGroup.Item key={class_.id} className="class-item">
+                                            {instructor.classes.map((class_) => (
+                                                <ListGroup.Item key={class_.id} className="class-item" onClick={() => { navigate(`/classroom/classroom-detail?classroomId=${class_.id}`); }}>
                                                     <div className="d-flex justify-content-between align-items-center">
                                                         <div>
                                                             <h5 className="mb-1">{class_.title}</h5>
                                                             <p className="mb-0 text-muted">
-                                                                <Clock size={14} className="me-1" />
-                                                                {class_.time} - {class_.grade}
+                                                                {class_.grade}
                                                             </p>
                                                         </div>
                                                         <Badge bg="secondary">
@@ -100,21 +100,20 @@ const TeacherProfile = () => {
                                             ))}
                                         </ListGroup>
                                     </Tab.Pane>
-                                    <Tab.Pane eventKey="performance">
-                                        {instructor.classPerformance.map((performance) => (
-                                            <div key={performance.subject} className="mb-3">
-                                                <div className="d-flex justify-content-between mb-2">
-                                                    <span>{performance.subject}</span>
-                                                    <span className="text-success">{performance.improvement}</span>
-                                                </div>
-                                                <ProgressBar
-                                                    now={performance.averageScore}
-                                                    label={`${performance.averageScore}%`}
-                                                    variant="success"
-                                                    className="custom-progress"
-                                                />
-                                            </div>
-                                        ))}
+                                    <Tab.Pane eventKey="tests">
+                                        <Row>
+                                            {instructor.tests.map((test) => (
+                                                <Col md={6} key={test.id} className="mb-3">
+                                                    <Card className="test-card">
+                                                        <Card.Body>
+                                                            <h5 className="test-title">{test.subject}</h5>
+                                                            <p className="test-description">{test.description}</p>
+                                                            <p className="test-date text-muted">Date: {test.date}</p>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </Col>
+                                            ))}
+                                        </Row>
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Card.Body>

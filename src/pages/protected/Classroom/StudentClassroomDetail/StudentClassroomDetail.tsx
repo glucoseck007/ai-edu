@@ -7,7 +7,7 @@ import { faUpload, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "./classroom-detail.css";
 
-function ClassroomDetail() {
+function StudentClassroomDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   const [classroomData, setClassroomData] = useState(
@@ -134,4 +134,4 @@ function ClassroomDetail() {
   );
 }
 
-export default ClassroomDetail;
+export default StudentClassroomDetail;
