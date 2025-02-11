@@ -2,19 +2,23 @@ import { Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Users, BookOpen, Settings, User } from "lucide-react";
 import styles from "./AdminSideBar.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 
 const ChatBotSidebarComponent: React.FC = () => {
     const location = useLocation();
+    const dispatch = useDispatch<AppDispatch>();
+    const auth = useSelector((state: RootState) => state.auth);
 
     const navTopItems = [
         { path: "/", icon: Home },
         { path: "/tests", icon: Users },
-        { path: "/student/chat-bot", icon: BookOpen },
+        { path: `/${auth.user?.roles[0]}/chat-bot`, icon: BookOpen },
     ];
 
     const navBottomItems = [
-        { path: "/settings", icon: Settings },
-        { path: "/profile", icon: User },
+        { path: "#", icon: Settings },
+        { path: `${auth.user?.roles[0]}/profile/${auth.user?.id}`, icon: User },
     ];
 
     return (

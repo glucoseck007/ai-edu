@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Card, Tabs, Tab, Table, Modal, Button, Form } from "react-bootstrap";
+import { Card, Tabs, Tab, Table, Modal, Button, Form, Container, Row, Col } from "react-bootstrap";
 import LoadingLink from "../../../../components/common/links/LoadingLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -184,7 +184,7 @@ function TeacherClassroomDetail() {
   };
 
   return (
-    <>
+    <div>
       {/* Header */}
       <div className="classroom-detail-header">
         <div className="cluster-header">
@@ -198,81 +198,112 @@ function TeacherClassroomDetail() {
           </h1>
         </div>
         <div>
-          <LoadingLink className="upload-button" to={`/upload?classroomId=${id}`}>
-            <FontAwesomeIcon icon={faUpload} />
-            <span className="description">Tải tài liệu lên</span>
-          </LoadingLink>
+
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <Tabs defaultActiveKey="classroom-data" id="classroom-tabs" className="mb-3">
-        <Tab eventKey="classroom-data" title="Classroom Data" style={{borderBottom:"2px solidrgb(41, 119, 202)"}}>
-          <div className="classroom-detail-container my-2">
-            <Button
-              className="mb-3"
-              style={{backgroundColor:"#07294d"}}
-              onClick={() => setShowAddModal(true)}
-            >
-              <FontAwesomeIcon icon={faPlus} className="me-2" />
-              Add Assignment
-            </Button>
-            {classroomData.map((assignment) => (
-              <div className="card-holder" key={assignment.id}>
-                <Card
-                  className="my-3 assignment-card"
-                  onClick={() => {
-                    setSelectedAssignment(assignment);
-                    setShowModal(true);
+      <Tabs defaultActiveKey="classroom-data" id="classroom-tabs" className="mb-4">
+        <Tab eventKey="classroom-data" title="Classroom Data">
+          <Container className="px-0">
+            <Row className="mb-4 align-items-center">
+              <Col xs={12} sm="auto" className="mb-2 mb-sm-0">
+                <Button
+                  variant="primary"
+                  style={{
+                    backgroundColor: "#07294d",
+                    border: "none",
+                    padding: "0.5rem 1rem",
+                    fontWeight: "500"
                   }}
-                  style={{ cursor: 'pointer' }}
+                  onClick={() => setShowAddModal(true)}
                 >
-                  <Card.Header className="d-flex align-items-center">
-                    <FontAwesomeIcon icon={faUser} className="me-2" />
-                    <span>{assignment.teacher.name} đã đăng một bài tập mới</span>
-                  </Card.Header>
-                  <Card.Body>
-                    <Card.Title>{assignment.title}</Card.Title>
-                    <Card.Text className="text-muted">
-                      <FontAwesomeIcon icon={faClock} className="me-2" />
-                      Đăng lúc: {formatDate(assignment.createdAt)}
-                    </Card.Text>
-                    <Card.Text className="text-muted">
-                      <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
-                      Hạn nộp: {formatDate(assignment.deadline)}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </div>
-            ))}
-          </div>
+                  <FontAwesomeIcon icon={faPlus} className="me-2" />
+                  Add Assignment
+                </Button>
+              </Col>
+              <Col xs={12} sm="auto">
+                <LoadingLink
+                  className="btn btn-secondary"
+                  to={`/upload?classroomId=${id}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    padding: "0.5rem 1rem"
+                  }}
+                >
+                  <FontAwesomeIcon icon={faUpload} />
+                  <span>Upload Document</span>
+                </LoadingLink>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                {classroomData.map((assignment) => (
+                  <Card
+                    key={assignment.id}
+                    className="mb-3 shadow-sm"
+                    onClick={() => {
+                      setSelectedAssignment(assignment);
+                      setShowModal(true);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Card.Header className="bg-light">
+                      <div className="d-flex align-items-center">
+                        <FontAwesomeIcon icon={faUser} className="me-2 text-primary" />
+                        <span className="fw-medium">{assignment.teacher.name} posted a new assignment</span>
+                      </div>
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Title className="mb-3">{assignment.title}</Card.Title>
+                      <div className="text-muted small">
+                        <div className="mb-2">
+                          <FontAwesomeIcon icon={faClock} className="me-2" />
+                          Posted: {formatDate(assignment.createdAt)}
+                        </div>
+                        <div>
+                          <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+                          Due: {formatDate(assignment.deadline)}
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </Col>
+            </Row>
+          </Container>
         </Tab>
 
         <Tab eventKey="students" title="Students">
-          <div className="students-list-container">
-            {students.length > 0 ? (
-              <Table striped bordered hover responsive>
-                <thead>
-                  <tr>
-                    <th style={{ width: "10%" }}>#</th>
-                    <th style={{ width: "10%" }}>Tên học sinh</th>
-                    <th style={{ width: "10%" }}>Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map((student, index) => (
-                    <tr key={student.id}>
-                      <td>{index + 1}</td>
-                      <td>{student.name}</td>
-                      <td>{student.email}</td>
+          <Container className="px-0">
+            <div className="students-list-container">
+              {students.length > 0 ? (
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th style={{ width: "10%" }}>#</th>
+                      <th style={{ width: "10%" }}>Tên học sinh</th>
+                      <th style={{ width: "10%" }}>Email</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
-            ) : (
-              <p>Không có học sinh trong lớp này.</p>
-            )}
-          </div>
+                  </thead>
+                  <tbody>
+                    {students.map((student, index) => (
+                      <tr key={student.id}>
+                        <td>{index + 1}</td>
+                        <td>{student.name}</td>
+                        <td>{student.email}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <p>Không có học sinh trong lớp này.</p>
+              )}
+            </div>
+          </Container>
         </Tab>
       </Tabs>
 
@@ -362,7 +393,7 @@ function TeacherClassroomDetail() {
           <Button onClick={handleAddAssignment}>Add</Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 }
 

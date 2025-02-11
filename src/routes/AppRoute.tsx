@@ -20,7 +20,6 @@ import AddClass from "../pages/protected/AddClass/AddClass";
 import Classroom from "../pages/protected/Classroom/Classroom";
 import StudentClassroomDetail from "../pages/protected/Classroom/StudentClassroomDetail/StudentClassroomDetail";
 import TestList from "../pages/protected/Test/TestList/TestList";
-import JoinClass from "../pages/protected/Classroom/Join/JoinClassroom";
 import TeacherChatBot from "../pages/protected/ChatBot/teacher/TeacherChatBot";
 import SuperAdminDashboard from "../pages/protected/Admin/Dashboard/Dashboard";
 import ReviewTest from "../pages/protected/Test/ReviewTest/ReviewTest";
@@ -61,7 +60,6 @@ const AppRoute: React.FC = () => {
           element={<TeacherClassroomDetail />}
         />
         <Route path="/add-class" element={<AddClass />} />
-        <Route path="join-class" element={<JoinClass />} />
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
       </Route>
 
