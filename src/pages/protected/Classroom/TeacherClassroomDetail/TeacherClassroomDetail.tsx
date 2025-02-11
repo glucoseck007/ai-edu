@@ -1,46 +1,113 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Card, Tabs, Tab, Nav } from "react-bootstrap";
+import { Card, Tabs, Tab, Table, Modal, Button, Form } from "react-bootstrap";
 import LoadingLink from "../../../../components/common/links/LoadingLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload, faArrowLeft, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUpload,
+  faArrowLeft,
+  faUsers,
+  faClock,
+  faCalendarAlt,
+  faFileAlt,
+  faUser,
+  faPlus
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "./classroom-detail.css";
 
 function TeacherClassroomDetail() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [classroomData, setClassroomData] = useState(location.state?.classroomData);
+  const [classroomData, setClassroomData] = useState([]);
   const [students, setStudents] = useState([]);
   const [id, setId] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newAssignment, setNewAssignment] = useState({
+    title: "",
+    content: "",
+    teacher: "",
+    deadline: "",
+    materials: "",
+    topics: "",
+    instructions: "",
+    maxPoints: 100
+  });
+
+  // Mock Example Data for UI Testing with enhanced details
+  const mockClassroomData = [
+    {
+      id: "1",
+      title: "Math Homework",
+      content: "Complete algebra exercises from chapter 5.",
+      fileName: "algebra_homework.pdf",
+      teacher: {
+        name: "Dr. Smith",
+        avatar: "https://example.com/avatar.jpg"
+      },
+      createdAt: "2024-02-05T14:30:00",
+      deadline: "2024-02-12T23:59:59",
+      materials: [
+        { id: "m1", name: "Chapter 5 Exercises.pdf", type: "pdf" },
+        { id: "m2", name: "Formula Sheet.docx", type: "document" }
+      ],
+      maxPoints: 100,
+      topics: ["Algebra", "Equations"],
+      instructions: "Please complete all exercises from 5.1 to 5.4. Show all your work and submit as a single PDF file."
+    },
+    {
+      id: "2",
+      title: "Science Project",
+      content: "Prepare a presentation on the Solar System.",
+      fileName: "solar_system.pptx",
+      teacher: {
+        name: "Mrs. Johnson",
+        avatar: "https://example.com/avatar2.jpg"
+      },
+      createdAt: "2024-02-08T10:15:00",
+      deadline: "2024-02-20T23:59:59",
+      materials: [
+        { id: "m3", name: "Project Guidelines.pdf", type: "pdf" },
+        { id: "m4", name: "Template.pptx", type: "presentation" }
+      ],
+      maxPoints: 150,
+      topics: ["Solar System", "Astronomy"],
+      instructions: "Create a 10-minute presentation about one planet in our solar system. Include at least 5 interesting facts and 3 images."
+    }
+  ];
+
+  const mockStudents = [
+    { id: "1", name: "Alice Johnson", email: "alice@example.com" },
+    { id: "2", name: "Bob Smith", email: "bob@example.com" },
+    { id: "3", name: "Charlie Brown", email: "charlie@example.com" }
+  ];
 
   useEffect(() => {
-    console.log("Classroom Data:", classroomData);
     const fetchClassroomDetails = async () => {
-      if (!classroomData) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const classroomId = urlParams.get("classroomId");
-        console.log("Classroom ID:", classroomId);
+      const urlParams = new URLSearchParams(window.location.search);
+      const classroomId = urlParams.get("classroomId");
+      setId(classroomId || "mock-id");
 
-        if (classroomId) {
-          setId(classroomId);
-          try {
-            const response = await axios.get(
-              `${import.meta.env.VITE_API}/classroom-content/classroom`,
-              {
-                params: { classroomId: classroomId },
-              }
-            );
-            setClassroomData(response.data);
-          } catch (error) {
-            console.error("Error fetching classroom details:", error);
-          }
+      if (classroomId) {
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_API}/classroom-content/classroom`,
+            { params: { classroomId } }
+          );
+          setClassroomData(response.data.length > 0 ? response.data : mockClassroomData);
+        } catch (error) {
+          console.error("Error fetching classroom details:", error);
+          setClassroomData(mockClassroomData);
         }
+      } else {
+        setClassroomData(mockClassroomData);
       }
     };
 
     fetchClassroomDetails();
-  }, [classroomData]);
+  }, []);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -50,19 +117,16 @@ function TeacherClassroomDetail() {
             `${import.meta.env.VITE_API}/classroom-content/students`,
             { params: { classroomId: id } }
           );
-          setStudents(response.data);
+          setStudents(response.data.length > 0 ? response.data : mockStudents);
         } catch (error) {
           console.error("Error fetching student list:", error);
+          setStudents(mockStudents);
         }
       }
     };
 
     fetchStudents();
   }, [id]);
-
-  if (!classroomData) {
-    return <p>Loading classroom details...</p>;
-  }
 
   const handleDownload = async (contentId, fileName) => {
     try {
@@ -84,6 +148,41 @@ function TeacherClassroomDetail() {
     }
   };
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString('vi-VN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const handleAddAssignment = () => {
+    const newEntry = {
+      id: String(classroomData.length + 1),
+      ...newAssignment,
+      teacher: { name: newAssignment.teacher },
+      createdAt: new Date().toISOString(),
+      deadline: new Date(newAssignment.deadline).toISOString(),
+      materials: newAssignment.materials.split(",").map((m) => m.trim()),
+      topics: newAssignment.topics.split(",").map((t) => t.trim())
+    };
+
+    setClassroomData([...classroomData, newEntry]);
+    setShowAddModal(false);
+    setNewAssignment({
+      title: "",
+      content: "",
+      teacher: "",
+      deadline: "",
+      materials: "",
+      topics: "",
+      instructions: "",
+      maxPoints: 100
+    });
+  };
+
   return (
     <>
       {/* Header */}
@@ -95,7 +194,7 @@ function TeacherClassroomDetail() {
             onClick={() => navigate(-1)}
           />
           <h1 style={{ marginBottom: "20px", marginLeft: "20px" }}>
-             {classroomData.name}
+            Classroom
           </h1>
         </div>
         <div>
@@ -109,68 +208,160 @@ function TeacherClassroomDetail() {
       {/* Tab Navigation */}
       <Tabs defaultActiveKey="classroom-data" id="classroom-tabs" className="mb-3">
         <Tab eventKey="classroom-data" title="Classroom Data">
-          <Tab.Pane eventKey="classroom-data">
-            <div className="classroom-detail-container">
-              {classroomData.map((classroom, index) => (
-                <div className="card-holder" key={index}>
-                  <Card className="mb-3">
-                    <Card.Header>{classroom.title}</Card.Header>
-                    <Card.Body>
-                      <blockquote className="blockquote mb-0">
-                        <p>
-                          <strong>Mô tả:</strong>{" "}
-                          {classroom.content || "Không có mô tả."}
-                        </p>
-                        <p>
-                          <strong>Tài liệu đính kèm:</strong>{" "}
-                          {classroom.fileName ? (
-                            <a
-                              style={{ color: "blue", cursor: "pointer" }}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleDownload(classroom.id, classroom.fileName);
-                              }}
-                            >
-                              {classroom.fileName}
-                            </a>
-                          ) : (
-                            "Không có tài liệu đính kèm."
-                          )}
-                        </p>
-                        <footer className="blockquote-footer">
-                          Cập nhật lần cuối:{" "}
-                          <cite title="Last Modified">
-                            {classroom.modifiedAt || "Không xác định"}
-                          </cite>
-                        </footer>
-                      </blockquote>
-                    </Card.Body>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          </Tab.Pane>
+          <div className="classroom-detail-container my-2">
+            <Button
+              className="mb-3"
+              variant="primary"
+              onClick={() => setShowAddModal(true)}
+            >
+              <FontAwesomeIcon icon={faPlus} className="me-2" />
+              Add Assignment
+            </Button>
+            {classroomData.map((assignment) => (
+              <div className="card-holder" key={assignment.id}>
+                <Card
+                  className="my-3 assignment-card"
+                  onClick={() => {
+                    setSelectedAssignment(assignment);
+                    setShowModal(true);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Card.Header className="d-flex align-items-center">
+                    <FontAwesomeIcon icon={faUser} className="me-2" />
+                    <span>{assignment.teacher.name} đã đăng một bài tập mới</span>
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>{assignment.title}</Card.Title>
+                    <Card.Text className="text-muted">
+                      <FontAwesomeIcon icon={faClock} className="me-2" />
+                      Đăng lúc: {formatDate(assignment.createdAt)}
+                    </Card.Text>
+                    <Card.Text className="text-muted">
+                      <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+                      Hạn nộp: {formatDate(assignment.deadline)}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </div>
+            ))}
+          </div>
         </Tab>
 
         <Tab eventKey="students" title="Students">
-          <Tab.Pane eventKey="students">
-            <div className="students-list-container">
-              <h2><FontAwesomeIcon icon={faUsers} className="me-2" />Danh sách học sinh</h2>
-              {students.length > 0 ? (
-                <ul className="students-list">
+          <div className="students-list-container">
+            {students.length > 0 ? (
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th style={{ width: "10%" }}>#</th>
+                    <th style={{ width: "10%" }}>Tên học sinh</th>
+                    <th style={{ width: "10%" }}>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {students.map((student, index) => (
-                    <li key={index} className="student-item">
-                      {student.name} - {student.email}
+                    <tr key={student.id}>
+                      <td>{index + 1}</td>
+                      <td>{student.name}</td>
+                      <td>{student.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <p>Không có học sinh trong lớp này.</p>
+            )}
+          </div>
+        </Tab>
+      </Tabs>
+
+      {/* Assignment Detail Modal */}
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        size="lg"
+        aria-labelledby="assignment-modal"
+      >
+        {selectedAssignment && (
+          <>
+            <Modal.Header closeButton>
+              <Modal.Title id="assignment-modal">
+                {selectedAssignment.title}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="mb-3">
+                <strong>Giáo viên:</strong> {selectedAssignment.teacher.name}
+              </div>
+              <div className="mb-3">
+                <strong>Thời gian đăng:</strong> {formatDate(selectedAssignment.createdAt)}
+              </div>
+              <div className="mb-3">
+                <strong>Hạn nộp:</strong> {formatDate(selectedAssignment.deadline)}
+              </div>
+              <div className="mb-3">
+                <strong>Điểm tối đa:</strong> {selectedAssignment.maxPoints}
+              </div>
+              <div className="mb-3">
+                <strong>Chủ đề:</strong> {selectedAssignment.topics.join(", ")}
+              </div>
+              <div className="mb-3">
+                <strong>Hướng dẫn:</strong>
+                <p>{selectedAssignment.instructions}</p>
+              </div>
+              <div className="mb-3">
+                <strong>Tài liệu:</strong>
+                <ul className="list-unstyled mt-2">
+                  {selectedAssignment.materials.map((material) => (
+                    <li key={material.id} className="mb-2">
+                      <FontAwesomeIcon icon={faFileAlt} className="me-2" />
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDownload(material.id, material.name);
+                        }}
+                      >
+                        {material.name}
+                      </a>
                     </li>
                   ))}
                 </ul>
-              ) : (
-                <p>Không có học sinh trong lớp này.</p>
-              )}
-            </div>
-          </Tab.Pane>
-        </Tab>
-      </Tabs>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Đóng
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Modal>
+      <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Assignment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Title</Form.Label>
+              <Form.Control type="text" onChange={(e) => setNewAssignment({ ...newAssignment, title: e.target.value })} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Teacher</Form.Label>
+              <Form.Control type="text" onChange={(e) => setNewAssignment({ ...newAssignment, teacher: e.target.value })} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Deadline</Form.Label>
+              <Form.Control type="datetime-local" onChange={(e) => setNewAssignment({ ...newAssignment, deadline: e.target.value })} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleAddAssignment}>Add</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
