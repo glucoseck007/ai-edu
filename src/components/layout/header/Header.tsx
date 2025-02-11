@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 import LoadingLink from "../../common/links/LoadingLink";
 import Dropdown from "react-bootstrap/Dropdown";
-import {DropdownButton} from "react-bootstrap";  
+import { DropdownButton } from "react-bootstrap";
 import AppLogo from "../../../assets/images/logo.png";
 
 function Header() {
@@ -36,14 +36,14 @@ function Header() {
             <div className="col-lg-2 col-md-2 col-sm-3 col-4">
               <div className="right-icon">
                 <ul>
-                    <LoadingLink to="/" style={{ textDecoration: "none" }}>
-                      <img
-                        src={AppLogo}
-                        alt="Logo"
-                        width="120px"
-                        className="mt-2"
-                      />
-                    </LoadingLink>
+                  <LoadingLink to="/" style={{ textDecoration: "none" }}>
+                    <img
+                      src={AppLogo}
+                      alt="Logo"
+                      width="120px"
+                      className="mt-2"
+                    />
+                  </LoadingLink>
                 </ul>
               </div>
             </div>
@@ -86,7 +86,7 @@ function Header() {
                     </li>
                     <li className="nav-item">
                       <LoadingLink
-                        to={auth.user?.roles[0]==="teacher"?"/teacher/chat-bot":"/student/chat-bot"}
+                        to={auth.user?.roles[0] === "teacher" ? "/teacher/chat-bot" : "/student/chat-bot"}
                         style={{ textDecoration: "none" }}
                       >
                         {t("homePage.header.chatBot")}

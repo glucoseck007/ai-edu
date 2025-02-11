@@ -18,7 +18,6 @@ const UploadQuiz: React.FC = () => {
   const [subject, setSubject] = useState("");
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
-  console.log(query);
   const classroomId = query.get("classroomId");
 
   const subjects = [
@@ -60,12 +59,12 @@ const UploadQuiz: React.FC = () => {
     if (!selectedFile) {
       alert("Please select a file to upload.");
       return;
-    };
+    }
 
     const formData = new FormData();
-    formData.append("file",selectedFile);
-    formData.append("classroomId",classroomId??"");
-    formData.append("subject",subject);
+    formData.append("file", selectedFile);
+    formData.append("classroomId", classroomId ?? "");
+    formData.append("subject", subject);
 
     try {
       const response = await axios.post(
@@ -79,6 +78,7 @@ const UploadQuiz: React.FC = () => {
       );
 
       console.log("File uploaded successfully:", response.data);
+
       localStorage.setItem("quiz", JSON.stringify(response.data));
       alert("File uploaded successfully.");
       setSelectedFile(null);
