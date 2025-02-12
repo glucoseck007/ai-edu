@@ -26,6 +26,8 @@ import ReviewTest from "../pages/protected/Test/ReviewTest/ReviewTest";
 import StudentProfile from "../pages/protected/User/Student/StudentProfile";
 import TeacherProfile from "../pages/protected/User/Teacher/TeacherProfile";
 import TeacherClassroomDetail from "../pages/protected/Classroom/TeacherClassroomDetail/TeacherClassroomDetail";
+import ResultTest from "../pages/protected/Test/ResultTest/ResultTest";
+import ClassResultTest from "../pages/protected/Test/ClassTestResult/ClassResultTest";
 
 const AppRoute: React.FC = () => {
   return (
@@ -62,6 +64,9 @@ const AppRoute: React.FC = () => {
         <Route path="/add-class" element={<AddClass />} />
         <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
+        <Route path="/student/test-result/:id" element={<ResultTest />} />
+        <Route path="/teacher/test-result/:id" element={<ClassResultTest />} />
+        <Route path="/teacher/test-result/:id/:studentid" element={<ResultTest />} />
       </Route>
 
       {/* Test Routes */}

@@ -92,7 +92,7 @@ const TeacherProfile = () => {
                                         <Row>
                                             {instructor.tests.map((test) => (
                                                 <Col md={6} key={test.id} className="mb-3">
-                                                    <Card className="test-card">
+                                                    <Card className="test-card" onClick={() => navigate(`/teacher/test-result/${test.id}`)}>
                                                         <Card.Body>
                                                             <h5 className="test-title">{test.subject}</h5>
                                                             <p className="test-description">{test.description}</p>
