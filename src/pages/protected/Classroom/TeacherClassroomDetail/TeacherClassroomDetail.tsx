@@ -234,7 +234,7 @@ function TeacherClassroomDetail() {
                   }}
                 >
                   <FontAwesomeIcon icon={faUpload} />
-                  <span>Upload Document</span>
+                  <span>Upload Document For AI</span>
                 </LoadingLink>
               </Col>
             </Row>

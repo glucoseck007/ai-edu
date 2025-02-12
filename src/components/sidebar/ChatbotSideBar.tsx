@@ -12,13 +12,13 @@ const ChatBotSidebarComponent: React.FC = () => {
 
     const navTopItems = [
         { path: "/", icon: Home },
-        { path: "/tests", icon: Users },
-        { path: `/${auth.user?.roles[0]}/chat-bot`, icon: BookOpen },
+        { path: "/tests", icon: BookOpen},
+        { path: `/${auth.user?.roles[0]}/chat-bot`, icon: Users },
     ];
 
     const navBottomItems = [
         { path: "#", icon: Settings },
-        { path: `${auth.user?.roles[0]}/profile/${auth.user?.id}`, icon: User },
+        { path: `/${auth.user?.roles[0]}/profile/${auth.user?.id}`, icon: User },
     ];
 
     return (
@@ -32,7 +32,7 @@ const ChatBotSidebarComponent: React.FC = () => {
                                 to={item.path}
                                 className={`${styles.navLink} ${location.pathname === item.path ? styles.active : ""}`}
                             >
-                                <item.icon size={18} />
+                                <item.icon size={25} />
                             </Nav.Link>
                         </Nav.Item>
                     ))}
@@ -45,7 +45,7 @@ const ChatBotSidebarComponent: React.FC = () => {
                                 to={item.path}
                                 className={`${styles.navLink} ${location.pathname === item.path ? styles.active : ""}`}
                             >
-                                <item.icon size={18} />
+                                <item.icon size={25} />
                             </Nav.Link>
                         </Nav.Item>
                     ))}

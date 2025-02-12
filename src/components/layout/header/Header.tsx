@@ -106,7 +106,7 @@ function Header() {
                         </LoadingLink>
                       </li>
                       {
-                        auth.user?.roles[0] !== "student" && (
+                        auth.user?.roles[0] === "student" && (
                           <>
                             <li>
                               <LoadingLink to="/tests">
@@ -114,7 +114,7 @@ function Header() {
                               </LoadingLink>
                             </li>
                             <li>
-                              <LoadingLink to="/teacher/chat-bot">
+                              <LoadingLink to="/student/chat-bot">
                                 Chat Bot
                               </LoadingLink>
                             </li>
@@ -124,7 +124,7 @@ function Header() {
                                 <div className="dropdown-content">
                                   {/* <LoadingLink to="/join-class">Tham gia</LoadingLink> */}
                                   <Button variant="white" onClick={() => setShowModal(true)}>
-                                    Tham gia lớp học
+                                  <LoadingLink to="#">Tham gia lớp học</LoadingLink>
                                   </Button>
                                 </div>
                               </div>
@@ -147,9 +147,15 @@ function Header() {
                             <div className="dropdown">
                               <LoadingLink to="/classroom">Lớp học</LoadingLink>
                               <div className="dropdown-content">
-                                <LoadingLink to="/join-class">Tham gia</LoadingLink>
+                              
                                 {auth.user?.roles.includes("teacher") && (
+                                  <>
+                                  <Button variant="white" onClick={() => setShowModal(true)}>
+                                  <LoadingLink to="#">Tham gia lớp học</LoadingLink>
+                                  
+                                </Button>
                                   <LoadingLink to="/add-class">Tạo mới</LoadingLink>
+                                  </>
                                 )}
                               </div>
                             </div>
@@ -159,7 +165,7 @@ function Header() {
                       }
                       {auth.user ? (
                         <DropdownButton id="dropdown-basic-button" className="user-dropdown" title={<FontAwesomeIcon icon={faUser} />}>
-                          <Dropdown.Item href={`/profile/${auth.user?.id}`}>{t("homePage.dropdown.profile")}</Dropdown.Item>
+                          <Dropdown.Item href={`/${auth.user?.roles[0]}/profile/${auth.user?.id}`}>{t("homePage.dropdown.profile")}</Dropdown.Item>
                           <Dropdown.Item onClick={handleLogout}>{t("homePage.dropdown.logout")}</Dropdown.Item>
                         </DropdownButton>
                       ) : (

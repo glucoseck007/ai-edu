@@ -4,13 +4,13 @@ import { BookOpen, CheckCircle, ClipboardList } from "lucide-react";
 import { format } from "date-fns";
 import "./StudentProfile.scss";
 import { useNavigate } from "react-router-dom";
+import StudentImg from "../../../../assets/images/student.jpg";
 
 const StudentProfile = () => {
     const navigate = useNavigate();
     const student = {
         name: "Sarah Smith",
         grade: "Grade 3",
-        stars: 45,
         classes: [
             { id: 1, title: "Mathematics", teacher: "Mrs. Emily Johnson" },
             { id: 2, title: "English Literature", teacher: "Mr. John Smith" },
@@ -33,14 +33,10 @@ const StudentProfile = () => {
                         <Col xs="auto">
                             <div className="position-relative">
                                 <img
-                                    src="/api/placeholder/120/120"
+                                    src={StudentImg}
                                     alt="Student avatar"
                                     className="rounded-circle student-avatar"
                                 />
-                                <Badge bg="warning" text="dark" className="position-absolute top-0 end-0 star-badge">
-                                    <CheckCircle size={16} className="me-1" />
-                                    {student.stars}
-                                </Badge>
                             </div>
                         </Col>
                         <Col>

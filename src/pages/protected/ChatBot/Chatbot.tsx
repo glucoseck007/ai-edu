@@ -9,6 +9,8 @@ import ChatBotImg from "../../../assets/images/Chatbot.jpg";
 import StudentImg from "../../../assets/images/student.jpg";
 import { Calculator, Atom, FlaskConical, BookOpen, Landmark } from "lucide-react";
 import ChatBotSidebarComponent from "../../../components/sidebar/ChatbotSideBar"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faRobot } from "@fortawesome/free-solid-svg-icons"
 
 interface Message {
   id: number
@@ -204,13 +206,13 @@ const StudentChatBot: React.FC = () => {
   )
 
   return (
-    <Container fluid className="chat-container">
+    <Container fluid className="chat-container p-0 m-0">
       <Row className="h-100 gx-0">
         <ChatBotSidebarComponent />
         <Col className="p-0 m-0">
           <Card className="chat-card">
             <Card.Header>
-              <h4 className="mb-0">Student Chat Bot</h4>
+              <h4 className="mb-0 py-3"><FontAwesomeIcon icon={faRobot} />&nbsp;Student Chat Bot</h4>
             </Card.Header>
             <Nav variant="tabs" activeKey={selectedSubject} onSelect={(k) => setSelectedSubject(k ?? "math")}>
               {subjects.map((subject) => (

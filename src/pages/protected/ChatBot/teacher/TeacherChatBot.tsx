@@ -8,6 +8,8 @@ import "../StudentChatBot.scss"
 import ChatBotImg from "../../../../assets/images/Chatbot.jpg";
 import TeacherImg from "../../../../assets/images/teacher.jpg";
 import ChatBotSidebarComponent from "../../../../components/sidebar/ChatbotSideBar"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faRobot } from "@fortawesome/free-solid-svg-icons"
 
 interface Message {
     id: number
@@ -192,13 +194,14 @@ const StudentChatBot: React.FC = () => {
     )
 
     return (
-        <Container fluid className="chat-container">
+        <Container fluid className="chat-container p-0 m-0">
             <Row className="h-100 gx-0">
                 <ChatBotSidebarComponent />
                 <Col className="p-0 m-0">
                     <Card className="chat-card">
-                        <Card.Header>
-                            <h4 className="mb-0">Teacher Chat Bot</h4>
+                        <Card.Header className="py-3">
+                            
+                            <h4 className="mb-0 "><FontAwesomeIcon icon={faRobot} />&nbsp;Teacher Chat Bot</h4>
                         </Card.Header>
                         <Card.Body className="chat-body">
                             <div className="messages-container">
@@ -217,9 +220,9 @@ const StudentChatBot: React.FC = () => {
                                                     Waiting for response....
                                                 </span>
                                             ) : (
-                                                <div className="d-flex align-items-center">
+                                                <div className="align-items-center">
                                                     <span
-                                                        className={message.isError ? "text-danger" : message.isBot ? "text-black" : "text-white"}
+                                                        className={message.isError ? "ps-2 text-danger" : message.isBot ? "ps-2 text-black" : " s-2 text-white"}
                                                     >
                                                         {message.content}
                                                     </span>
@@ -229,6 +232,7 @@ const StudentChatBot: React.FC = () => {
                                                             size="sm"
                                                             className="ms-2"
                                                             onClick={() => handleRetry(message)}
+                                                            style={{width:"20%"}}
                                                         >
                                                             Retry
                                                         </Button>

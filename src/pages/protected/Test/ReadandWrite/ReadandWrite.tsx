@@ -9,7 +9,7 @@ import { numberToLetter } from "../../../../utils/Converters";
 
 const ReadingWritingModule: React.FC = () => {
   const [isRunning, setIsRunning] = useState(true);
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(3600);
   const [selectedOption, setSelectedOption] = useState<{
     [key: number]: number | null;
   }>({});
@@ -70,7 +70,7 @@ const ReadingWritingModule: React.FC = () => {
     let interval: number;
     if (isRunning) {
       interval = window.setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
+        setTime((prevTime) => prevTime - 1);
       }, 1000);
     }
 

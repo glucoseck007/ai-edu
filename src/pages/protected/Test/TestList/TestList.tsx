@@ -43,6 +43,7 @@ const TestList: React.FC = () => {
   };
 
   return (
+    <div className="min-vh-100">
     <Container className="my-4">
       {auth.user?.roles[0] === "teacher" && (
         <div className="button-create-test">
@@ -82,7 +83,12 @@ const TestList: React.FC = () => {
                 </Card.Text>
                 <Button
                   style={{ backgroundColor: "rgb(45, 100, 159)" }}
-                  onClick={() => navigate(`/test/${test.id}`)}
+                  onClick={() => {
+                    auth.user.roles[0]==="student"?
+                    navigate(`/test/${test.id}`):
+                    navigate(`/teacher/test-review/${test.id}`)
+                  }                    
+                  }
                 >
                   {auth.user?.roles[0] === "teacher" ? "Đánh giá" : "Tham gia"}
 
@@ -93,6 +99,7 @@ const TestList: React.FC = () => {
         ))}
       </Row>
     </Container >
+    </div>
   );
 };
 

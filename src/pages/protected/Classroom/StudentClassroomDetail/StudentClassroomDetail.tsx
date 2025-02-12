@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload, faArrowLeft, faUser, faClock, faCalendarAlt, faFileAlt } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "./classroom-detail.css";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 
 interface Material {
   id: string;
@@ -153,47 +153,45 @@ function StudentClassroomDetail() {
             Hoạt động lớp học
           </h1>
         </div>
-        <div>
-          <LoadingLink className="upload-button" to={`/upload?classroomId=${id}`}>
-            <FontAwesomeIcon icon={faUpload} />
-            <span className="description">Tải tài liệu lên</span>
-          </LoadingLink>
-        </div>
       </div>
 
-      <div className="classroom-detail-container">
-        {classroomData.map((assignment) => (
-          <div className="card-holder" key={assignment.id}>
-            <Card
-              className="mb-3 assignment-card"
-              onClick={() => {
-                setSelectedAssignment(assignment);
-                setShowModal(true);
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              <Card.Header className="d-flex align-items-center">
-                <FontAwesomeIcon icon={faUser} className="me-2" />
-                <span>{assignment.teacher.name} đã đăng một bài tập mới</span>
-              </Card.Header>
-              <Card.Body>
-                <Card.Title>{assignment.title}</Card.Title>
-                <Card.Text className="text-muted">
-                  <FontAwesomeIcon icon={faClock} className="me-2" />
-                  Đăng lúc: {formatDate(assignment.createdAt)}
-                </Card.Text>
-                <Card.Text className="text-muted">
-                  <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
-                  Hạn nộp: {formatDate(assignment.deadline)}
-                </Card.Text>
-                <Card.Text>
-                  <strong>Điểm tối đa:</strong> {assignment.maxPoints} điểm
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
-      </div>
+      <Container className="px-0">
+            <Row>
+              <Col>
+                {classroomData.map((assignment) => (
+                  <Card
+                    key={assignment.id}
+                    className="mb-3 shadow-sm"
+                    onClick={() => {
+                      setSelectedAssignment(assignment);
+                      setShowModal(true);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Card.Header className="bg-light">
+                      <div className="d-flex align-items-center">
+                        <FontAwesomeIcon icon={faUser} className="me-2 text-primary" />
+                        <span className="fw-medium">{assignment.teacher.name} posted a new assignment</span>
+                      </div>
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Title className="mb-3">{assignment.title}</Card.Title>
+                      <div className="text-muted small">
+                        <div className="mb-2">
+                          <FontAwesomeIcon icon={faClock} className="me-2" />
+                          Posted: {formatDate(assignment.createdAt)}
+                        </div>
+                        <div>
+                          <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+                          Due: {formatDate(assignment.deadline)}
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </Col>
+            </Row>
+          </Container>
 
       {/* Assignment Detail Modal */}
       <Modal

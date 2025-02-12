@@ -44,8 +44,8 @@ const AppRoute: React.FC = () => {
         <Route path="/blog" element={<Blog />} />
         <Route path="/exam-list" element={<ExamList />} />
         <Route path="/tests" element={<TestList />} />
-        <Route path="upload" element={<Upload />} />
-        <Route path="upload-quiz" element={<UploadQuiz />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/upload-quiz" element={<UploadQuiz />} />
         <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/classroom" element={<Classroom />} />
         <Route path="/teacher/review-test" element={<ReviewTest />} />
@@ -60,6 +60,7 @@ const AppRoute: React.FC = () => {
           element={<TeacherClassroomDetail />}
         />
         <Route path="/add-class" element={<AddClass />} />
+        <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
       </Route>
 
