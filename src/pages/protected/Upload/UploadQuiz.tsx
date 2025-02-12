@@ -17,13 +17,10 @@ const UploadQuiz: React.FC = () => {
   const [subject, setSubject] = useState("");
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
-  console.log(query);
   const classroomId = query.get("classroomId");
 
   const handleFileSelect = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    fileInputRef.current?.click();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,36 +45,18 @@ const UploadQuiz: React.FC = () => {
       return;
     }
 
-    // Convert file to Base64
-    const fileToBase64 = (file: File) => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-      });
-    };
-
-    const base64File = await fileToBase64(selectedFile);
-    const base64Data = base64File.split(",")[1]; // Remove the data URL prefix
-
-    const requestBody = {
-      classroomId: classroomId, // Replace with actual classroom ID
-      subject: subject,
-      fileData: atob(base64Data)
-        .split("")
-        .map((char) => char.charCodeAt(0)), // Convert Base64 to byte[]
-      fileName: selectedFile.name,
-      fileType: selectedFile.type,
-    };
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("classroomId", classroomId || "");
+    formData.append("subject", subject);
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API}/classroom-content/upload_for_quiz`,
-        requestBody,
+        `${import.meta.env.VITE_AI_API}/upload_for_quiz`,
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -108,11 +87,11 @@ const UploadQuiz: React.FC = () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="title">Môn học</label>
+                  <label htmlFor="subject">Môn học</label>
                   <input
                     type="text"
                     id="subject"
-                    name="subjectt"
+                    name="subject"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     required
