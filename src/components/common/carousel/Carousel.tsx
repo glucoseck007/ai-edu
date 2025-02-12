@@ -68,10 +68,7 @@ function Carousel() {
                   Trải nghiệm học tập tuyệt vời
                 </h1>
                 <p data-animation="fadeInUp" data-delay="1.3s">
-                  Website học tập dành cho trẻ em với nội dung phong phú, tương
-                  tác sinh động và phương pháp giáo dục hiện đại. Giúp bé khám
-                  phá thế giới qua các bài học trực quan, trò chơi bổ ích và bài
-                  tập phát triển tư duy.
+                Website học tập dành cho trẻ em với nội dung đa dạng, phong phú, hình thức tương tác sinh động và áp dụng phương pháp giáo dục tiên tiến, giúp các em tiếp thu kiến thức một cách hiệu quả và hứng thú hơn.
                 </p>
               </div>
             </div>
@@ -89,14 +86,13 @@ function Carousel() {
             <div className="col-xl-7 col-lg-9">
               <div className="slider-cont">
                 <h1 data-animation="bounceInLeft" data-delay="1s">
-                  Học mà chơi, chơi mà học!
+                  Học dễ dàng, dạy hiệu quả!
                 </h1>
                 <p data-animation="fadeInUp" data-delay="1.3s">
-                  🔹 Bài học đa dạng: Toán, Tiếng Việt, Tiếng Anh, Khoa học...{" "}
+                  Nền tảng chatbot thông minh hỗ trợ.{" "}
                   <br />
-                  🔹 Trò chơi giáo dục hấp dẫn giúp bé ghi nhớ nhanh <br />
-                  🔹 Video hoạt hình sinh động giúp bé tiếp thu dễ dàng <br />
-                  🔹 Bài tập phát triển tư duy, kỹ năng giải quyết vấn đề
+                  🔹 Cho giáo viên: Tải lên tài liệu, tạo quiz nhanh chóng, quản lý học tập hiệu quả. <br />
+                  🔹 Cho học sinh: Hỏi đáp tức thì, luyện tập với quiz, nâng cao khả năng tự học. <br />
                 </p>
               </div>
             </div>

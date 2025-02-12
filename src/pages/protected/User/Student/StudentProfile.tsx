@@ -9,18 +9,18 @@ import StudentImg from "../../../../assets/images/student.jpg";
 const StudentProfile = () => {
     const navigate = useNavigate();
     const student = {
-        name: "Sarah Smith",
-        grade: "Grade 3",
+        name: "Trần Đức Trung",
+        grade: "Lớp 1",
         classes: [
-            { id: 1, title: "Mathematics", teacher: "Mrs. Emily Johnson" },
-            { id: 2, title: "English Literature", teacher: "Mr. John Smith" },
-            { id: 3, title: "Science", teacher: "Ms. Olivia Brown" },
-            { id: 4, title: "History", teacher: "Dr. Robert Davis" },
+            { id: 1, title: "Toán", teacher: "Mrs. Emily Johnson" },
+            { id: 2, title: "Tiếng Anh", teacher: "Mr. John Smith" },
+            { id: 3, title: "Khoa Học", teacher: "Ms. Olivia Brown" },
+            { id: 4, title: "Lịch Sử", teacher: "Dr. Robert Davis" },
         ],
         testHistory: [
-            { id: 1, subject: "Math", testName: "Algebra Basics", score: 85, date: "2024-01-15" },
-            { id: 2, subject: "English", testName: "Grammar Check", score: 78, date: "2024-01-20" },
-            { id: 3, subject: "Science", testName: "Physics Intro", score: 92, date: "2024-02-01" }
+            { id: 1, subject: "Toán", testName: "Toán 1", score: 85, date: "2024-01-15" },
+            { id: 2, subject: "Tiếng Anh", testName: "Thì hiện tại", score: 78, date: "2024-01-20" },
+            { id: 3, subject: "Khoa Học", testName: "Cơ quan cơ thể", score: 92, date: "2024-02-01" }
         ]
     };
 
@@ -53,13 +53,13 @@ const StudentProfile = () => {
                     <Nav.Item>
                         <Nav.Link eventKey="classes">
                             <BookOpen size={20} className="me-2" />
-                            My Classes
+                            Lớp 
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link eventKey="test-history">
                             <ClipboardList size={20} className="me-2" />
-                            Test History
+                            Lịch sử thi
                         </Nav.Link>
                     </Nav.Item>
                 </Nav>
@@ -73,7 +73,7 @@ const StudentProfile = () => {
                                     <Card.Body>
                                         <div className="d-flex justify-content-between align-items-center mb-2">
                                             <h5 className="class-title">{classItem.title}</h5>
-                                            <p className="class-teacher">Teacher: {classItem.teacher}</p>
+                                            <p className="class-teacher">Giáo Viên: {classItem.teacher}</p>
                                         </div>
                                     </Card.Body>
                                 </Card>
@@ -89,11 +89,11 @@ const StudentProfile = () => {
                                     <Col key={test.id}>
                                         <Card className="test-history-card text-center">
                                             <Card.Body>
-                                                <h4 className="test-subject">Subject: {test.subject}</h4>
-                                                <p className="test-name">Test Name: {test.testName}</p>
-                                                <h5 className="test-score">Score: {test.score}%</h5>
+                                                <h4 className="test-subject">Môn: {test.subject}</h4>
+                                                <p className="test-name">Tên bài thi: {test.testName}</p>
+                                                <h5 className="test-score">Điểm: {test.score}%</h5>
                                                 <p className="test-date">
-                                                    Date: {format(new Date(test.date), "MMMM dd, yyyy")}
+                                                    Ngày: {format(new Date(test.date), "MMMM dd, yyyy")}
                                                 </p>
                                             </Card.Body>
                                         </Card>
