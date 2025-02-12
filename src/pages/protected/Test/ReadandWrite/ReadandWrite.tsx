@@ -6,14 +6,20 @@ import {
   Button,
 } from "react-bootstrap";
 import { numberToLetter } from "../../../../utils/Converters";
+import { useNavigate } from "react-router-dom";
 
-const ReadingWritingModule: React.FC = () => {
+interface ReadingWritingModuleProps {
+  testId: string;
+}
+
+const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({ testId }) => {
   const [isRunning, setIsRunning] = useState(true);
   const [time, setTime] = useState(3600);
   const [selectedOption, setSelectedOption] = useState<{
     [key: number]: number | null;
   }>({});
   const target = useRef(null);
+  const navigate = useNavigate();
   const data = {
     "quiz": [
       {
@@ -192,7 +198,14 @@ const ReadingWritingModule: React.FC = () => {
       <div className="bg-light mt-auto">
         <Container>
           <div className="p-3 d-flex justify-content-end">
-            <Button variant="primary" className="rounded-pill px-3" style={{ width: "10%" }}>Finish</Button>
+            <Button
+              variant="primary"
+              className="rounded-pill px-3"
+              style={{ width: "10%" }}
+              onClick={() => { navigate(`/student/test-result/${testId}`) }}
+            >
+              Finish
+            </Button>
           </div>
         </Container>
       </div>

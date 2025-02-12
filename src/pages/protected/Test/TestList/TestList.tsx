@@ -84,7 +84,7 @@ const TestList: React.FC = () => {
                 <Button
                   style={{ backgroundColor: "rgb(45, 100, 159)" }}
                   onClick={() => {
-                    auth.user.roles[0]==="student"?
+                    auth.user?.roles[0]==="student"?
                     navigate(`/test/${test.id}`):
                     navigate(`/teacher/test-review/${test.id}`)
                   }                    

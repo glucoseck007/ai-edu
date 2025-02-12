@@ -1,11 +1,12 @@
 import { type FC } from "react";
 import ReadingWritingModule from "./ReadandWrite/ReadandWrite";
+import { useParams } from "react-router-dom";
 
 const TestScreen: FC = () => {
-  // Render current module based on section and pa
+  const { id } = useParams();
   return (
     <div className="p-4">
-      <ReadingWritingModule />
+      <ReadingWritingModule testId={id ?? "1"} />
     </div>
   );
 };

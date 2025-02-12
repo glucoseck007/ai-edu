@@ -204,7 +204,7 @@ function TeacherClassroomDetail() {
 
       {/* Tab Navigation */}
       <Tabs defaultActiveKey="classroom-data" id="classroom-tabs" className="mb-4">
-        <Tab eventKey="classroom-data" title="Classroom Data">
+        <Tab eventKey="classroom-data" title="Lớp học">
           <Container className="px-0">
             <Row className="mb-4 align-items-center">
               <Col xs={12} sm="auto" className="mb-2 mb-sm-0">
@@ -219,7 +219,7 @@ function TeacherClassroomDetail() {
                   onClick={() => setShowAddModal(true)}
                 >
                   <FontAwesomeIcon icon={faPlus} className="me-2" />
-                  Add Assignment
+                  Thêm bài tập
                 </Button>
               </Col>
               <Col xs={12} sm="auto">
@@ -234,7 +234,7 @@ function TeacherClassroomDetail() {
                   }}
                 >
                   <FontAwesomeIcon icon={faUpload} />
-                  <span>Upload Document For AI</span>
+                  <span>Tải tài liệu cho AI</span>
                 </LoadingLink>
               </Col>
             </Row>
@@ -254,7 +254,7 @@ function TeacherClassroomDetail() {
                     <Card.Header className="bg-light">
                       <div className="d-flex align-items-center">
                         <FontAwesomeIcon icon={faUser} className="me-2 text-primary" />
-                        <span className="fw-medium">{assignment.teacher.name} posted a new assignment</span>
+                        <span className="fw-medium">{assignment.teacher.name} đã thêm một bài tập mới</span>
                       </div>
                     </Card.Header>
                     <Card.Body>
@@ -277,7 +277,7 @@ function TeacherClassroomDetail() {
           </Container>
         </Tab>
 
-        <Tab eventKey="students" title="Students">
+        <Tab eventKey="students" title="Danh sách học sinh">
           <Container className="px-0">
             <div className="students-list-container">
               {students.length > 0 ? (
