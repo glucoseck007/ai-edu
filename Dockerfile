@@ -25,23 +25,22 @@
 # EXPOSE 8080
 # ENTRYPOINT ["java", "-jar", "app.jar"] 
 
-# Stage 1: Build frontend
-FROM node:alpine as build
+FROM node:20-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy only package.json first to leverage Docker cache
-COPY package.json ./
+# Copy package.json và package-lock.json trước để tối ưu cache Docker
+COPY package*.json ./
 
-# Install dependencies using npm
+# Cài đặt dependencies
 RUN npm install
 
-# Copy the rest of the application
+# Copy toàn bộ mã nguồn vào container
 COPY . .
 
-# Build the application
-RUN npm run build
+# Expose cổng 5173 (cổng mặc định của Vite)
+EXPOSE 5173
 
-EXPOSE 8080
+# Chạy Vite trên 0.0.0.0 để truy cập từ bên ngoài
+CMD ["npm", "run", "dev", "--", "--host"]
 
-CMD ["nginx", "-g", "daemon off;"]

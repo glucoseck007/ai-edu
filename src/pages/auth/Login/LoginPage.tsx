@@ -144,29 +144,6 @@ function LoginPage() {
           <div className="login-right-inner">
             <h2 className="login-right-header">{t("auth.header.login")}</h2>
 
-            <div className="login-option-container">
-              <CustomButton
-                icon={icon.ggIcon}
-                backgroundColor="transparent"
-                border="1px solid black"
-                color="#001468"
-                width="310px"
-                onClick={handleGoogleLogin}
-                title={t("auth.buttonTitle.ggLogin")}
-              />
-              <CustomButton
-                icon={icon.fbIcon}
-                backgroundColor="#4168b2"
-                color="white"
-                width="310px"
-                title={t("auth.buttonTitle.fbLogin")}
-              />
-            </div>
-
-            <div className="divider">
-              <span className="or">{t("auth.header.or")}</span>
-            </div>
-
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="input-field-container">
                 <EmailInput

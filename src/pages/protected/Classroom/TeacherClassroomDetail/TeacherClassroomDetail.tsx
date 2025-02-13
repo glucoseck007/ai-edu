@@ -164,7 +164,6 @@ function TeacherClassroomDetail() {
       ...newAssignment,
       teacher: { name: newAssignment.teacher },
       createdAt: new Date().toISOString(),
-      deadline: new Date(newAssignment.deadline).toISOString(),
       materials: newAssignment.materials.split(",").map((m) => m.trim()),
       topics: newAssignment.topics.split(",").map((t) => t.trim())
     };
@@ -201,111 +200,108 @@ function TeacherClassroomDetail() {
 
         </div>
       </div>
-
-      {/* Tab Navigation */}
-      <Tabs defaultActiveKey="classroom-data" id="classroom-tabs" className="mb-4">
-        <Tab eventKey="classroom-data" title="Lớp học">
-          <Container className="px-0">
-            <Row className="mb-4 align-items-center">
-              <Col xs={12} sm="auto" className="mb-2 mb-sm-0">
-                <Button
-                  variant="primary"
-                  style={{
-                    backgroundColor: "#07294d",
-                    border: "none",
-                    padding: "0.5rem 1rem",
-                    fontWeight: "500"
-                  }}
-                  onClick={() => setShowAddModal(true)}
-                >
-                  <FontAwesomeIcon icon={faPlus} className="me-2" />
-                  Thêm bài tập
-                </Button>
-              </Col>
-              <Col xs={12} sm="auto">
-                <LoadingLink
-                  className="btn btn-secondary"
-                  to={`/upload?classroomId=${id}`}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    padding: "0.5rem 1rem"
-                  }}
-                >
-                  <FontAwesomeIcon icon={faUpload} />
-                  <span>Tải tài liệu cho AI</span>
-                </LoadingLink>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col>
-                {classroomData.map((assignment) => (
-                  <Card
-                    key={assignment.id}
-                    className="mb-3 shadow-sm"
-                    onClick={() => {
-                      setSelectedAssignment(assignment);
-                      setShowModal(true);
+      <Container>
+        {/* Tab Navigation */}
+        <Tabs defaultActiveKey="classroom-data" id="classroom-tabs" className="mb-4">
+          <Tab eventKey="classroom-data" title="Lớp học">
+            <Container className="px-0">
+              <Row className="mb-4 align-items-center">
+                <Col xs={12} sm="auto" className="mb-2 mb-sm-0">
+                  <Button
+                    variant="primary"
+                    style={{
+                      backgroundColor: "#07294d",
+                      border: "none",
+                      padding: "0.5rem 1rem",
+                      fontWeight: "500"
                     }}
-                    style={{ cursor: 'pointer' }}
+                    onClick={() => setShowAddModal(true)}
                   >
-                    <Card.Header className="bg-light">
-                      <div className="d-flex align-items-center">
-                        <FontAwesomeIcon icon={faUser} className="me-2 text-primary" />
-                        <span className="fw-medium">{assignment.teacher.name} đã thêm một bài tập mới</span>
-                      </div>
-                    </Card.Header>
-                    <Card.Body>
-                      <Card.Title className="mb-3">{assignment.title}</Card.Title>
-                      <div className="text-muted small">
-                        <div className="mb-2">
-                          <FontAwesomeIcon icon={faClock} className="me-2" />
-                          Posted: {formatDate(assignment.createdAt)}
-                        </div>
-                        <div>
-                          <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
-                          Due: {formatDate(assignment.deadline)}
-                        </div>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                ))}
-              </Col>
-            </Row>
-          </Container>
-        </Tab>
+                    <FontAwesomeIcon icon={faPlus} className="me-2" />
+                    Thêm bài tập
+                  </Button>
+                </Col>
+                <Col xs={12} sm="auto">
+                  <LoadingLink
+                    className="btn btn-secondary"
+                    to={`/upload?classroomId=${id}`}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      padding: "0.5rem 1rem"
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faUpload} />
+                    <span>Tải tài liệu cho AI</span>
+                  </LoadingLink>
+                </Col>
+              </Row>
 
-        <Tab eventKey="students" title="Danh sách học sinh">
-          <Container className="px-0">
-            <div className="students-list-container">
-              {students.length > 0 ? (
-                <Table striped bordered hover responsive>
-                  <thead>
-                    <tr>
-                      <th style={{ width: "10%" }}>#</th>
-                      <th style={{ width: "10%" }}>Tên học sinh</th>
-                      <th style={{ width: "10%" }}>Email</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {students.map((student, index) => (
-                      <tr key={student.id}>
-                        <td>{index + 1}</td>
-                        <td>{student.name}</td>
-                        <td>{student.email}</td>
+              <Row>
+                <Col>
+                  {classroomData.map((assignment) => (
+                    <Card
+                      key={assignment.id}
+                      className="mb-3 shadow-sm"
+                      onClick={() => {
+                        setSelectedAssignment(assignment);
+                        setShowModal(true);
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Card.Header className="bg-light">
+                        <div className="d-flex align-items-center">
+                          <FontAwesomeIcon icon={faUser} className="me-2 text-primary" />
+                          <span className="fw-medium">{assignment.teacher.name} đã thêm một bài tập mới</span>
+                        </div>
+                      </Card.Header>
+                      <Card.Body>
+                        <Card.Title className="mb-3">{assignment.title}</Card.Title>
+                        <div className="text-muted small">
+                          <div className="mb-2">
+                            <FontAwesomeIcon icon={faClock} className="me-2" />
+                            Posted: {formatDate(assignment.createdAt)}
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </Col>
+              </Row>
+            </Container>
+          </Tab>
+
+          <Tab eventKey="students" title="Danh sách học sinh">
+            <Container className="px-0">
+              <div className="students-list-container">
+                {students.length > 0 ? (
+                  <Table striped bordered hover responsive>
+                    <thead>
+                      <tr>
+                        <th style={{ width: "10%" }}>#</th>
+                        <th style={{ width: "10%" }}>Tên học sinh</th>
+                        <th style={{ width: "10%" }}>Email</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              ) : (
-                <p>Không có học sinh trong lớp này.</p>
-              )}
-            </div>
-          </Container>
-        </Tab>
-      </Tabs>
+                    </thead>
+                    <tbody>
+                      {students.map((student, index) => (
+                        <tr key={student.id}>
+                          <td>{index + 1}</td>
+                          <td>{student.name}</td>
+                          <td>{student.email}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <p>Không có học sinh trong lớp này.</p>
+                )}
+              </div>
+            </Container>
+          </Tab>
+        </Tabs>
+      </Container>
 
       {/* Assignment Detail Modal */}
       <Modal
@@ -327,38 +323,10 @@ function TeacherClassroomDetail() {
               </div>
               <div className="mb-3">
                 <strong>Thời gian đăng:</strong> {formatDate(selectedAssignment.createdAt)}
-              </div>
-              <div className="mb-3">
-                <strong>Hạn nộp:</strong> {formatDate(selectedAssignment.deadline)}
-              </div>
-              <div className="mb-3">
-                <strong>Điểm tối đa:</strong> {selectedAssignment.maxPoints}
-              </div>
-              <div className="mb-3">
-                <strong>Chủ đề:</strong> {selectedAssignment.topics.join(", ")}
-              </div>
+              </div>          
               <div className="mb-3">
                 <strong>Hướng dẫn:</strong>
                 <p>{selectedAssignment.instructions}</p>
-              </div>
-              <div className="mb-3">
-                <strong>Tài liệu:</strong>
-                <ul className="list-unstyled mt-2">
-                  {selectedAssignment.materials.map((material) => (
-                    <li key={material.id} className="mb-2">
-                      <FontAwesomeIcon icon={faFileAlt} className="me-2" />
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleDownload(material.id, material.name);
-                        }}
-                      >
-                        {material.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
               </div>
             </Modal.Body>
             <Modal.Footer>
@@ -376,16 +344,12 @@ function TeacherClassroomDetail() {
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Title</Form.Label>
+              <Form.Label>Tiêu đề</Form.Label>
               <Form.Control type="text" onChange={(e) => setNewAssignment({ ...newAssignment, title: e.target.value })} />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Teacher</Form.Label>
-              <Form.Control type="text" onChange={(e) => setNewAssignment({ ...newAssignment, teacher: e.target.value })} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Deadline</Form.Label>
-              <Form.Control type="datetime-local" onChange={(e) => setNewAssignment({ ...newAssignment, deadline: e.target.value })} />
+              <Form.Label>Nội dung</Form.Label>
+              <Form.Control type="text" onChange={(e) => setNewAssignment({ ...newAssignment, instructions : e.target.value })} />
             </Form.Group>
           </Form>
         </Modal.Body>
