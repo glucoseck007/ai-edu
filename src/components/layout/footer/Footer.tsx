@@ -1,3 +1,5 @@
+import Logo from "../../../assets/images/logo-edu.jpg";
+
 function Footer() {
     return (
         <footer id="footer-part">
@@ -7,9 +9,9 @@ function Footer() {
                         <div className="col-lg-4 col-md-6">
                             <div className="footer-about mt-40">
                                 <div className="logo">
-                                    <a href="#" className="text-decoration-none"><img src="./src/assets/images/logo-future-me.png" alt="Logo" /></a>
+                                    <a href="#" className="text-decoration-none"><img src={Logo} alt="Logo" /></a>
                                 </div>
-                                <p>Gravida nibh vel velit auctor aliquetn quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate.</p>
+                                <p className="text-center">Hỗ trợ học sinh cấp 1 học tập</p>
                                 <ul className="mt-20">
                                     <li><a href="#" className="text-decoration-none"><i className="fa fa-facebook-f"></i></a></li>
                                     <li><a href="#" className="text-decoration-none"><i className="fa fa-twitter"></i></a></li>
@@ -64,7 +66,7 @@ function Footer() {
                                             <i className="fa fa-home"></i>
                                         </div>
                                         <div className="cont">
-                                            <p>143 castle road 517 district, kiyev port south Canada</p>
+                                            <p>Smart Kids</p>
                                         </div>
                                     </li>
                                     <li>
@@ -84,23 +86,6 @@ function Footer() {
                                         </div>
                                     </li>
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="footer-copyright pt-10 pb-10">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-8">
-                            <div className="copyright text-md-left text-center">
-                                <p><small>@Copyright by pickerball</small></p>
-                            </div>
-                        </div>
-                        <div className="col-md-4">
-                            <div className="copyright text-md-right text-center">
-                                <p><small>Dec 2024</small></p>
                             </div>
                         </div>
                     </div>

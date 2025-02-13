@@ -87,7 +87,7 @@ const Classroom = () => {
                       {classroom.classroomCode || "Mã lớp học."}
                     </Card.Text>
                     <LoadingLink
-                      to={`/classroom/classroom-detail?classroomId=${classroom.id}`}
+                      to={`/${auth.user?.roles[0]}/class-detail?classroomId=${classroom.id}`}
                     >
                       <Button variant="warning" style={{ color: "white" }}>
                         Xem chi tiết

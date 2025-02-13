@@ -1,6 +1,10 @@
 .chat-container {
   height: 100vh;
-  padding: 1rem;
+  .col-md-1,
+  .col-md-11 {
+    padding: 0;
+    margin: 0;
+  }
 }
 
 .chat-card {
@@ -76,6 +80,7 @@
     padding: 0.5rem 1rem;
     border-radius: 1rem;
     max-width: 70%;
+    color: "white";
   }
 }
 

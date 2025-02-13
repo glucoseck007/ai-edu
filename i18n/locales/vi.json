@@ -15,10 +15,10 @@
   "explainMe": {
     "header": {
       "links": {
-        "futureMe": "Future Me"
+        "futureMe": "Smart Kids"
       },
       "button": {
-        "futureMe": "Future Me",
+        "futureMe": "Smart Kids",
         "testMe": "Test Me",
         "explainMe": "Explain Me",
         "aboutUs": "Về chúng tôi",
@@ -32,7 +32,7 @@
     },
     "hero": {
       "title": "Giải Thích",
-      "description": "Hãy làm bài kiểm tra và xem Future Me mô tả chính xác về con người cũng như nghề nghiệp của bạn trong tương lai",
+      "description": "Hãy làm bài kiểm tra và xem Smart Kids mô tả chính xác về con người cũng như nghề nghiệp của bạn trong tương lai",
       "search": {
         "placeholder": "Tìm kiếm...",
         "button": "Tìm kiếm",
@@ -46,7 +46,7 @@
       "showMore": "Xem thêm"
     },
     "video": {
-      "title": "Video của Future Me",
+      "title": "Video của Smart Kids",
       "cardTitle": "Tiêu đề video",
       "cardText": "Mô tả video",
       "showMore": "Xem thêm"
@@ -57,20 +57,20 @@
       "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor."
     },
     "footer": {
-      "slogan": "Future Me - Hệ thống giáo dục trực tuyến theo định hướng nghề nghiệp.",
+      "slogan": "Smart Kids - Hệ thống giáo dục trực tuyến theo định hướng nghề nghiệp.",
       "description": "Hãy cũng tìm hiểu về định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân bạn nhé!",
       "sections": {
-        "aboutUs": "Về Future Me",
+        "aboutUs": "Về Smart Kids",
         "features": "Tính năng",
         "articles": "Bài viết",
         "policies": "Chính sách"
       },
       "aboutUs": {
         "intro": "Giới thiệu",
-        "description": "Future Me là gì?"
+        "description": "Smart Kids là gì?"
       },
       "features": {
-        "futureMe": "Future Me",
+        "futureMe": "Smart Kids",
         "testMe": "Test Me",
         "explainMe": "Explain Me"
       },
@@ -83,7 +83,7 @@
         "terms": "Điều khoản sử dụng",
         "privacy": "Chính sách bảo mật"
       },
-      "copyright": "Bản quyền © Future Me"
+      "copyright": "Bản quyền © Smart Kids"
     }
   },
   "auth": {
@@ -113,7 +113,7 @@
     },
     "checkboxTitle": {
       "rememberMe": "Nhớ mật khẩu",
-      "policyAcceptance": "Chấp nhận <a href='{{termsUrl}}' target='_blank'>Điều khoản sử dụng</a> và <a href='{{policyUrl}}' target='_blank'>Chính sách bảo mật</a> của Future Me."
+      "policyAcceptance": "Chấp nhận <a href='{{termsUrl}}' target='_blank'>Điều khoản sử dụng</a> và <a href='{{policyUrl}}' target='_blank'>Chính sách bảo mật</a> của Smart Kids."
     },
     "placeholder": {
       "fullname": "Nhập họ và tên",
@@ -131,8 +131,8 @@
       "passwordSpecial": "Mật khẩu phải có ít nhất 1 ký tự đặc biệt"
     },
     "paragraph": {
-      "lorem-login-page": "Hãy cùng Future Me bắt đầu tìm hiểu những khái niệm đầu tiên về việc định hướng nghề nghiệp và tìm ra nghề nghiệp phù hợp với bản thân!",
-      "lorem-register-page": "Chào mừng bạn đến với Future Me. Hãy cùng chúng tôi bắt đầu hành trình khám phá bản thân!"
+      "lorem-login-page": "Hãy cùng Smart Kids đồng hành để giúp trẻ học tập hiệu quả hơn!",
+      "lorem-register-page": "Chào mừng bạn đến với Smart Kids! Hãy cùng chúng tôi khởi đầu hành trình học tập đầy hứng khởi!"
     }
   },
   "questionSpecific": {

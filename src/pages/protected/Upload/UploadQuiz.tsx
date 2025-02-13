@@ -7,9 +7,17 @@ import {
 import { faGoogleDrive } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
 import axios from "axios";
+import {
+  Book,
+  Calculator,
+  FlaskConical,
+  Globe,
+  Landmark,
+  Library,
+} from "lucide-react";
 
 const UploadQuiz: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -18,6 +26,20 @@ const UploadQuiz: React.FC = () => {
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   const classroomId = query.get("classroomId");
+  const navigate = useNavigate();
+
+  const subjects = [
+    { id: "math", name: "Toán học", icon: <Calculator /> },
+    { id: "history", name: "Lịch sử", icon: <Landmark /> },
+    { id: "english", name: "Tiếng Anh", icon: <Book /> },
+    { id: "geography", name: "Địa lý", icon: <Globe /> },
+    { id: "physics", name: "Khoa học", icon: <FlaskConical /> },
+    { id: "literature", name: "Văn học", icon: <Library /> },
+  ];
+
+  const handleSubjectSelect = (subjectName: string) => {
+    setSubject(subjectName);
+  };
 
   const handleFileSelect = () => {
     fileInputRef.current?.click();
@@ -62,8 +84,12 @@ const UploadQuiz: React.FC = () => {
       );
 
       console.log("File uploaded successfully:", response.data);
+
+      localStorage.setItem("quiz", JSON.stringify(response.data));
       alert("File uploaded successfully.");
       setSelectedFile(null);
+      navigate("/teacher/review-test");
+      console.log("Check response:", response.data);
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("There was an error uploading the file.");
@@ -87,19 +113,41 @@ const UploadQuiz: React.FC = () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="subject">Môn học</label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    required
-                  />
+                  <label htmlFor="title">Môn học</label>
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      style={{ backgroundColor: "rgb(45, 100, 159)" }}
+                      id="dropdown-basic"
+                    >
+                      {subject ? (
+                        <>
+                          {subjects.find((s) => s.name === subject)?.icon}{" "}
+                          &nbsp;
+                          {subjects.find((s) => s.name === subject)?.name}
+                        </>
+                      ) : (
+                        "Chọn môn học"
+                      )}
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      {subjects.map((subj) => (
+                        <Dropdown.Item
+                          key={subj.id}
+                          onClick={() => handleSubjectSelect(subj.name)}
+                        >
+                          {subj.icon} &nbsp; {subj.name}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
 
                 <Dropdown>
-                  <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  <Dropdown.Toggle
+                    style={{ backgroundColor: "rgb(45, 100, 159)" }}
+                    id="dropdown-basic"
+                  >
                     <FontAwesomeIcon icon={faPaperclip} className="me-2" />
                     Chọn Tệp
                   </Dropdown.Toggle>
@@ -145,7 +193,7 @@ const UploadQuiz: React.FC = () => {
                 )}
 
                 <Button
-                  variant="primary"
+                  style={{ backgroundColor: "rgb(45, 100, 159)" }}
                   type="submit"
                   className="mt-3"
                   disabled={!selectedFile}

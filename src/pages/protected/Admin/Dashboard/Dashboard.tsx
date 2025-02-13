@@ -2,7 +2,6 @@ import { Row, Col, Container } from "react-bootstrap"
 import { useLocation } from "react-router-dom";
 import UserList from "./UserList";
 import Courses from "./Courses";
-import Assignments from "./Assignments";
 import HomeDashboard from "./Home";
 import SidebarComponent from "../../../../components/sidebar/AdminSideBar";
 
@@ -16,8 +15,6 @@ const SuperAdminDashboard: React.FC = () => {
                 return <UserList />
             case "courses":
                 return <Courses />
-            case "assignments":
-                return <Assignments />
             default:
                 return <HomeDashboard />
         }

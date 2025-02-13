@@ -57,7 +57,7 @@ function Carousel() {
     <section id="slider-part" className="slider-active">
       <div
         className="single-slider bg_cover pt-150"
-        style={{ backgroundImage: "url(./src/assets/images/slider/s-1.jpg)" }}
+        style={{ backgroundImage: "url(./src/assets/images/bg1.png)" }}
         data-overlay="4"
       >
         <div className="container">
@@ -68,10 +68,7 @@ function Carousel() {
                   Trải nghiệm học tập tuyệt vời
                 </h1>
                 <p data-animation="fadeInUp" data-delay="1.3s">
-                  Website học tập dành cho trẻ em với nội dung phong phú, tương
-                  tác sinh động và phương pháp giáo dục hiện đại. Giúp bé khám
-                  phá thế giới qua các bài học trực quan, trò chơi bổ ích và bài
-                  tập phát triển tư duy.
+                Website học tập dành cho trẻ em với nội dung đa dạng, phong phú, hình thức tương tác sinh động và áp dụng phương pháp giáo dục tiên tiến, giúp các em tiếp thu kiến thức một cách hiệu quả và hứng thú hơn.
                 </p>
               </div>
             </div>
@@ -81,7 +78,7 @@ function Carousel() {
 
       <div
         className="single-slider bg_cover pt-150"
-        style={{ backgroundImage: "url(./src/assets/images/slider/s-2.jpg)" }}
+        style={{ backgroundImage: "url(./src/assets/images/bg2.png)" }}
         data-overlay="4"
       >
         <div className="container">
@@ -89,37 +86,13 @@ function Carousel() {
             <div className="col-xl-7 col-lg-9">
               <div className="slider-cont">
                 <h1 data-animation="bounceInLeft" data-delay="1s">
-                  Học Vui – Chơi Hay, Bé Thông Minh Mỗi Ngày!
+                  Học dễ dàng, dạy hiệu quả!
                 </h1>
                 <p data-animation="fadeInUp" data-delay="1.3s">
-                  Website học tập cho trẻ – Nơi bé vừa học vừa chơi, phát triển
-                  tư duy sáng tạo với bài giảng sinh động, trò chơi trí tuệ và
-                  hoạt động tương tác thú vị!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="single-slider bg_cover pt-150"
-        style={{ backgroundImage: "url(./src/assets/images/slider/s-3.jpg)" }}
-        data-overlay="4"
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-xl-7 col-lg-9">
-              <div className="slider-cont">
-                <h1 data-animation="bounceInLeft" data-delay="1s">
-                  Học mà chơi, chơi mà học!
-                </h1>
-                <p data-animation="fadeInUp" data-delay="1.3s">
-                  🔹 Bài học đa dạng: Toán, Tiếng Việt, Tiếng Anh, Khoa học...{" "}
+                  Nền tảng chatbot thông minh hỗ trợ.{" "}
                   <br />
-                  🔹 Trò chơi giáo dục hấp dẫn giúp bé ghi nhớ nhanh <br />
-                  🔹 Video hoạt hình sinh động giúp bé tiếp thu dễ dàng <br />
-                  🔹 Bài tập phát triển tư duy, kỹ năng giải quyết vấn đề
+                  🔹 Cho giáo viên: Tải lên tài liệu, tạo quiz nhanh chóng, quản lý học tập hiệu quả. <br />
+                  🔹 Cho học sinh: Hỏi đáp tức thì, luyện tập với quiz, nâng cao khả năng tự học. <br />
                 </p>
               </div>
             </div>

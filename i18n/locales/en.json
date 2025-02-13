@@ -1,10 +1,10 @@
 {
     "header": {
         "links": {
-            "futureMe": "Future Me"
+            "futureMe": "Smart Kids"
         },
         "button": {
-            "futureMe": "Future Me",
+            "futureMe": "Smart Kids",
             "testMe": "Test Me",
             "explainMe": "Explain Me",
             "aboutUs": "About Us",
@@ -18,7 +18,7 @@
     },
     "hero": {
         "title": "Explanation",
-        "description": "Take the test and see how Future Me accurately describes your personality and future career",
+        "description": "Take the test and see how Smart Kids accurately describes your personality and future career",
         "search": {
             "placeholder": "Search...",
             "button": "Search",
@@ -32,7 +32,7 @@
         "showMore": "Show more"
     },
     "video": {
-        "title": "Future Me Videos",
+        "title": "Smart Kids Videos",
         "cardTitle": "Video title",
         "cardText": "Video description",
         "showMore": "Show more"
@@ -43,20 +43,20 @@
         "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor."
     },
     "footer": {
-        "slogan": "Future Me - Career-oriented online education system",
+        "slogan": "Smart Kids - Career-oriented online education system",
         "description": "Let's explore career orientations and find the right career for you!",
         "sections": {
-            "aboutUs": "About Future Me",
+            "aboutUs": "About Smart Kids",
             "features": "Features",
             "articles": "Articles",
             "policies": "Policies"
         },
         "aboutUs": {
             "intro": "Introduction",
-            "description": "What is Future Me?"
+            "description": "What is Smart Kids?"
         },
         "features": {
-            "futureMe": "Future Me",
+            "futureMe": "Smart Kids",
             "testMe": "Test Me",
             "explainMe": "Explain Me"
         },
@@ -69,6 +69,6 @@
             "terms": "Terms of Use",
             "privacy": "Privacy Policy"
         },
-        "copyright": "Copyright © Future Me"
+        "copyright": "Copyright © Smart Kids"
     }
 }
