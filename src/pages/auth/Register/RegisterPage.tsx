@@ -29,7 +29,7 @@ function RegisterPage() {
   const [phone, setPhone] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const [school, setSchool] = useState<string>("");
+  const [schoolCode, setSchoolCode] = useState<string>("");
   const [role, setRole] = useState<"student" | "teacher">("student");
   const [policy, setPolicy] = useState<boolean>(false);
   const [classCode, setClassCode] = useState<string>("");
@@ -53,7 +53,7 @@ function RegisterPage() {
   const handleRegister = async () => {
     setIsSubmitting(true);
 
-    if (!email.trim() || !password.trim() || !phone.trim() || !firstName.trim() || classCode.trim() || className.trim()) {
+    if (!email.trim() || !password.trim() || !phone.trim() || !firstName.trim() || !classCode.trim() || !className.trim() || !schoolCode.trim()) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       setTimeout(() => {
@@ -100,8 +100,8 @@ function RegisterPage() {
           username: email,
           password,
           firstName,
-          lastName: "",
-          school,
+          lastName,
+          schoolCode,
           role,
           phone,
           classCode,
@@ -188,7 +188,6 @@ function RegisterPage() {
     }
   };
 
-
   return (
     <>
       <div className="register-container">
@@ -243,8 +242,8 @@ function RegisterPage() {
               />
               <CustomToggleButton onRoleChange={handleRoleChange} />
               <TextInput
-                value={school}
-                onChange={(value) => setSchool(value)}
+                value={schoolCode}
+                onChange={(value) => setSchoolCode(value)}
                 label={t("Mã trường học")}
                 placeholder={t("Nhập mã trường học")}
                 icon={faSchool}
