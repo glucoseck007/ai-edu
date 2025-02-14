@@ -31,6 +31,8 @@ function RegisterPage() {
   const [school, setSchool] = useState<string>("");
   const [role, setRole] = useState<"student" | "teacher">("student");
   const [policy, setPolicy] = useState<boolean>(false);
+  const [classCode, setClassCode] = useState<string>("");
+  const [className, setClassName] = useState<string>("");
 
   const [showVerificationModal, setShowVerificationModal] = useState<boolean>(false);
   const [verificationCode, setVerificationCode] = useState<string>("");
@@ -50,7 +52,7 @@ function RegisterPage() {
   const handleRegister = async () => {
     setIsSubmitting(true);
 
-    if (!email.trim() || !password.trim() || !phone.trim() || !fullName.trim()) {
+    if (!email.trim() || !password.trim() || !phone.trim() || !fullName.trim() || classCode.trim() || className.trim()) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       setTimeout(() => {
@@ -74,7 +76,21 @@ function RegisterPage() {
 
       setIsSubmitting(false);
       return;
+    };
+
+    if (classCode < "1" || classCode > "5") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(() => {
+        setToastStatus("warning");
+        setToastMessage(t("Khối phải từ 1-5"));
+        setShowToast(true);
+      }, 300);
+
+      setIsSubmitting(false);
+      return;
     }
+
 
     try {
       const response = await axios.post(
@@ -215,6 +231,27 @@ function RegisterPage() {
                 placeholder={t("auth.placeholder.school")}
                 icon={faSchool}
               />
+
+              {
+                role === "student" && (
+                  <>
+                    <TextInput
+                      value={classCode}
+                      onChange={(value) => setClassCode(value)}
+                      label={t("Khối")}
+                      placeholder={t("Nhập khối từ 1-5")}
+                      icon={faSchool}
+                    />
+                    <TextInput
+                      value={className}
+                      onChange={(value) => setClassName(value)}
+                      label={t("Lớp")}
+                      placeholder={t("Nhập lớp")}
+                      icon={faSchool}
+                    />
+                  </>
+                )
+              }
               <Form.Check
                 className="policy"
                 checked={policy}
@@ -308,7 +345,7 @@ function RegisterPage() {
               style={{
                 whiteSpace: 'nowrap',
                 height: '40px',
-                marginTop:"30px" // Match the typical height of the TextInput
+                marginTop: "30px"
               }}
             >
               Send Again
