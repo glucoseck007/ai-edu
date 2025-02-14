@@ -3,7 +3,7 @@ import "./register.css";
 import { useState } from "react";
 import { faSchool, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Trans, useTranslation } from "react-i18next";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import TextInput from "../../../components/common/input/Text-Input";
 import PhoneInput from "../../../components/common/input/Phone-Input";
 import CustomToggleButton from "../../../components/common/button/toggle-button/Custom-Toggle-Button";
@@ -27,7 +27,8 @@ function RegisterPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [fullName, setFullName] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [school, setSchool] = useState<string>("");
   const [role, setRole] = useState<"student" | "teacher">("student");
   const [policy, setPolicy] = useState<boolean>(false);
@@ -52,7 +53,7 @@ function RegisterPage() {
   const handleRegister = async () => {
     setIsSubmitting(true);
 
-    if (!email.trim() || !password.trim() || !phone.trim() || !fullName.trim() || classCode.trim() || className.trim()) {
+    if (!email.trim() || !password.trim() || !phone.trim() || !firstName.trim() || classCode.trim() || className.trim()) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       setTimeout(() => {
@@ -98,10 +99,13 @@ function RegisterPage() {
         {
           username: email,
           password,
-          fullName,
+          firstName,
+          lastName: "",
           school,
           role,
           phone,
+          classCode,
+          className
         }
       );
 
@@ -200,14 +204,28 @@ function RegisterPage() {
               <h2 className="register-left-header">
                 {t("auth.header.register")}
               </h2>
-              <TextInput
-                label={t("auth.inputLabel.fullname")}
-                placeholder={t("auth.placeholder.fullname")}
-                icon={faUser}
-                value={fullName}
-                onChange={(value) => setFullName(value)}
-                isRequired
-              />
+              <Row>
+                <Col md={6}>
+                  <TextInput
+                    label={t("Họ")}
+                    placeholder={t("Nhập họ")}
+                    icon={faUser}
+                    value={firstName}
+                    onChange={(value) => setFirstName(value)}
+                    isRequired
+                  />
+                </Col>
+                <Col md={6}>
+                  <TextInput
+                    label={t("Tên")}
+                    placeholder={t("Nhập tên")}
+                    icon={faUser}
+                    value={lastName}
+                    onChange={(value) => setLastName(value)}
+                    isRequired
+                  />
+                </Col>
+              </Row>
               <EmailInput
                 isRequired
                 value={email}
@@ -227,8 +245,8 @@ function RegisterPage() {
               <TextInput
                 value={school}
                 onChange={(value) => setSchool(value)}
-                label={t("auth.inputLabel.school")}
-                placeholder={t("auth.placeholder.school")}
+                label={t("Mã trường học")}
+                placeholder={t("Nhập mã trường học")}
                 icon={faSchool}
               />
 
