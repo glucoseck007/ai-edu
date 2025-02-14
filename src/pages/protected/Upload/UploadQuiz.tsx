@@ -69,7 +69,7 @@ const UploadQuiz: React.FC = () => {
 
     const formData = new FormData();
     formData.append("file", selectedFile);
-    formData.append("classroomId", classroomId || "");
+    formData.append("classroomId", classroomId ?? "");
     formData.append("subject", subject);
 
     try {

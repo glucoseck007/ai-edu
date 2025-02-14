@@ -3,8 +3,10 @@ package com.edu.aiedu.service;
 import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Classroom;
+import com.edu.aiedu.entity.School;
 import com.edu.aiedu.repository.AccountRepository;
 import com.edu.aiedu.repository.ClassroomRepository;
+import com.edu.aiedu.repository.SchoolRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +19,21 @@ import java.util.stream.Collectors;
 @Service
 public class ClassroomService {
 
+    private final SchoolRepository schoolRepository;
     private final ClassroomRepository classroomRepository;
     private final AccountRepository accountRepository;
 
     @Autowired
-    public ClassroomService(ClassroomRepository classroomRepository, AccountRepository accountRepository) {
+    public ClassroomService(ClassroomRepository classroomRepository, AccountRepository accountRepository, SchoolRepository schoolRepository) {
         this.classroomRepository = classroomRepository;
         this.accountRepository = accountRepository;
+        this.schoolRepository = schoolRepository;
     }
 
     public Classroom addClass(ClassroomDTO classroomDTO) {
         Account account = accountRepository.findById(classroomDTO.getAccountId())
                 .orElseThrow(() -> new RuntimeException("Account not found"));
+        Optional<School> school = schoolRepository.findBySchoolCode(classroomDTO.getSchoolCode());
 
         Classroom classroom = Classroom.builder()
                 .name(classroomDTO.getName())
@@ -37,6 +42,7 @@ public class ClassroomService {
                 .room(classroomDTO.getRoom())
                 .account(account)
                 .classroomCode(generateUniqueClassroomCode())
+                .school(school.get())
                 .build();
 
         return classroomRepository.save(classroom);
@@ -54,6 +60,23 @@ public class ClassroomService {
                 accountId,
                 classroom.getClassroomCode()
         )).toList();
+    }
+
+    @Transactional
+    public void deleteClassroom(String schoolCode, String className) {
+        Optional<School> schoolOpt = schoolRepository.findBySchoolCode(schoolCode);
+
+        if (schoolOpt.isPresent()) {
+            Optional<Classroom> classroomOpt = classroomRepository.findByNameAndSchool(className, schoolOpt.get());
+
+            if (classroomOpt.isPresent()) {
+                classroomRepository.delete(classroomOpt.get());  // EntityManager remove() is called here
+            } else {
+                throw new RuntimeException("Classroom not found");
+            }
+        } else {
+            throw new RuntimeException("School not found");
+        }
     }
 
     public List<ClassroomDTO> getClassroomsByAccountId(String accountId) {

@@ -1,10 +1,18 @@
 package com.edu.aiedu.controller;
 
+import com.edu.aiedu.dto.ai.AIClassroomDTO;
+import com.edu.aiedu.dto.ai.TeacherClassDTO;
 import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.dto.request.JoinClassroomRequest;
+import com.edu.aiedu.dto.response.ApiResponse;
 import com.edu.aiedu.entity.Classroom;
 import com.edu.aiedu.service.AccountService;
 import com.edu.aiedu.service.ClassroomService;
+import com.edu.aiedu.service.ExternalApiService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +21,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/classroom")
 public class ClassroomController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClassroomController.class);
+
     private final AccountService accountService;
     private final ClassroomService classroomService;
+    @Autowired
+    private ExternalApiService externalApiService;
 
     public ClassroomController(ClassroomService classroomService, AccountService accountService) {
         this.classroomService = classroomService;
@@ -31,10 +44,42 @@ public class ClassroomController {
                 savedClassroom.getSubject(),
                 savedClassroom.getRoom(),
                 savedClassroom.getAccount().getId(), // Only return the Account ID
-                savedClassroom.getClassroomCode()
+                savedClassroom.getClassroomCode(),
+                savedClassroom.getSchool().getSchoolCode()
         );
+
+        AIClassroomDTO aiClassroomDTO = new AIClassroomDTO();
+        aiClassroomDTO.setClass_name(savedClassroom.getName());
+        aiClassroomDTO.setClass_level(savedClassroom.getSection());
+        aiClassroomDTO.setSchool_code(savedClassroom.getSchool().getSchoolCode());
+
+        TeacherClassDTO teacherClassDTO = new TeacherClassDTO();
+        teacherClassDTO.setClass_name(savedClassroom.getName());
+        teacherClassDTO.setTeacher_code(savedClassroom.getAccount().getId().substring(0, 5));
+        teacherClassDTO.setSchool_code(savedClassroom.getSchool().getSchoolCode());
+
+        externalApiService.callExternalAddClassAPI(aiClassroomDTO);
+        externalApiService.callExternalAddTeacherToClass(teacherClassDTO);
+
         return ResponseEntity.ok(responseDTO);
     }
+
+    @DeleteMapping("/remove_class/{class_name}/{school_code}")
+    public ResponseEntity<ClassroomDTO> removeClass(@PathVariable String class_name, @PathVariable String school_code) {
+        logger.info(school_code);
+        try {
+            classroomService.deleteClassroom(school_code, class_name);
+            externalApiService.callExternalDeleteSchoolAPI(school_code);
+
+            ClassroomDTO responseDTO = new ClassroomDTO(class_name, school_code);
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @GetMapping("/list_classes_owner")
     public ResponseEntity<List<ClassroomDTO>> getOwnClassesByAccountId(@RequestParam String accountId) {

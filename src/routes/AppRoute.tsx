@@ -48,8 +48,17 @@ const AppRoute: React.FC = () => {
         <Route path="/tests" element={<TestList />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/upload-quiz" element={<UploadQuiz />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/upload-quiz" element={<UploadQuiz />} />
         <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/classroom" element={<Classroom />} />
+        <Route path="/teacher/review-test" element={<ReviewTest />} />
+        <Route path="/student/profile/:id" element={<StudentProfile />} />
+        <Route path="/teacher/profile/:id" element={<TeacherProfile />} />
+        <Route
+          path="/student/class-detail"
+          element={<StudentClassroomDetail />}
+        />
         <Route path="/teacher/review-test" element={<ReviewTest />} />
         <Route path="/student/profile/:id" element={<StudentProfile />} />
         <Route path="/teacher/profile/:id" element={<TeacherProfile />} />
@@ -61,12 +70,20 @@ const AppRoute: React.FC = () => {
           path="/teacher/class-detail"
           element={<TeacherClassroomDetail />}
         />
+        <Route
+          path="/teacher/class-detail"
+          element={<TeacherClassroomDetail />}
+        />
         <Route path="/add-class" element={<AddClass />} />
+        <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
         <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
         <Route path="/student/test-result/:id" element={<ResultTest />} />
         <Route path="/teacher/test-result/:id" element={<ClassResultTest />} />
-        <Route path="/teacher/test-result/:id/:studentid" element={<ResultTest />} />
+        <Route
+          path="/teacher/test-result/:id/:studentid"
+          element={<ResultTest />}
+        />
       </Route>
 
       {/* Test Routes */}
@@ -76,9 +93,9 @@ const AppRoute: React.FC = () => {
         <Route path="teacher/chat-bot" element={<TeacherChatBot />} />
       </Route>
 
-      <Route element={<ChatLayouts />}>
+      <Route element={<ChatLayouts />}></Route>
 
-      </Route>
+      <Route element={<ChatLayouts />}></Route>
     </Routes>
   );
 };

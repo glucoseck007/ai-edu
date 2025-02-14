@@ -2,10 +2,7 @@ package com.edu.aiedu.service;
 
 import com.edu.aiedu.Utils.SecurityUtil;
 import com.edu.aiedu.dto.request.ClassroomDTO;
-import com.edu.aiedu.dto.request.account.AccountCreationRequest;
-import com.edu.aiedu.dto.request.account.AccountUpdateRequest;
-import com.edu.aiedu.dto.request.account.PasswordChangeRequest;
-import com.edu.aiedu.dto.request.account.PasswordCreationRequest;
+import com.edu.aiedu.dto.request.account.*;
 import com.edu.aiedu.dto.response.AccountResponse;
 import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Classroom;
@@ -30,6 +27,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,14 +38,22 @@ public class AccountService {
     private final AccountClassroomRepository accountClassroomRepository;
     AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
+    EmailService emailService;
+
+    public void verifyAccount(AccountVerificationRequest request) {
+        Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (account.isVerified()) throw new AppException(ErrorCode.ACCOUNT_ALREADY_VERIFIED);
+
+        if (!account.getVerificationCode().equals(request.getVerificationCode()) || account.getVerificationCodeExpiry().isBefore(LocalDateTime.now())) {
+            throw new AppException(ErrorCode.INVALID_VERIFICATION_CODE);
+        }
+    }
 
     public AccountResponse createAccount(AccountCreationRequest request) {
 
         if (accountRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.ACCOUNT_EXISTED);
-
-//        if (accountRepository.existsByEmail(request.getEmail()))
-//            throw new AppException(ErrorCode.EMAIL_HAS_BEEN_USED);
 
         Account account = accountMapper.toUser(request);
         account.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -61,8 +67,41 @@ public class AccountService {
         account.setCreatedDate(LocalDateTime.now());
         account.setCreatedBy(SecurityUtil.getCurrentUsername());
 
-        return accountMapper.toUserResponse(accountRepository.save(account));
+        // Generate verification code
+        String verificationCode = generateVerificationCode();
+        account.setVerificationCode(verificationCode);
+        account.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(15)); // Valid for 15 mins
+
+        accountRepository.save(account);
+
+        // Send verification email
+        emailService.sendVerificationEmail("khicongkhanh@gmail.com", verificationCode);
+
+        return accountMapper.toUserResponse(account);
     }
+
+//    public AccountResponse createAccount(AccountCreationRequest request) {
+//
+//        if (accountRepository.existsByUsername(request.getUsername()))
+//            throw new AppException(ErrorCode.ACCOUNT_EXISTED);
+//
+////        if (accountRepository.existsByEmail(request.getEmail()))
+////            throw new AppException(ErrorCode.EMAIL_HAS_BEEN_USED);
+//
+//        Account account = accountMapper.toUser(request);
+//        account.setPassword(passwordEncoder.encode(request.getPassword()));
+//
+//        HashSet<String> roles = new HashSet<>();
+//        if (isValidRole(request.getRole())) {
+//            roles.add(request.getRole());
+//            account.setRoles(roles);
+//        } else throw new AppException(ErrorCode.ROLE_NOT_VALID);
+//
+//        account.setCreatedDate(LocalDateTime.now());
+//        account.setCreatedBy(SecurityUtil.getCurrentUsername());
+//
+//        return accountMapper.toUserResponse(accountRepository.save(account));
+//    }
 
     private boolean isValidRole(String value) {
         try {
@@ -149,6 +188,11 @@ public class AccountService {
         account.setLastModifiedBy(SecurityUtil.getCurrentUsername());
     }
 
+    public void deleteById(String userId) {
+        var account = accountRepository.findById(userId).orElseThrow(() -> new RuntimeException("Account not found"));
+        accountRepository.deleteById(userId);
+    }
+
     public List<ClassroomDTO> getClassesForAccount(String accountId) {
         List<Classroom> classrooms = accountClassroomRepository.findClassroomsByAccountId(accountId);
 
@@ -162,5 +206,11 @@ public class AccountService {
                         .accountId(classroom.getAccount().getId())
                         .classroomCode(classroom.getClassroomCode())
                         .build()).collect(Collectors.toList());
+    }
+
+    private String generateVerificationCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000); // 6-digit code
+        return String.valueOf(code);
     }
 }

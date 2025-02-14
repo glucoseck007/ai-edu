@@ -4,6 +4,7 @@ import { useState } from "react";
 import { faSchool, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Trans, useTranslation } from "react-i18next";
 import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import TextInput from "../../../components/common/input/Text-Input";
 import PhoneInput from "../../../components/common/input/Phone-Input";
 import CustomToggleButton from "../../../components/common/button/toggle-button/Custom-Toggle-Button";
@@ -20,6 +21,7 @@ function RegisterPage() {
   const policyUrl = "";
   const termsUrl = "";
   const VERIFICATION_TIMEOUT = 60;
+  const VERIFICATION_TIMEOUT = 60;
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -32,9 +34,11 @@ function RegisterPage() {
   const [role, setRole] = useState<"student" | "teacher">("student");
   const [policy, setPolicy] = useState<boolean>(false);
 
-  const [showVerificationModal, setShowVerificationModal] = useState<boolean>(false);
+  const [showVerificationModal, setShowVerificationModal] =
+    useState<boolean>(false);
   const [verificationCode, setVerificationCode] = useState<string>("");
-  const [timeRemaining, setTimeRemaining] = useState<number>(VERIFICATION_TIMEOUT);
+  const [timeRemaining, setTimeRemaining] =
+    useState<number>(VERIFICATION_TIMEOUT);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
@@ -50,7 +54,12 @@ function RegisterPage() {
   const handleRegister = async () => {
     setIsSubmitting(true);
 
-    if (!email.trim() || !password.trim() || !phone.trim() || !fullName.trim()) {
+    if (
+      !email.trim() ||
+      !password.trim() ||
+      !phone.trim() ||
+      !fullName.trim()
+    ) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       setTimeout(() => {
@@ -65,9 +74,11 @@ function RegisterPage() {
 
     if (!policy) {
       window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
       setTimeout(() => {
         setToastStatus("warning");
+        setToastMessage(t("Please accept the terms and conditions!"));
         setToastMessage(t("Please accept the terms and conditions!"));
         setShowToast(true);
       }, 300);
@@ -109,12 +120,15 @@ function RegisterPage() {
     } catch (error: any) {
       // Scroll to top first
       window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
       // Show error toast after scroll
       setTimeout(() => {
         setToastStatus("error");
         setToastMessage(
-          error.response?.data?.message || error.message || "An error occurred during registration"
+          error.response?.data?.message ||
+            error.message ||
+            "An error occurred during registration"
         );
         setShowToast(true);
       }, 300);
@@ -148,12 +162,14 @@ function RegisterPage() {
       // API call to verify the code
       await axios.post(`${import.meta.env.VITE_API}/accounts/verify-code`, {
         email,
-        code: verificationCode
+        code: verificationCode,
       });
 
       setShowVerificationModal(false);
       setToastStatus("success");
-      setToastMessage(t("Email verified successfully! Redirecting to login..."));
+      setToastMessage(
+        t("Email verified successfully! Redirecting to login...")
+      );
       setShowToast(true);
 
       setTimeout(() => {
@@ -161,13 +177,14 @@ function RegisterPage() {
       }, 2000);
     } catch (error: any) {
       setToastStatus("error");
-      setToastMessage(error.response?.data?.message || "Invalid verification code");
+      setToastMessage(
+        error.response?.data?.message || "Invalid verification code"
+      );
       setShowToast(true);
     } finally {
       setIsVerifying(false);
     }
   };
-
 
   return (
     <>
@@ -284,14 +301,16 @@ function RegisterPage() {
           </div>
         </div>
       </div>
-      <Modal show={showVerificationModal} onHide={() => setShowVerificationModal(false)}>
+      <Modal
+        show={showVerificationModal}
+        onHide={() => setShowVerificationModal(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>{t("Email Verification")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>{t("Please enter the verification code sent to your email")}</p>
-          <p className="text-muted">
-          </p>
+          <p className="text-muted"></p>
           <div className="d-flex align-items-start gap-2">
             <div className="col-8 p-0">
               <TextInput
@@ -306,9 +325,9 @@ function RegisterPage() {
               onClick={sendVerificationCode}
               className="col-3"
               style={{
-                whiteSpace: 'nowrap',
-                height: '40px',
-                marginTop:"30px" // Match the typical height of the TextInput
+                whiteSpace: "nowrap",
+                height: "40px",
+                marginTop: "30px", // Match the typical height of the TextInput
               }}
             >
               Send Again

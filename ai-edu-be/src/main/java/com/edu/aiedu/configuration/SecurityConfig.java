@@ -33,10 +33,13 @@ public class SecurityConfig {
             "/api/auth/logout",
             "/api/auth/outbound/authentication",
             "/api/accounts/create-account",
-            "api/ask_question",
+            "/api/accounts/verify-account",
+            "/api/ask_question",
+            "/api/school/add_school",
             "/api/classroom-content/upload",
-            "api/classroom/add_class",
-            "/api/classroom/join"
+            "/api/classroom/add_class",
+            "/api/classroom/join",
+            "/api/subject/add_subject",
     };
 
     private CustomJwtDecoder jwtDecoder;
@@ -47,6 +50,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/school/remove_school/**", "/api/classroom/remove_class/**", "/api/accounts/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/classroom-content/**",
                                 "/api/classroom/**",

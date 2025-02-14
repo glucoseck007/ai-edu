@@ -42,4 +42,10 @@ public class Classroom extends BaseEntity {
     @ManyToMany(mappedBy = "joinedClassrooms")
     @JsonManagedReference
     private Set<Account> members;
+
+    @ManyToOne
+    @JoinColumn(name = "school_code", nullable = false)
+    @JsonBackReference
+    private School school;
+
 }

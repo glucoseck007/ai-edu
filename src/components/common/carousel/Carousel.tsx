@@ -58,6 +58,7 @@ function Carousel() {
       <div
         className="single-slider bg_cover pt-150"
         style={{ backgroundImage: "url(./src/assets/images/bg1.png)" }}
+        style={{ backgroundImage: "url(./src/assets/images/bg1.png)" }}
         data-overlay="4"
       >
         <div className="container">
@@ -68,7 +69,10 @@ function Carousel() {
                   Trải nghiệm học tập tuyệt vời
                 </h1>
                 <p data-animation="fadeInUp" data-delay="1.3s">
-                Website học tập dành cho trẻ em với nội dung đa dạng, phong phú, hình thức tương tác sinh động và áp dụng phương pháp giáo dục tiên tiến, giúp các em tiếp thu kiến thức một cách hiệu quả và hứng thú hơn.
+                  Website học tập dành cho trẻ em với nội dung đa dạng, phong
+                  phú, hình thức tương tác sinh động và áp dụng phương pháp giáo
+                  dục tiên tiến, giúp các em tiếp thu kiến thức một cách hiệu
+                  quả và hứng thú hơn.
                 </p>
               </div>
             </div>
@@ -89,10 +93,11 @@ function Carousel() {
                   Học dễ dàng, dạy hiệu quả!
                 </h1>
                 <p data-animation="fadeInUp" data-delay="1.3s">
-                  Nền tảng chatbot thông minh hỗ trợ.{" "}
-                  <br />
-                  🔹 Cho giáo viên: Tải lên tài liệu, tạo quiz nhanh chóng, quản lý học tập hiệu quả. <br />
-                  🔹 Cho học sinh: Hỏi đáp tức thì, luyện tập với quiz, nâng cao khả năng tự học. <br />
+                  Nền tảng chatbot thông minh hỗ trợ. <br />
+                  🔹 Cho giáo viên: Tải lên tài liệu, tạo quiz nhanh chóng, quản
+                  lý học tập hiệu quả. <br />
+                  🔹 Cho học sinh: Hỏi đáp tức thì, luyện tập với quiz, nâng cao
+                  khả năng tự học. <br />
                 </p>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import { type FC } from "react";
 import ReadingWritingModule from "./ReadandWrite/ReadandWrite";
 import { useParams } from "react-router-dom";
 

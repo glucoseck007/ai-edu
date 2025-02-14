@@ -23,4 +23,7 @@ public class AccountCreationRequest {
     String email;
     LocalDate dob;
     String role;
+    String class_level;
+    String class_name;
+    String school_code;
 }

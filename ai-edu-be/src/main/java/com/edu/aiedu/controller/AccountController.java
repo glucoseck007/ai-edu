@@ -1,19 +1,21 @@
 package com.edu.aiedu.controller;
 
+import com.edu.aiedu.dto.ai.AIStudentDTO;
+import com.edu.aiedu.dto.ai.AITeacherDTO;
 import com.edu.aiedu.dto.request.ClassroomDTO;
-import com.edu.aiedu.dto.request.account.AccountCreationRequest;
-import com.edu.aiedu.dto.request.account.AccountUpdateRequest;
-import com.edu.aiedu.dto.request.account.PasswordChangeRequest;
-import com.edu.aiedu.dto.request.account.PasswordCreationRequest;
+import com.edu.aiedu.dto.request.account.*;
 import com.edu.aiedu.dto.response.AccountResponse;
 import com.edu.aiedu.dto.response.ApiResponse;
 import com.edu.aiedu.entity.Classroom;
 import com.edu.aiedu.service.AccountService;
+import com.edu.aiedu.service.ExternalApiService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +29,46 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountController {
     AccountService accountService;
+    private final ExternalApiService externalApiService;
+    private final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @PostMapping("/create-account")
     ApiResponse<AccountResponse> createAccount(@RequestBody @Valid AccountCreationRequest request) {
+        AccountResponse accountResponse = accountService.createAccount(request);
+
+        if (accountResponse != null) {
+            try {
+                if (accountResponse.getRoles().contains("teacher")) {
+                    String teacher_name = accountResponse.getFirstName() + " " + accountResponse.getLastName();
+                    String teacher_code = accountResponse.getId().substring(0, 5);
+                    String teacher_gender = Math.random() < 0.5 ? "male" : "female";
+                    String school_code = request.getSchool_code();
+                    AITeacherDTO teacher = new AITeacherDTO(teacher_name, teacher_code, teacher_gender, school_code);
+                    externalApiService.callExternalAddTeacher(teacher);
+                } else {
+                    String student_name = accountResponse.getFirstName() + " " + accountResponse.getLastName();
+                    String student_code = accountResponse.getId().substring(0, 5);
+                    String student_gender = Math.random() < 0.5 ? "male" : "female";
+                    String school_code = request.getSchool_code();
+                    String class_level = request.getClass_level();
+                    String class_name = request.getClass_name();
+                    externalApiService.callExternalAddStudent(new AIStudentDTO(student_name, student_code, student_gender, school_code, class_level, class_name));
+                }
+            } catch (Exception e) {
+                logger.error("Failed to call external API: " + e.getMessage());
+            }
+        }
+
         return ApiResponse.<AccountResponse>builder()
-                .result(accountService.createAccount(request))
+                .result(accountResponse)
+                .build();
+    }
+
+    @PostMapping("/verify-account")
+    ApiResponse<Void> verifyAccount(@RequestBody @Valid AccountVerificationRequest request) {
+        accountService.verifyAccount(request);
+        return ApiResponse.<Void>builder()
+                .message("Account verified successfully. You can now log in.")
                 .build();
     }
 
@@ -90,6 +127,19 @@ public class AccountController {
     @DeleteMapping("/{accountId}")
     ApiResponse<String> deleteAccount(@PathVariable("accountId") String userId) {
         accountService.deleteUser(userId);
+        return ApiResponse.<String>builder()
+                .result("Account deleted")
+                .build();
+    }
+
+    @DeleteMapping("/{accountId}/{school_code}")
+    ApiResponse<String> deleteTeacher(@PathVariable("accountId") String userId, @PathVariable("school_code") String schoolCode, @RequestBody String role) {
+        accountService.deleteById(userId);
+        if (role.equals("teacher")) {
+            externalApiService.callExternalDeleteTeacher(schoolCode, userId.substring(0, 5));
+        } else {
+            externalApiService.callExternalDeleteStudent(schoolCode, userId.substring(0, 5));
+        }
         return ApiResponse.<String>builder()
                 .result("Account deleted")
                 .build();

@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +31,9 @@ public class Account extends BaseEntity {
     String phoneNumber;
     String address;
     String email;
+    private boolean isVerified = false;
+    private String verificationCode;
+    private LocalDateTime verificationCodeExpiry;
     Set<String> roles;
 
     // Classrooms created by this account (for teachers)
