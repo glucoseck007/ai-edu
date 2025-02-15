@@ -3,8 +3,7 @@ import "./register.css";
 import { useState } from "react";
 import { faSchool, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Trans, useTranslation } from "react-i18next";
-import { Button, Form, Modal } from "react-bootstrap";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import TextInput from "../../../components/common/input/Text-Input";
 import PhoneInput from "../../../components/common/input/Phone-Input";
 import CustomToggleButton from "../../../components/common/button/toggle-button/Custom-Toggle-Button";
@@ -21,7 +20,6 @@ function RegisterPage() {
   const policyUrl = "";
   const termsUrl = "";
   const VERIFICATION_TIMEOUT = 60;
-  const VERIFICATION_TIMEOUT = 60;
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -29,10 +27,13 @@ function RegisterPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [fullName, setFullName] = useState<string>("");
-  const [school, setSchool] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [schoolCode, setSchoolCode] = useState<string>("");
   const [role, setRole] = useState<"student" | "teacher">("student");
   const [policy, setPolicy] = useState<boolean>(false);
+  const [classCode, setClassCode] = useState<string>("");
+  const [className, setClassName] = useState<string>("");
 
   const [showVerificationModal, setShowVerificationModal] =
     useState<boolean>(false);
@@ -58,7 +59,10 @@ function RegisterPage() {
       !email.trim() ||
       !password.trim() ||
       !phone.trim() ||
-      !fullName.trim()
+      !firstName.trim() ||
+      !classCode.trim() ||
+      !className.trim() ||
+      !schoolCode.trim()
     ) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -87,16 +91,45 @@ function RegisterPage() {
       return;
     }
 
+    if (classCode < "1" || classCode > "5") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(() => {
+        setToastStatus("warning");
+        setToastMessage(t("Khối phải từ 1-5"));
+        setShowToast(true);
+      }, 300);
+
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (classCode < "1" || classCode > "5") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(() => {
+        setToastStatus("warning");
+        setToastMessage(t("Khối phải từ 1-5"));
+        setShowToast(true);
+      }, 300);
+
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API}/accounts/create-account`,
         {
           username: email,
           password,
-          fullName,
-          school,
+          firstName,
+          lastName,
+          schoolCode,
           role,
           phone,
+          classCode,
+          className,
         }
       );
 
@@ -201,14 +234,28 @@ function RegisterPage() {
               <h2 className="register-left-header">
                 {t("auth.header.register")}
               </h2>
-              <TextInput
-                label={t("auth.inputLabel.fullname")}
-                placeholder={t("auth.placeholder.fullname")}
-                icon={faUser}
-                value={fullName}
-                onChange={(value) => setFullName(value)}
-                isRequired
-              />
+              <Row>
+                <Col md={6}>
+                  <TextInput
+                    label={t("Họ")}
+                    placeholder={t("Nhập họ")}
+                    icon={faUser}
+                    value={firstName}
+                    onChange={(value) => setFirstName(value)}
+                    isRequired
+                  />
+                </Col>
+                <Col md={6}>
+                  <TextInput
+                    label={t("Tên")}
+                    placeholder={t("Nhập tên")}
+                    icon={faUser}
+                    value={lastName}
+                    onChange={(value) => setLastName(value)}
+                    isRequired
+                  />
+                </Col>
+              </Row>
               <EmailInput
                 isRequired
                 value={email}
@@ -226,12 +273,31 @@ function RegisterPage() {
               />
               <CustomToggleButton onRoleChange={handleRoleChange} />
               <TextInput
-                value={school}
-                onChange={(value) => setSchool(value)}
-                label={t("auth.inputLabel.school")}
-                placeholder={t("auth.placeholder.school")}
+                value={schoolCode}
+                onChange={(value) => setSchoolCode(value)}
+                label={t("Mã trường học")}
+                placeholder={t("Nhập mã trường học")}
                 icon={faSchool}
               />
+
+              {role === "student" && (
+                <>
+                  <TextInput
+                    value={classCode}
+                    onChange={(value) => setClassCode(value)}
+                    label={t("Khối")}
+                    placeholder={t("Nhập khối từ 1-5")}
+                    icon={faSchool}
+                  />
+                  <TextInput
+                    value={className}
+                    onChange={(value) => setClassName(value)}
+                    label={t("Lớp")}
+                    placeholder={t("Nhập lớp")}
+                    icon={faSchool}
+                  />
+                </>
+              )}
               <Form.Check
                 className="policy"
                 checked={policy}
@@ -327,7 +393,7 @@ function RegisterPage() {
               style={{
                 whiteSpace: "nowrap",
                 height: "40px",
-                marginTop: "30px", // Match the typical height of the TextInput
+                marginTop: "30px",
               }}
             >
               Send Again

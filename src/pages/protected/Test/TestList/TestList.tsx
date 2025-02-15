@@ -6,12 +6,8 @@ import CustomButton from "../../../../components/common/button/custom-button/Cus
 import "./testlist.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../redux/store";
 
 const TestList: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const auth = useSelector((state: RootState) => state.auth);
   const [tests] = useState([
@@ -19,11 +15,7 @@ const TestList: React.FC = () => {
       id: 1,
       title: "Bài thi 1",
       createdBy: "Nguyễn Văn A",
-      title: "Bài thi 1",
-      createdBy: "Nguyễn Văn A",
       totalTime: 60, // in minutes
-      subject: "Toán",
-      grade: "3",
       subject: "Toán",
       grade: "3",
     },
@@ -31,11 +23,7 @@ const TestList: React.FC = () => {
       id: 2,
       title: "Bài thi 2",
       createdBy: "Nguyễn Văn B",
-      title: "Bài thi 2",
-      createdBy: "Nguyễn Văn B",
       totalTime: 45,
-      subject: "Tiếng Anh",
-      grade: "4",
       subject: "Tiếng Anh",
       grade: "4",
     },
@@ -43,11 +31,7 @@ const TestList: React.FC = () => {
       id: 3,
       title: "Bài thi 3",
       createdBy: "Nguyễn Văn C",
-      title: "Bài thi 3",
-      createdBy: "Nguyễn Văn C",
       totalTime: 90,
-      subject: "Lịch sử",
-      grade: "5",
       subject: "Lịch sử",
       grade: "5",
     },

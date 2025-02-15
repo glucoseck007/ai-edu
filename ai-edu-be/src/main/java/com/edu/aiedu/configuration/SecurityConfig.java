@@ -35,6 +35,7 @@ public class SecurityConfig {
             "/api/accounts/create-account",
             "/api/accounts/verify-account",
             "/api/ask_question",
+            "/api/**",
             "/api/school/add_school",
             "/api/classroom-content/upload",
             "/api/classroom/add_class",

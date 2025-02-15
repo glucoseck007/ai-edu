@@ -179,7 +179,6 @@ function TeacherClassroomDetail() {
       ...newAssignment,
       teacher: { name: newAssignment.teacher },
       createdAt: new Date().toISOString(),
-      deadline: new Date(newAssignment.deadline).toISOString(),
       materials: newAssignment.materials.split(",").map((m) => m.trim()),
       topics: newAssignment.topics.split(",").map((t) => t.trim()),
     };
@@ -288,13 +287,6 @@ function TeacherClassroomDetail() {
                             <FontAwesomeIcon icon={faClock} className="me-2" />
                             Posted: {formatDate(assignment.createdAt)}
                           </div>
-                          <div>
-                            <FontAwesomeIcon
-                              icon={faCalendarAlt}
-                              className="me-2"
-                            />
-                            Due: {formatDate(assignment.deadline)}
-                          </div>
                         </div>
                       </Card.Body>
                     </Card>
@@ -358,37 +350,8 @@ function TeacherClassroomDetail() {
                 {formatDate(selectedAssignment.createdAt)}
               </div>
               <div className="mb-3">
-                <strong>Hạn nộp:</strong>{" "}
-                {formatDate(selectedAssignment.deadline)}
-              </div>
-              <div className="mb-3">
-                <strong>Điểm tối đa:</strong> {selectedAssignment.maxPoints}
-              </div>
-              <div className="mb-3">
-                <strong>Chủ đề:</strong> {selectedAssignment.topics.join(", ")}
-              </div>
-              <div className="mb-3">
                 <strong>Hướng dẫn:</strong>
                 <p>{selectedAssignment.instructions}</p>
-              </div>
-              <div className="mb-3">
-                <strong>Tài liệu:</strong>
-                <ul className="list-unstyled mt-2">
-                  {selectedAssignment.materials.map((material) => (
-                    <li key={material.id} className="mb-2">
-                      <FontAwesomeIcon icon={faFileAlt} className="me-2" />
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleDownload(material.id, material.name);
-                        }}
-                      >
-                        {material.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
               </div>
             </Modal.Body>
             <Modal.Footer>
@@ -406,7 +369,7 @@ function TeacherClassroomDetail() {
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Title</Form.Label>
+              <Form.Label>Tiêu đề</Form.Label>
               <Form.Control
                 type="text"
                 onChange={(e) =>
@@ -415,13 +378,13 @@ function TeacherClassroomDetail() {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Teacher</Form.Label>
+              <Form.Label>Nội dung</Form.Label>
               <Form.Control
                 type="text"
                 onChange={(e) =>
                   setNewAssignment({
                     ...newAssignment,
-                    teacher: e.target.value,
+                    instructions: e.target.value,
                   })
                 }
               />

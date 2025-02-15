@@ -10,6 +10,7 @@ import {
   Row,
 } from "react-bootstrap";
 import { numberToLetter } from "../../../../utils/Converters";
+import axios from "axios";
 
 const ReviewTest: React.FC = () => {
   const storedData = JSON.parse(localStorage.getItem("quiz") || "{}");
@@ -114,6 +115,26 @@ const ReviewTest: React.FC = () => {
     });
   };
 
+  const handleSaveQuiz = async () => {
+    const quizs = localStorage.getItem("quiz");
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API}/quiz/save`,
+        JSON.parse(quizs), // Ensure correct JSON format
+        {
+          headers: {
+            "Content-Type": "application/json", // Set the correct content type
+          },
+        }
+      );
+
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <Container>
       <Row className="d-flex justify-content-center">
@@ -208,6 +229,17 @@ const ReviewTest: React.FC = () => {
             </Card>
           ))}
         </Col>
+      </Row>
+      <Row>
+        <div className="d-flex justify-content-center my-3">
+          <Button
+            type="submit"
+            onClick={handleSaveQuiz}
+            style={{ width: "20%", backgroundColor: "#ffd98e", color: "black" }}
+          >
+            Save quiz
+          </Button>
+        </div>
       </Row>
       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
