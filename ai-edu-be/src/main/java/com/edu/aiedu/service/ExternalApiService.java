@@ -22,7 +22,7 @@ public class ExternalApiService {
     @Async
     public void callExternalAddSubject(SubjectDTO subjectDTO) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/add_subject"; // Replace with the actual IP and port
+            String externalApiUrl = "http://103.82.25.83:443//add_subject"; // Replace with the actual IP and port
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -44,7 +44,7 @@ public class ExternalApiService {
     @Async
     public void callExternalAddTeacher(AITeacherDTO teacherDTO) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/add_teacher"; // Replace with the actual IP and port
+            String externalApiUrl = "http://103.82.25.83:443//add_teacher"; // Replace with the actual IP and port
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -66,7 +66,7 @@ public class ExternalApiService {
     @Async
     public void callExternalDeleteTeacher(String schoolCode, String teacherCode) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/remove_teacher/{school_code}/{teacher_code}";
+            String externalApiUrl = "http://103.82.25.83:443//remove_teacher/{school_code}/{teacher_code}";
 
             ResponseEntity<String> response = restTemplate.exchange(externalApiUrl, HttpMethod.DELETE, null, String.class, schoolCode, teacherCode);
             if (response.getStatusCode() == HttpStatus.OK) {
@@ -82,7 +82,7 @@ public class ExternalApiService {
     @Async
     public void callExternalDeleteStudent(String schoolCode, String studentCode) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/remove_student/{school_code}/{student_code}";
+            String externalApiUrl = "http://103.82.25.83:443//remove_student/{school_code}/{student_code}";
 
             ResponseEntity<String> response = restTemplate.exchange(externalApiUrl, HttpMethod.DELETE, null, String.class, schoolCode, studentCode);
             if (response.getStatusCode() == HttpStatus.OK) {
@@ -98,7 +98,7 @@ public class ExternalApiService {
     @Async
     public void callExternalAddStudent(AIStudentDTO studentDTO) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/add_student"; // Replace with the actual IP and port
+            String externalApiUrl = "http://103.82.25.83:443//add_student"; // Replace with the actual IP and port
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -120,7 +120,7 @@ public class ExternalApiService {
     @Async
     public void callExternalAddClassAPI(AIClassroomDTO classroomDTO) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/add_class"; // Replace with the actual IP and port
+            String externalApiUrl = "http://103.82.25.83:443//add_class"; // Replace with the actual IP and port
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -142,7 +142,7 @@ public class ExternalApiService {
     @Async
     public void callExternalAddTeacherToClass(TeacherClassDTO teacherClassDTO) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/add_teacher_class"; // Replace with the actual IP and port
+            String externalApiUrl = "http://103.82.25.83:443//add_teacher_class"; // Replace with the actual IP and port
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -164,7 +164,7 @@ public class ExternalApiService {
     @Async
     public void callExternalAddSchoolAPI(SchoolDTO schoolDTO) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/add_school";
+            String externalApiUrl = "http://103.82.25.83:443//add_school";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -186,7 +186,7 @@ public class ExternalApiService {
     @Async
     public void callExternalDeleteSchoolAPI(String schoolCode) {
         try {
-            String externalApiUrl = "http://192.168.50.122:8000/remove_school/{school_code}";
+            String externalApiUrl = "http://103.82.25.83:443//remove_school/{school_code}";
 
             ResponseEntity<String> response = restTemplate.exchange(externalApiUrl, HttpMethod.DELETE, null, String.class, schoolCode);
             if (response.getStatusCode() == HttpStatus.OK) {

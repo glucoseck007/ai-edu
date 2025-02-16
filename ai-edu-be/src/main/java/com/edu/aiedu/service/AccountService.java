@@ -72,12 +72,14 @@ public class AccountService {
         account.setVerificationCode(verificationCode);
         account.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(15)); // Valid for 15 mins
 
-        accountRepository.save(account);
-
-        // Send verification email
-        emailService.sendVerificationEmail("khicongkhanh@gmail.com", verificationCode);
-
-        return accountMapper.toUserResponse(account);
+        try {
+            emailService.sendVerificationEmail("khicongkhanh@gmail.com", verificationCode);
+            accountRepository.save(account);
+            return accountMapper.toUserResponse(account);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 //    public AccountResponse createAccount(AccountCreationRequest request) {

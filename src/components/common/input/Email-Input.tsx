@@ -21,7 +21,7 @@ function EmailInput({ isRequired = false, onChange, value }: EmailInputProps) {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
 
-    if (emailPattern.test(newValue)) {
+    if (!emailPattern.test(newValue)) {
       setError(t("auth.error.invalidEmail"));
     } else {
       setError(null);

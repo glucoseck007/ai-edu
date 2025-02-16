@@ -55,25 +55,72 @@ function RegisterPage() {
   const handleRegister = async () => {
     setIsSubmitting(true);
 
-    if (
-      !email.trim() ||
-      !password.trim() ||
-      !phone.trim() ||
-      !firstName.trim() ||
-      !classCode.trim() ||
-      !className.trim() ||
-      !schoolCode.trim()
-    ) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    if (role === "teacher") {
+      if (
+        !email.trim() ||
+        !password.trim() ||
+        !phone.trim() ||
+        !firstName.trim() ||
+        !schoolCode.trim()
+      ) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
 
-      setTimeout(() => {
-        setToastStatus("warning");
-        setToastMessage(t("Please fill in all required fields!"));
-        setShowToast(true);
-      }, 300);
+        setTimeout(() => {
+          setToastStatus("warning");
+          setToastMessage(t("Please fill in all required fields!"));
+          setShowToast(true);
+        }, 300);
 
-      setIsSubmitting(false);
-      return;
+        setIsSubmitting(false);
+        return;
+      }
+    } else {
+      if (
+        !email.trim() ||
+        !password.trim() ||
+        !phone.trim() ||
+        !firstName.trim() ||
+        !classCode.trim() ||
+        !className.trim() ||
+        !schoolCode.trim()
+      ) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        setTimeout(() => {
+          setToastStatus("warning");
+          setToastMessage(t("Please fill in all required fields!"));
+          setShowToast(true);
+        }, 300);
+
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (classCode < "1" || classCode > "5") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        setTimeout(() => {
+          setToastStatus("warning");
+          setToastMessage(t("Khối phải từ 1-5"));
+          setShowToast(true);
+        }, 300);
+
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (classCode < "1" || classCode > "5") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        setTimeout(() => {
+          setToastStatus("warning");
+          setToastMessage(t("Khối phải từ 1-5"));
+          setShowToast(true);
+        }, 300);
+
+        setIsSubmitting(false);
+        return;
+      }
     }
 
     if (!policy) {
@@ -91,45 +138,20 @@ function RegisterPage() {
       return;
     }
 
-    if (classCode < "1" || classCode > "5") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-
-      setTimeout(() => {
-        setToastStatus("warning");
-        setToastMessage(t("Khối phải từ 1-5"));
-        setShowToast(true);
-      }, 300);
-
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (classCode < "1" || classCode > "5") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-
-      setTimeout(() => {
-        setToastStatus("warning");
-        setToastMessage(t("Khối phải từ 1-5"));
-        setShowToast(true);
-      }, 300);
-
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API}/accounts/create-account`,
         {
           username: email,
+          email,
           password,
           firstName,
           lastName,
-          schoolCode,
+          school_code: schoolCode,
           role,
-          phone,
-          classCode,
-          className,
+          phoneNumber: phone,
+          class_level: classCode,
+          class_name: className,
         }
       );
 
@@ -139,17 +161,19 @@ function RegisterPage() {
         behavior: "smooth",
       });
 
-      // Show success toast and navigate to login page after scroll
-      setTimeout(() => {
-        setToastStatus("success");
-        setToastMessage(t("Registration successful! Please login."));
-        setShowToast(true);
+      setShowVerificationModal(true);
 
-        // Navigate after showing toast
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
-      }, 300);
+      // Show success toast and navigate to login page after scroll
+      // setTimeout(() => {
+      //   setToastStatus("success");
+      //   setToastMessage(t("Registration successful! Please login."));
+      //   setShowToast(true);
+
+      //   // Navigate after showing toast
+      //   setTimeout(() => {
+      //     navigate("/login");
+      //   }, 2000);
+      // }, 300);
     } catch (error: any) {
       // Scroll to top first
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -193,9 +217,9 @@ function RegisterPage() {
     setIsVerifying(true);
     try {
       // API call to verify the code
-      await axios.post(`${import.meta.env.VITE_API}/accounts/verify-code`, {
+      await axios.post(`${import.meta.env.VITE_API}/accounts/verify-account`, {
         email,
-        code: verificationCode,
+        verificationCode,
       });
 
       setShowVerificationModal(false);
@@ -323,7 +347,7 @@ function RegisterPage() {
               />
               <LoadingButton
                 isLoading={isSubmitting}
-                onClick={sendVerificationCode}
+                onClick={handleRegister}
                 style={{
                   width: "100%",
                   height: "48px",
@@ -388,7 +412,7 @@ function RegisterPage() {
             </div>
             <Button
               variant="primary"
-              onClick={sendVerificationCode}
+              onClick={verifyCode}
               className="col-3"
               style={{
                 whiteSpace: "nowrap",

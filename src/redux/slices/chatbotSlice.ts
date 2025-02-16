@@ -21,7 +21,11 @@ const initialState: ChatbotState = {
 export const fetchChatbotResponse = createAsyncThunk(
   "chatbot/fetchResponse",
   async (
-    { student_code, subject, question }: { student_code: any; subject: string; question: string | Blob },
+    {
+      student_code,
+      subject,
+      question,
+    }: { student_code: any; subject: string; question: string | Blob },
     { rejectWithValue }
   ) => {
     try {
@@ -42,13 +46,57 @@ export const fetchChatbotResponse = createAsyncThunk(
       } else {
         return rejectWithValue({
           message: "No response from chatbot",
-          status: 404
+          status: 404,
         });
       }
     } catch (error: any) {
       return rejectWithValue({
-        message: error?.response?.data?.message || "An error occurred while fetching chatbot response",
-        status: error?.response?.status || 500
+        message:
+          error?.response?.data?.message ||
+          "An error occurred while fetching chatbot response",
+        status: error?.response?.status || 500,
+      });
+    }
+  }
+);
+
+export const fetchTeacherChatbotResponse = createAsyncThunk(
+  "chatbot/fetchResponse",
+  async (
+    {
+      teacher_code,
+      subject,
+      question,
+    }: { teacher_code: any; subject: string; question: string | Blob },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_AI_API}/teacher_ask_question`,
+        { teacher_code, question, subject },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const chatbotResponse = response.data.message;
+
+      if (chatbotResponse) {
+        return chatbotResponse;
+      } else {
+        return rejectWithValue({
+          message: "No response from chatbot",
+          status: 404,
+        });
+      }
+    } catch (error: any) {
+      return rejectWithValue({
+        message:
+          error?.response?.data?.message ||
+          "An error occurred while fetching chatbot response",
+        status: error?.response?.status || 500,
       });
     }
   }

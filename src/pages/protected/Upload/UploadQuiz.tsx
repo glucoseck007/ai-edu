@@ -18,6 +18,10 @@ import {
   Landmark,
   Library,
 } from "lucide-react";
+import Compressor from "compressorjs";
+import { PDFDocument } from "pdf-lib";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
 
 const UploadQuiz: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,6 +63,80 @@ const UploadQuiz: React.FC = () => {
     }
   };
 
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      new Compressor(file, {
+        quality: 0.6, // Adjust compression quality
+        success: (result) => {
+          resolve(
+            new File([result], file.name, {
+              type: file.type,
+              lastModified: Date.now(),
+            })
+          );
+        },
+        error: (err) => {
+          reject(err);
+        },
+      });
+    });
+  };
+
+  const compressPDF = async (file: File): Promise<File> => {
+    try {
+      const pdfBytes = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes);
+
+      pdfDoc.setTitle("Optimized PDF");
+      pdfDoc.setAuthor("Your App");
+
+      const compressedPdfBytes = await pdfDoc.save({ useObjectStreams: false });
+
+      return new File([compressedPdfBytes], file.name, {
+        type: file.type,
+        lastModified: Date.now(),
+      });
+    } catch (error) {
+      console.error("PDF compression error:", error);
+      return file; // If error occurs, return original file
+    }
+  };
+
+  const compressDOCX = async (file: File): Promise<File> => {
+    try {
+      const docBytes = await file.arrayBuffer();
+      const zip = new PizZip(docBytes);
+      const doc = new Docxtemplater(zip);
+
+      // Remove unused metadata
+      doc.setOptions({ paragraphLoop: true, linebreaks: true });
+
+      const compressedDocBytes = doc.getZip().generate({ type: "uint8array" });
+
+      return new File([compressedDocBytes], file.name, {
+        type: file.type,
+        lastModified: Date.now(),
+      });
+    } catch (error) {
+      console.error("DOCX compression error:", error);
+      return file; // If error occurs, return original file
+    }
+  };
+
+  const compressFile = async (file: File): Promise<File> => {
+    if (file.type.startsWith("image/")) {
+      return await compressImage(file);
+    } else if (file.type === "application/pdf") {
+      return await compressPDF(file);
+    } else if (
+      file.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      return await compressDOCX(file);
+    }
+    return file; // If file type is not supported, return original file
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -68,7 +146,8 @@ const UploadQuiz: React.FC = () => {
     }
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    const compressedFile = await compressFile(selectedFile);
+    formData.append("file", compressedFile);
     formData.append("classroomId", classroomId ?? "");
     formData.append("subject", subject);
 
