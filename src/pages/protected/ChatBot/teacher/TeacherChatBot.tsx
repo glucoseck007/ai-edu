@@ -22,6 +22,7 @@ import TeacherImg from "../../../../assets/images/teacher.jpg";
 import ChatBotSidebarComponent from "../../../../components/sidebar/ChatbotSideBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import Latex from 'react-latex-next';
 
 interface Message {
   id: number;
@@ -274,13 +275,13 @@ const TeacherChatBot: React.FC = () => {
                               message.isError
                                 ? "ps-2 text-danger"
                                 : message.isBot
-                                ? "ps-2 text-black"
-                                : "ps-2 text-white"
+                                  ? "ps-2 text-black"
+                                  : "ps-2 text-white"
                             }
                           >
                             {message.content.split("\n").map((line, index) => (
                               <React.Fragment key={index}>
-                                {line}
+                                <Latex>{line}</Latex>
                                 <br />
                               </React.Fragment>
                             ))}

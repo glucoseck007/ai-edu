@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../redux/store";
 import {
@@ -30,6 +30,7 @@ import {
 import ChatBotSidebarComponent from "../../../components/sidebar/ChatbotSideBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import Latex from 'react-latex-next';
 
 interface Message {
   id: number;
@@ -243,7 +244,11 @@ const StudentChatBot: React.FC = () => {
   );
 
   return (
-    <Container fluid className="chat-container p-0 m-0">
+    <Container
+      fluid
+      className="chat-container p-0 m-0"
+      style={{ overflow: "hidden" }}
+    >
       <Row className="h-100 gx-0">
         <ChatBotSidebarComponent />
         <Col className="p-0 m-0">
@@ -294,17 +299,12 @@ const StudentChatBot: React.FC = () => {
                         </span>
                       ) : (
                         <div>
-                          <span
-                            className={
-                              message.isError
-                                ? "text-danger"
-                                : message.isBot
-                                ? "text-black"
-                                : "text-white"
-                            }
-                          >
-                            {message.content}
-                          </span>
+                          {message.content.split("\n").map((line, index) => (
+                            <React.Fragment key={index}>
+                              <Latex>{line}</Latex>
+                              <br />
+                            </React.Fragment>
+                          ))}
                           {message.isError && (
                             <div>
                               <Button
