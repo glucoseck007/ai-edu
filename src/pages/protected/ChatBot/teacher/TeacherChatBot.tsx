@@ -228,7 +228,7 @@ const TeacherChatBot: React.FC = () => {
     <Container
       fluid
       className="chat-container p-0 m-0"
-      style={{ overflowY: "auto" }}
+      style={{ overflow: "hidden" }}
     >
       <Row className="h-100 gx-0">
         <ChatBotSidebarComponent />

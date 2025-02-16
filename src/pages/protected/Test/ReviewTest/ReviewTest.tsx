@@ -11,6 +11,8 @@ import {
 } from "react-bootstrap";
 import { numberToLetter } from "../../../../utils/Converters";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const ReviewTest: React.FC = () => {
   const storedData = JSON.parse(localStorage.getItem("quiz") || "{}");
@@ -25,7 +27,10 @@ const ReviewTest: React.FC = () => {
     value: string;
   }>({ id: null, value: "" });
   const [showAddModal, setShowAddModal] = useState(false);
+  const [titleModal, setTitleModal] = useState<boolean>(false);
+  const [quizTitle, setQuizTitle] = useState(storedData.title || "");
   const [newQuiz, setNewQuiz] = useState<any>({
+    Title: "",
     "Question Type": "",
     Question: "",
     Answers: [],
@@ -107,21 +112,38 @@ const ReviewTest: React.FC = () => {
     localStorage.setItem("quiz", JSON.stringify({ quiz: updatedQuizList }));
     setShowAddModal(false);
     setNewQuiz({
-      Question: "",
+      Title: "",
       "Question Type": "",
+      Question: "",
       Answers: [],
       "Correct Answer": "",
       Reference: "",
     });
+    setQuizTitle("");
   };
 
+  const auth = useSelector((state: RootState) => state.auth);
+
+
   const handleSaveQuiz = async () => {
-    const quizs = localStorage.getItem("quiz");
+
+    if (!quizTitle.trim()) {
+      alert("Quiz title cannot be empty!");
+      return;
+    };
+
+    const quizDataToSave = {
+      title: quizTitle,
+      quiz: quizs,
+      userId: auth.user?.id
+    };
+
+    localStorage.setItem("quiz", JSON.stringify(quizDataToSave));
 
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API}/quiz/save`,
-        JSON.parse(quizs), // Ensure correct JSON format
+        quizDataToSave, // Ensure correct JSON format
         {
           headers: {
             "Content-Type": "application/json", // Set the correct content type
@@ -132,7 +154,8 @@ const ReviewTest: React.FC = () => {
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
-    }
+    };
+    setTitleModal(false);
   };
 
   return (
@@ -234,13 +257,36 @@ const ReviewTest: React.FC = () => {
         <div className="d-flex justify-content-center my-3">
           <Button
             type="submit"
-            onClick={handleSaveQuiz}
+            onClick={() => setTitleModal(true)}
             style={{ width: "20%", backgroundColor: "#ffd98e", color: "black" }}
           >
             Save quiz
           </Button>
         </div>
       </Row>
+      <Modal show={titleModal} onHide={() => setTitleModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Quiz Title</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Quiz Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter quiz title"
+                value={quizTitle}
+                onChange={(e) => setQuizTitle(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button style={{ backgroundColor: "#07294d" }} onClick={handleSaveQuiz}>
+            Save Title
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Quiz</Modal.Title>
