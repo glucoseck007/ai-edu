@@ -280,7 +280,7 @@ const TeacherChatBot: React.FC = () => {
                           >
                             {message.content.split("\n").map((line, index) => (
                               <React.Fragment key={index}>
-                                {line}
+                                <Latex>{line}</Latex>
                                 <br />
                               </React.Fragment>
                             ))}
