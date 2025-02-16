@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "quizzes")
 public class Quiz {
@@ -22,6 +23,10 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Question> questions;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;

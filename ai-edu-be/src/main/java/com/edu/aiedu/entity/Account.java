@@ -50,4 +50,7 @@ public class Account extends BaseEntity {
     )
     @JsonBackReference
     private Set<Classroom> joinedClassrooms;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Quiz> quizzes;
 }

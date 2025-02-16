@@ -63,17 +63,13 @@ export const fetchChatbotResponse = createAsyncThunk(
 export const fetchTeacherChatbotResponse = createAsyncThunk(
   "chatbot/fetchResponse",
   async (
-    {
-      teacher_code,
-      subject,
-      question,
-    }: { teacher_code: any; subject: string; question: string | Blob },
+    { teacher_code, question }: { teacher_code: any; question: string | Blob },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_AI_API}/teacher_ask_question`,
-        { teacher_code, question, subject },
+        { teacher_code, question },
         {
           headers: {
             "Content-Type": "application/json",
