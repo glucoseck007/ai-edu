@@ -1,6 +1,7 @@
 package com.edu.aiedu.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class Quiz {
     private Long id;
 
     private String title;
+
     private String subject;
 
     @Column(nullable = true)

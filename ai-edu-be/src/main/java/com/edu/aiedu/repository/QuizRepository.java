@@ -8,9 +8,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, String> {
+    Optional<Quiz> findById(Long id);
     List<Quiz> findByAccountId(String accountId);
     List<Quiz> findByClassCode(String classCode);
     List<Quiz> findByAccountIdAndClassCode(String accountId, String classCode);

@@ -41,7 +41,8 @@ public class SecurityConfig {
             "/api/classroom/add_class",
             "/api/classroom/join",
             "/api/subject/add_subject",
-            "api/quiz/assign-quiz"
+            "api/quiz/assign-quiz",
+            "api/quiz/**"
     };
 
     private CustomJwtDecoder jwtDecoder;

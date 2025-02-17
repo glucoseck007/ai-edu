@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { numberToLetter } from "../../../../utils/Converters";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface ReadingWritingModuleProps {
   testId: string;
@@ -17,57 +18,24 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
   }>({});
   const target = useRef(null);
   const navigate = useNavigate();
-  const data = {
-    "quiz": [
-      {
-        "Question":
-          "Ai đã chỉ huy cuộc tấn công vào năm 1282 chống lại Đế quốc Chiêm?",
-        "Answers": ["Hốt Tất Liệt", "Toa Đô", "Trần Nhân Tông"],
-        "Correct Answer": "Toa Đô",
-        "Reference":
-          "Năm 1282, nhà Nguyên sai Toa Đô mang quân vượt biển đánh Chiêm Thành ở phía nam Đại Việt.",
-        "Question Type": "MCQ",
-      },
-      {
-        "Question":
-          "Là đúng hay sai rằng Hốt Tất Liệt trực tiếp chỉ huy cuộc tấn công vào năm 1282 chống lại Đế quốc Chiêm?",
-        "Answers": ["Đúng", "Sai"],
-        "Correct Answer": "Sai",
-        "Reference":
-          "Năm 1282, nhà Nguyên sai Toa Đô mang quân vượt biển đánh Chiêm Thành ở phía nam Đại Việt.",
-        "Question Type": "TF",
-      },
-      {
-        "Question":
-          "Trần Hưng Đạo được thăng quan gì để chuẩn bị kháng chiến lần hai?",
-        "Answers": ["Tướng quân", "Binh bộ thượng thư", "Thượng tướng"],
-        "Correct Answer": "Tướng quân",
-        "Reference":
-          "Tháng Mười (âm lịch) năm 1283, Trần Hưng Đạo được phong làm Quốc công tiết chế thống lĩnh chư quân.",
-        "Question Type": "MCQ",
-      },
-      {
-        "Question": "Trần Hưng Đạo đã chia các đơn vị quân đội như thế nào?",
-        "Answers": [
-          "Chia theo cấp độ",
-          "Phân cho các quân hiệu tài giỏi",
-          "Kết hợp cả hai",
-        ],
-        "Correct Answer": "Phân cho các quân hiệu tài giỏi",
-        "Reference":
-          "Ông chọn các quân hiệu tài giỏi, cho chia nhau chỉ huy các đơn vị quân đội.",
-        "Question Type": "MCQ",
-      },
-      {
-        "Question": "Ai đã cho duyệt quân ở bến Đông Bộ Đầu?",
-        "Answers": ["Trần Hưng Đạo", "Hồ Quý Ly", "Lê Lợi"],
-        "Correct Answer": "Trần Hưng Đạo",
-        "Reference":
-          "Tháng Tám (âm lịch) năm sau (1284), ông cho duyệt quân ở bến Đông Bộ Đầu.",
-        "Question Type": "MCQ",
-      },
-    ],
+
+  const fetchQuizData = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/quiz/get/{quizId}`
+      ); // Replace with your actual API endpoint
+      console.log(response.data); // Logs the fetched data to the console
+
+      // Process the data if necessary
+      const quiz = response.data.quiz; // You can now use the quiz data as needed
+    } catch (error) {
+      console.error("There was an error fetching the data:", error);
+    }
   };
+
+  fetchQuizData(); // Call the function to fetch the data
+
+  const data = {};
 
   useEffect(() => {
     let interval: number;
@@ -110,14 +78,6 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
               Bài thi 1
             </span>
           </div>
-          <div>
-            <span
-              className="fw-bold"
-              style={{ fontSize: "1.2rem", whiteSpace: "nowrap" }}
-            >
-              Bài thi 1
-            </span>
-          </div>
           <div
             className="d-flex flex-column align-items-center"
             style={{
@@ -129,14 +89,9 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
             <span className="fw-medium" style={{ fontSize: "1.2rem" }}>
               {formatTime(time)}
             </span>
-            <span className="fw-medium" style={{ fontSize: "1.2rem" }}>
-              {formatTime(time)}
-            </span>
           </div>
           <Button
             variant="outline-dark"
-            className="rounded-pill px-2"
-            style={{ width: "8%", marginLeft: "86%" }}
             className="rounded-pill px-2"
             style={{ width: "8%", marginLeft: "86%" }}
           >
@@ -158,19 +113,15 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                       style={{
                         width: "30px",
                         height: "30px",
-                        width: "30px",
-                        height: "30px",
                         fontSize: "14px",
                       }}
                     >
                       {index + 1}
                     </div>
                     <span className="text-dark">{value.Question}</span>
-                    <span className="text-dark">{value.Question}</span>
                   </div>
                 </div>
               </Col>
-              <Col md={6} className="px-4 d-flex flex-column"></Col>
               <Col md={6} className="px-4 d-flex flex-column">
                 {/* Main Question Content */}
                 <div className="flex-grow-1">
@@ -179,16 +130,10 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                       <div
                         style={{ cursor: "pointer" }}
                         key={Answerindex}
-                        key={Answerindex}
                         className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
                         onClick={() => handleOptionClick(index, Answerindex)}
                       >
                         <div
-                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${
-                            selectedOption[index] === Answerindex
-                              ? "border-primary"
-                              : "border-secondary"
-                          }`}
                           className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${
                             selectedOption[index] === Answerindex
                               ? "border-primary"
@@ -206,9 +151,7 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                             >
                               {numberToLetter(Answerindex + 1)}
                             </div>
-                            <span className="text-black" className="text-black">
-                              {option}
-                            </span>
+                            <span className="text-black">{option}</span>
                           </div>
                         </div>
                       </div>

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,9 +50,9 @@ public class QuizService {
         return quizRepository.save(quiz);
     }
 
-//    public List<Quiz> getQuizzesByAccountId(String accountId) {
-//        return quizRepository.findByAccountId(accountId);
-//    }
+    public Optional<Quiz> getQuizzesById(Long id) {
+        return quizRepository.findById(id);
+    }
 
     public List<QuizDTO> getQuizzesByAccountId(String accountId) {
         return quizRepository.findByAccountId(accountId).stream()
