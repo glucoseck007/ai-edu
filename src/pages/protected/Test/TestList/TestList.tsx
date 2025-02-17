@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, InputGroup, Form } from "react-bootstrap";
 import CustomButton from "../../../../components/common/button/custom-button/Custom-Button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import axios from "axios";
 
-import "./testlist.css";
+import "./testlist.scss";
+import { SearchIcon } from "lucide-react";
 
 const TestList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,35 +24,35 @@ const TestList: React.FC = () => {
   // Placeholder for classCode (you might need to fetch this)
   const [classCode, setClassCode] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchTests = async () => {
-      if (!id) return;
+  const fetchTests = async () => {
+    if (!id) return;
 
-      setLoading(true);
-      try {
-        let response;
-        if (isTeacher) {
-          response = await axios.get(
-            `${import.meta.env.VITE_API}/quiz/account/${id}`
-          );
-        } else if (classCode) {
-          response = await axios.get(
-            `${import.meta.env.VITE_API}/quiz/by-account-classCode`,
-            { params: { accountId: id, classCode } }
-          );
-        } else {
-          console.warn("Class code is missing for student role.");
-          return;
-        }
-
-        setTests(response.data); // Ensure response.data is an array
-      } catch (error) {
-        console.error("Error fetching tests:", error);
-      } finally {
-        setLoading(false);
+    setLoading(true);
+    try {
+      let response;
+      if (isTeacher) {
+        response = await axios.get(
+          `${import.meta.env.VITE_API}/quiz/account/${id}`
+        );
+      } else if (classCode) {
+        response = await axios.get(
+          `${import.meta.env.VITE_API}/quiz/by-account-classCode`,
+          { params: { accountId: id, classCode } }
+        );
+      } else {
+        console.warn("Class code is missing for student role.");
+        return;
       }
-    };
 
+      setTests(response.data); // Ensure response.data is an array
+    } catch (error) {
+      console.error("Error fetching tests:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchTests();
   }, [id, isTeacher, classCode]); // Fetch tests when `id` changes
 
@@ -80,6 +81,12 @@ const TestList: React.FC = () => {
       .catch((error) => console.error("Lỗi khi giao bài:", error));
   };
 
+  const handleEnterClassCode = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setClassCode(classCode ?? '');
+    }
+  };
+
   return (
     <div className="min-vh-100">
       <Container className="my-4">
@@ -104,34 +111,20 @@ const TestList: React.FC = () => {
           </Col>
         </Row>
 
-        <Row className="mb-4">
+        <Row className="class-code-container mb-4">
           <Col md={6} className="mx-auto">
-            <div className="input-group d-flex shadow-sm rounded">
-              <input
+            <InputGroup className="shadow-sm class-code-input">
+              <Form.Control
                 type="text"
-                className="form-control border-end-0"
                 placeholder="Nhập mã lớp học"
                 value={classCode ?? ''}
                 onChange={(e) => setClassCode(e.target.value)}
-                style={{
-                  padding: '12px 15px',
-                  fontSize: '16px',
-                  backgroundColor: '#f8f9fa'
-                }}
+                onKeyDown={handleEnterClassCode}
               />
-              <Button
-                variant="primary"
-                onClick={() => setClassCode(classCode ?? '')}
-                className="d-flex align-items-center justify-content-center"
-                style={{
-                  minWidth: '120px',
-                  backgroundColor: 'rgb(45, 100, 159)',
-                  border: 'none'
-                }}
-              >
-                <span>Xác nhận</span>
-              </Button>
-            </div>
+              <InputGroup.Text onClick={fetchTests} className="input-icon">
+                <SearchIcon size={22} />
+              </InputGroup.Text>
+            </InputGroup>
           </Col>
         </Row>
 
