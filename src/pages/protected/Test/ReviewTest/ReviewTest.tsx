@@ -13,6 +13,7 @@ import { numberToLetter } from "../../../../utils/Converters";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import ToastComponent from "../../../../components/common/toast/Toast";
 
 const ReviewTest: React.FC = () => {
   const storedData = JSON.parse(localStorage.getItem("quiz") || "{}");
@@ -38,6 +39,13 @@ const ReviewTest: React.FC = () => {
     "Correct Answer": "",
     Reference: "",
   });
+
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastStatus, setToastStatus] = useState<
+    "success" | "warning" | "error"
+  >("success");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleEdit = (index: number) => {
     setEditIndex(index);
@@ -152,14 +160,28 @@ const ReviewTest: React.FC = () => {
       );
 
       console.log("Response:", response.data);
-    } catch (error) {
+      setToastStatus("success");
+      setToastMessage("Add a new quiz successfully!");
+      setShowToast(true);
+    } catch (error: any) {
       console.error("Error:", error);
+      setToastStatus("error");
+      setToastMessage(
+        error.message || "An error occurred while saving the quiz"
+      );
+      setShowToast(true);
     }
     setTitleModal(false);
   };
 
   return (
     <Container>
+      <ToastComponent
+        status={toastStatus}
+        message={toastMessage}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+      />
       <Row className="d-flex justify-content-center">
         <h1 className="text-bold text-center">Review Quiz</h1>
         <div className="d-flex justify-content-end my-3">
