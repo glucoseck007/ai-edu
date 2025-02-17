@@ -84,7 +84,7 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds 
       .toString()
       .padStart(2, "0")}`;
   };
@@ -109,15 +109,7 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
             >
               Bài thi 1
             </span>
-          </div>
-          <div>
-            <span
-              className="fw-bold"
-              style={{ fontSize: "1.2rem", whiteSpace: "nowrap" }}
-            >
-              Bài thi 1
-            </span>
-          </div>
+          </div>          
           <div
             className="d-flex flex-column align-items-center"
             style={{
@@ -129,14 +121,9 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
             <span className="fw-medium" style={{ fontSize: "1.2rem" }}>
               {formatTime(time)}
             </span>
-            <span className="fw-medium" style={{ fontSize: "1.2rem" }}>
-              {formatTime(time)}
-            </span>
           </div>
           <Button
             variant="outline-dark"
-            className="rounded-pill px-2"
-            style={{ width: "8%", marginLeft: "86%" }}
             className="rounded-pill px-2"
             style={{ width: "8%", marginLeft: "86%" }}
           >
@@ -158,19 +145,15 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                       style={{
                         width: "30px",
                         height: "30px",
-                        width: "30px",
-                        height: "30px",
                         fontSize: "14px",
                       }}
                     >
                       {index + 1}
                     </div>
                     <span className="text-dark">{value.Question}</span>
-                    <span className="text-dark">{value.Question}</span>
                   </div>
                 </div>
               </Col>
-              <Col md={6} className="px-4 d-flex flex-column"></Col>
               <Col md={6} className="px-4 d-flex flex-column">
                 {/* Main Question Content */}
                 <div className="flex-grow-1">
@@ -179,21 +162,14 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                       <div
                         style={{ cursor: "pointer" }}
                         key={Answerindex}
-                        key={Answerindex}
                         className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
                         onClick={() => handleOptionClick(index, Answerindex)}
                       >
                         <div
-                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${
-                            selectedOption[index] === Answerindex
-                              ? "border-primary"
-                              : "border-secondary"
-                          }`}
-                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${
-                            selectedOption[index] === Answerindex
-                              ? "border-primary"
-                              : "border-secondary"
-                          }`}
+                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${selectedOption[index] === Answerindex
+                            ? "border-primary"
+                            : "border-secondary"
+                            }`}
                         >
                           <div className="d-flex align-items-center gap-2">
                             <div
@@ -206,7 +182,7 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                             >
                               {numberToLetter(Answerindex + 1)}
                             </div>
-                            <span className="text-black" className="text-black">
+                            <span className="text-black">
                               {option}
                             </span>
                           </div>
