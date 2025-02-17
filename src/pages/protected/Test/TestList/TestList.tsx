@@ -98,6 +98,43 @@ const TestList: React.FC = () => {
           </div>
         )}
 
+        <Row>
+          <Col>
+            <h1 className="text-center">Danh sách bài kiểm tra</h1>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
+          <Col md={6} className="mx-auto">
+            <div className="input-group d-flex shadow-sm rounded">
+              <input
+                type="text"
+                className="form-control border-end-0"
+                placeholder="Nhập mã lớp học"
+                value={classCode ?? ''}
+                onChange={(e) => setClassCode(e.target.value)}
+                style={{
+                  padding: '12px 15px',
+                  fontSize: '16px',
+                  backgroundColor: '#f8f9fa'
+                }}
+              />
+              <Button
+                variant="primary"
+                onClick={() => setClassCode(classCode ?? '')}
+                className="d-flex align-items-center justify-content-center"
+                style={{
+                  minWidth: '120px',
+                  backgroundColor: 'rgb(45, 100, 159)',
+                  border: 'none'
+                }}
+              >
+                <span>Xác nhận</span>
+              </Button>
+            </div>
+          </Col>
+        </Row>
+
         <Row xs={1} md={3} className="g-4">
           {tests.length > 0 ? (
             tests.map((test) => (
