@@ -28,6 +28,8 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
 
       // Process the data if necessary
       const quiz = response.data.quiz; // You can now use the quiz data as needed
+
+      setData(quiz); // Nếu kh có thì thử xóa {} để mỗi quiz thôi
     } catch (error) {
       console.error("There was an error fetching the data:", error);
     }
@@ -35,7 +37,7 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
 
   fetchQuizData(); // Call the function to fetch the data
 
-  const data = {};
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     let interval: number;
@@ -134,11 +136,10 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                         onClick={() => handleOptionClick(index, Answerindex)}
                       >
                         <div
-                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${
-                            selectedOption[index] === Answerindex
-                              ? "border-primary"
-                              : "border-secondary"
-                          }`}
+                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${selectedOption[index] === Answerindex
+                            ? "border-primary"
+                            : "border-secondary"
+                            }`}
                         >
                           <div className="d-flex align-items-center gap-2">
                             <div
