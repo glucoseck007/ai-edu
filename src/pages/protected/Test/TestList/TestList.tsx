@@ -100,33 +100,33 @@ const TestList: React.FC = () => {
 
         <Row>
           <Col>
-            <h1 className="text-center">Danh sách bài kiểm tra</h1>
+            <h1 className="text-center my-3">Danh sách bài kiểm tra</h1>
           </Col>
         </Row>
 
         <Row className="mb-4">
           <Col md={6} className="mx-auto">
-            <div className="input-group d-flex shadow-sm rounded">
+            <div className="input-group d-flex my-3 rounded">
               <input
                 type="text"
                 className="form-control border-end-0"
                 placeholder="Nhập mã lớp học"
-                value={classCode ?? ''}
+                value={classCode ?? ""}
                 onChange={(e) => setClassCode(e.target.value)}
                 style={{
-                  padding: '12px 15px',
-                  fontSize: '16px',
-                  backgroundColor: '#f8f9fa'
+                  padding: "12px 15px",
+                  fontSize: "16px",
+                  backgroundColor: "#f8f9fa",
                 }}
               />
               <Button
                 variant="primary"
-                onClick={() => setClassCode(classCode ?? '')}
-                className="d-flex align-items-center justify-content-center"
+                onClick={() => setClassCode(classCode ?? "")}
+                className="d-flex align-items-center my-3 justify-content-center"
                 style={{
-                  minWidth: '120px',
-                  backgroundColor: 'rgb(45, 100, 159)',
-                  border: 'none'
+                  minWidth: "120px",
+                  backgroundColor: "rgb(45, 100, 159)",
+                  border: "none",
                 }}
               >
                 <span>Xác nhận</span>
@@ -185,7 +185,7 @@ const TestList: React.FC = () => {
               </Col>
             ))
           ) : (
-            <p className="text-center">Không có bài kiểm tra nào.</p>
+            <p className="text-center"></p>
           )}
         </Row>
       </Container>
