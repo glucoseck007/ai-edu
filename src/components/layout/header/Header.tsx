@@ -7,7 +7,15 @@ import { logout } from "../../../redux/slices/authSlice";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useTranslation } from "react-i18next";
 import LoadingLink from "../../common/links/LoadingLink";
-import { DropdownButton, Dropdown, Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
+import {
+  DropdownButton,
+  Dropdown,
+  Modal,
+  Button,
+  Form,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
 import AppLogo from "../../../assets/images/logo.png";
 import { useState } from "react";
 import axios from "axios";
@@ -39,7 +47,9 @@ function Header() {
   const validateCode = (value: string) => {
     const regex = /^[a-z0-9]{6}$/;
     if (!regex.test(value)) {
-      setError("Code must be 6 characters long and contain only lowercase letters and numbers");
+      setError(
+        "Code must be 6 characters long and contain only lowercase letters and numbers"
+      );
     } else {
       setError("");
     }
@@ -91,7 +101,12 @@ function Header() {
                 <div className="right-icon">
                   <ul>
                     <LoadingLink to="/" style={{ textDecoration: "none" }}>
-                      <img src={AppLogo} alt="Logo" width="120px" className="mt-2" />
+                      <img
+                        src={AppLogo}
+                        alt="Logo"
+                        width="120px"
+                        className="mt-2"
+                      />
                     </LoadingLink>
                   </ul>
                 </div>
@@ -105,38 +120,38 @@ function Header() {
                           {t("homePage.header.home")}
                         </LoadingLink>
                       </li>
-                      {
-                        auth.user?.roles[0] === "student" && (
-                          <>
-                            <li>
-                              <LoadingLink to="/tests">
-                                Kiểm tra
-                              </LoadingLink>
-                            </li>
-                            <li>
-                              <LoadingLink to="/student/chat-bot">
-                                Chat Bot
-                              </LoadingLink>
-                            </li>
-                            <li className="nav-item">
-                              <div className="dropdown">
-                                <LoadingLink to="/classroom">Lớp học</LoadingLink>
-                                <div className="dropdown-content">
-                                  {/* <LoadingLink to="/join-class">Tham gia</LoadingLink> */}
-                                  <Button variant="white" onClick={() => setShowModal(true)}>
-                                  <LoadingLink to="#">Tham gia lớp học</LoadingLink>
-                                  </Button>
-                                </div>
+                      {auth.user?.roles[0] === "student" && (
+                        <>
+                          <li>
+                            <LoadingLink to="/tests">Kiểm tra</LoadingLink>
+                          </li>
+                          <li>
+                            <LoadingLink to="/student/chat-bot">
+                              Chat Bot
+                            </LoadingLink>
+                          </li>
+                          <li className="nav-item">
+                            <div className="dropdown">
+                              <LoadingLink to="/classroom">Lớp học</LoadingLink>
+                              <div className="dropdown-content">
+                                {/* <LoadingLink to="/join-class">Tham gia</LoadingLink> */}
+                                <Button
+                                  variant="white"
+                                  onClick={() => setShowModal(true)}
+                                >
+                                  <LoadingLink to="#">
+                                    Tham gia lớp học
+                                  </LoadingLink>
+                                </Button>
                               </div>
-                            </li>
-                          </>
-                        )}
+                            </div>
+                          </li>
+                        </>
+                      )}
                       {auth.user?.roles[0] === "teacher" && (
                         <>
                           <li>
-                            <LoadingLink to="/tests">
-                              Tạo bài thi
-                            </LoadingLink>
+                            <LoadingLink to="/tests">Bài thi</LoadingLink>
                           </li>
                           <li>
                             <LoadingLink to="/teacher/chat-bot">
@@ -147,34 +162,59 @@ function Header() {
                             <div className="dropdown">
                               <LoadingLink to="/classroom">Lớp học</LoadingLink>
                               <div className="dropdown-content">
-                              
                                 {auth.user?.roles.includes("teacher") && (
                                   <>
-                                  <Button variant="white" onClick={() => setShowModal(true)}>
-                                  <LoadingLink to="#">Tham gia lớp học</LoadingLink>
-                                  
-                                </Button>
-                                  <LoadingLink to="/add-class">Tạo mới</LoadingLink>
+                                    <Button
+                                      variant="white"
+                                      onClick={() => setShowModal(true)}
+                                    >
+                                      <LoadingLink to="#">
+                                        Tham gia lớp học
+                                      </LoadingLink>
+                                    </Button>
+                                    <LoadingLink to="/add-class">
+                                      Tạo mới
+                                    </LoadingLink>
                                   </>
                                 )}
                               </div>
                             </div>
                           </li>
                         </>
-                      )
-                      }
+                      )}
                       {auth.user ? (
-                        <DropdownButton id="dropdown-basic-button" className="user-dropdown" title={<FontAwesomeIcon icon={faUser} />}>
-                          <Dropdown.Item href={`/${auth.user?.roles[0]}/profile/${auth.user?.id}`}>{t("homePage.dropdown.profile")}</Dropdown.Item>
-                          <Dropdown.Item onClick={handleLogout}>{t("homePage.dropdown.logout")}</Dropdown.Item>
+                        <DropdownButton
+                          id="dropdown-basic-button"
+                          className="user-dropdown"
+                          title={<FontAwesomeIcon icon={faUser} />}
+                        >
+                          <Dropdown.Item
+                            href={`/${auth.user?.roles[0]}/profile/${auth.user?.id}`}
+                          >
+                            {t("homePage.dropdown.profile")}
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={handleLogout}>
+                            {t("homePage.dropdown.logout")}
+                          </Dropdown.Item>
                         </DropdownButton>
                       ) : (
                         <>
                           <li className="nav-item">
-                            <a href="/login" className="main-btn" style={{ textDecoration: "none" }}>{t("homePage.header.login")}</a>
+                            <a
+                              href="/login"
+                              className="main-btn"
+                              style={{ textDecoration: "none" }}
+                            >
+                              {t("homePage.header.login")}
+                            </a>
                           </li>
                           <li className="nav-item">
-                            <a href="/register" style={{ textDecoration: "underline" }}>{t("homePage.header.register")}</a>
+                            <a
+                              href="/register"
+                              style={{ textDecoration: "underline" }}
+                            >
+                              {t("homePage.header.register")}
+                            </a>
                           </li>
                         </>
                       )}
@@ -207,10 +247,20 @@ function Header() {
                 isInvalid={!!error && code.length === 6}
                 disabled={isLoading}
               />
-              <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                {error}
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button variant="primary" type="submit" disabled={!code || !!error || isLoading}>
-              {isLoading ? <Spinner animation="border" size="sm" /> : "Tham gia"}
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={!code || !!error || isLoading}
+            >
+              {isLoading ? (
+                <Spinner animation="border" size="sm" />
+              ) : (
+                "Tham gia"
+              )}
             </Button>
           </Form>
         </Modal.Body>

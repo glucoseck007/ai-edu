@@ -26,7 +26,13 @@ const AddClass: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newClassroom = { name, section, subject, room, accountId };
+    const newClassroom = {
+      name,
+      section,
+      subject,
+      schoolCode: room,
+      accountId,
+    };
 
     try {
       const response = await axios.post(
@@ -71,7 +77,7 @@ const AddClass: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="section">Học phần</label>
+          <label htmlFor="section">Khối</label>
           <input
             type="text"
             id="section"
@@ -91,7 +97,7 @@ const AddClass: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="room">Phòng</label>
+          <label htmlFor="room">Mã trường</label>
           <input
             type="text"
             id="room"

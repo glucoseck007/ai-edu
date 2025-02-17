@@ -201,6 +201,7 @@ public class AccountService {
         return classrooms.stream().map(
                 classroom -> ClassroomDTO.builder()
                         .id(classroom.getId())
+                        .schoolCode(classroom.getSchool().getSchoolCode())
                         .name(classroom.getName())
                         .section(classroom.getSection())
                         .subject(classroom.getSubject())

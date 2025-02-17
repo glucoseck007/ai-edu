@@ -80,6 +80,7 @@ const Classroom = () => {
                     />
                     <Card.Title>{classroom.name}</Card.Title>
                     <Card.Text>
+                      <strong>Lớp: </strong>{" "}
                       {classroom.section || "Thông tin lớp học."}
                     </Card.Text>
                     <Card.Text>

@@ -41,6 +41,7 @@ public class SecurityConfig {
             "/api/classroom/add_class",
             "/api/classroom/join",
             "/api/subject/add_subject",
+            "api/quiz/assign-quiz"
     };
 
     private CustomJwtDecoder jwtDecoder;
@@ -52,9 +53,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/school/remove_school/**", "/api/classroom/remove_class/**", "/api/accounts/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/quiz/assign-quiz/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/classroom-content/**",
                                 "/api/classroom/**",
+                                "api/quiz/account/**",
+                                "api/quiz/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**").permitAll()

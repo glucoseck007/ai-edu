@@ -19,6 +19,7 @@ const ReviewTest: React.FC = () => {
   const quizData = Array.isArray(storedData.quiz) ? storedData.quiz : [];
 
   const [quizs, setQuizs] = useState(quizData);
+  const [subject] = useState(localStorage.getItem("subject") || "");
   const [showModal, setShowModal] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editQuiz, setEditQuiz] = useState<any>({});
@@ -124,18 +125,17 @@ const ReviewTest: React.FC = () => {
 
   const auth = useSelector((state: RootState) => state.auth);
 
-
   const handleSaveQuiz = async () => {
-
     if (!quizTitle.trim()) {
       alert("Quiz title cannot be empty!");
       return;
-    };
+    }
 
     const quizDataToSave = {
       title: quizTitle,
       quiz: quizs,
-      userId: auth.user?.id
+      userId: auth.user?.id,
+      subject,
     };
 
     localStorage.setItem("quiz", JSON.stringify(quizDataToSave));
@@ -154,7 +154,7 @@ const ReviewTest: React.FC = () => {
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
-    };
+    }
     setTitleModal(false);
   };
 
@@ -282,7 +282,10 @@ const ReviewTest: React.FC = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button style={{ backgroundColor: "#07294d" }} onClick={handleSaveQuiz}>
+          <Button
+            style={{ backgroundColor: "#07294d" }}
+            onClick={handleSaveQuiz}
+          >
             Save Title
           </Button>
         </Modal.Footer>
