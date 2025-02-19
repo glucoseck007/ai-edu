@@ -1,10 +1,14 @@
 package com.edu.aiedu.service;
 
+import com.edu.aiedu.dto.ai.ListClassMembersDTO;
+import com.edu.aiedu.dto.request.ClassroomContentDTO;
 import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Classroom;
+import com.edu.aiedu.entity.ClassroomContent;
 import com.edu.aiedu.entity.School;
 import com.edu.aiedu.repository.AccountRepository;
+import com.edu.aiedu.repository.ClassroomContentRepository;
 import com.edu.aiedu.repository.ClassroomRepository;
 import com.edu.aiedu.repository.SchoolRepository;
 import jakarta.transaction.Transactional;
@@ -22,12 +26,14 @@ public class ClassroomService {
     private final SchoolRepository schoolRepository;
     private final ClassroomRepository classroomRepository;
     private final AccountRepository accountRepository;
+    private final ClassroomContentRepository classroomContentRepository;
 
     @Autowired
-    public ClassroomService(ClassroomRepository classroomRepository, AccountRepository accountRepository, SchoolRepository schoolRepository) {
+    public ClassroomService(ClassroomRepository classroomRepository, AccountRepository accountRepository, SchoolRepository schoolRepository, ClassroomContentRepository classroomContentRepository) {
         this.classroomRepository = classroomRepository;
         this.accountRepository = accountRepository;
         this.schoolRepository = schoolRepository;
+        this.classroomContentRepository = classroomContentRepository;
     }
 
     public Classroom addClass(ClassroomDTO classroomDTO) {
@@ -168,5 +174,39 @@ public class ClassroomService {
         // Save both entities to maintain consistency
         classroomRepository.save(classroom);
         accountRepository.save(account);
+    }
+
+    public ClassroomContent saveClassroomContent(ClassroomContentDTO dto) {
+        Optional<Classroom> classroomOptional = classroomRepository.findById(dto.getClassroomId());
+        if (classroomOptional.isEmpty()) {
+            throw new IllegalArgumentException("Classroom not found");
+        }
+
+        Classroom classroom = classroomOptional.get();
+        ClassroomContent content = ClassroomContent.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .fileData(dto.getFileData())
+                .fileName(dto.getFileName())
+                .fileType(dto.getFileType())
+                .classroom(classroom)
+                .build();
+
+        return classroomContentRepository.save(content);
+    }
+
+    public List<ClassroomContentDTO> getClassroomContentByClassroomId(String classroomId) {
+        List<ClassroomContent> contentList = classroomContentRepository.findByClassroomId(classroomId);
+
+        return contentList.stream().map(content ->
+                ClassroomContentDTO.builder()
+//                        .id(content.getId())
+                        .title(content.getTitle())
+                        .content(content.getContent())
+                        .fileName(content.getFileName())
+                        .fileType(content.getFileType())
+                        .classroomId(classroomId)
+                        .build()
+        ).collect(Collectors.toList());
     }
 }

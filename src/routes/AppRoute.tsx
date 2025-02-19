@@ -78,8 +78,11 @@ const AppRoute: React.FC = () => {
         <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
         <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
-        <Route path="/student/test-result/:id" element={<ResultTest />} />
-        <Route path="/teacher/test-result/:id" element={<ClassResultTest />} />
+        <Route path="/student/test-result/:testId" element={<ResultTest />} />
+        <Route
+          path="/teacher/test-result/:testId"
+          element={<ClassResultTest />}
+        />
         <Route
           path="/teacher/test-result/:id/:studentid"
           element={<ResultTest />}

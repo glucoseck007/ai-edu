@@ -1,6 +1,6 @@
 package com.edu.aiedu.repository;
 
-import com.edu.aiedu.dto.ai.AccountClassroomQuizDTO;
+import com.edu.aiedu.dto.ai.ListClassMembersDTO;
 import com.edu.aiedu.entity.AccountClassroom;
 import com.edu.aiedu.entity.Classroom;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +28,13 @@ public interface AccountClassroomRepository extends JpaRepository<AccountClassro
             "JOIN quizzes q ON q.class_code = c.classroom_code",
             nativeQuery = true)
     List<Object[]> findAccountClassroomQuizzesNative();
+
+    @Query("""
+        SELECT new com.edu.aiedu.dto.ai.ListClassMembersDTO(a.id, a.firstName, a.lastName, a.email)
+        FROM AccountClassroom ac
+        JOIN ac.classroom c
+        JOIN ac.account a
+        WHERE c.classroomCode = :classroomCode
+    """)
+    List<ListClassMembersDTO> findClassMembersByClassroomCode(@Param("classroomCode") String classroomCode);
 }

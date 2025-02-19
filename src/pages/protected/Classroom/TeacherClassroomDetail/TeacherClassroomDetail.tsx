@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -36,69 +36,39 @@ function TeacherClassroomDetail() {
   const [showModal, setShowModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const urlParams = new URLSearchParams(window.location.search);
+  const classroomId = urlParams.get("classroomId");
+  const classroomCode = urlParams.get("classroomCode");
   const [newAssignment, setNewAssignment] = useState({
+    classroomId: classroomId,
     title: "",
     content: "",
-    teacher: "",
-    deadline: "",
-    materials: "",
-    topics: "",
-    instructions: "",
-    maxPoints: 100,
   });
 
-  // Mock Example Data for UI Testing with enhanced details
-  const mockClassroomData = [
-    {
-      id: "1",
-      title: "Math Homework",
-      content: "Complete algebra exercises from chapter 5.",
-      fileName: "algebra_homework.pdf",
-      teacher: {
-        name: "Dr. Smith",
-        avatar: "https://example.com/avatar.jpg",
-      },
-      createdAt: "2024-02-05T14:30:00",
-      deadline: "2024-02-12T23:59:59",
-      materials: [
-        { id: "m1", name: "Chapter 5 Exercises.pdf", type: "pdf" },
-        { id: "m2", name: "Formula Sheet.docx", type: "document" },
-      ],
-      maxPoints: 100,
-      topics: ["Algebra", "Equations"],
-      instructions:
-        "Please complete all exercises from 5.1 to 5.4. Show all your work and submit as a single PDF file.",
-    },
-    {
-      id: "2",
-      title: "Science Project",
-      content: "Prepare a presentation on the Solar System.",
-      fileName: "solar_system.pptx",
-      teacher: {
-        name: "Mrs. Johnson",
-        avatar: "https://example.com/avatar2.jpg",
-      },
-      createdAt: "2024-02-08T10:15:00",
-      deadline: "2024-02-20T23:59:59",
-      materials: [
-        { id: "m3", name: "Project Guidelines.pdf", type: "pdf" },
-        { id: "m4", name: "Template.pptx", type: "presentation" },
-      ],
-      maxPoints: 150,
-      topics: ["Solar System", "Astronomy"],
-      instructions:
-        "Create a 10-minute presentation about one planet in our solar system. Include at least 5 interesting facts and 3 images.",
-    },
-  ];
-
-  const mockStudents = [
-    { id: "1", name: "Alice Johnson", email: "alice@example.com" },
-    { id: "2", name: "Bob Smith", email: "bob@example.com" },
-    { id: "3", name: "Charlie Brown", email: "charlie@example.com" },
-  ];
-
+  // Fetch Classroom Details
   useEffect(() => {
     const fetchClassroomDetails = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const classroomId = urlParams.get("classroomId");
+      if (classroomId) {
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_API}/classroom-content/classroom`,
+            { params: { classroomId: classroomId } }
+          );
+          setClassroomData(response.data);
+        } catch (error) {
+          console.error("Error fetching classroom details:", error);
+        }
+      }
+    };
+
+    fetchClassroomDetails();
+  }, [classroomId]);
+
+  // Fetch Students List
+  useEffect(() => {
+    const fetchStudents = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const classroomId = urlParams.get("classroomId");
       setId(classroomId || "mock-id");
@@ -106,43 +76,19 @@ function TeacherClassroomDetail() {
       if (classroomId) {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_API}/classroom-content/classroom`,
-            { params: { classroomId } }
+            `${import.meta.env.VITE_API}/classroom/members/${classroomCode}`
           );
-          setClassroomData(
-            response.data.length > 0 ? response.data : mockClassroomData
-          );
-        } catch (error) {
-          console.error("Error fetching classroom details:", error);
-          setClassroomData(mockClassroomData);
-        }
-      } else {
-        setClassroomData(mockClassroomData);
-      }
-    };
-
-    fetchClassroomDetails();
-  }, []);
-
-  useEffect(() => {
-    const fetchStudents = async () => {
-      if (id) {
-        try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_API}/classroom-content/students`,
-            { params: { classroomId: id } }
-          );
-          setStudents(response.data.length > 0 ? response.data : mockStudents);
+          setStudents(response.data); // Directly store fetched data
         } catch (error) {
           console.error("Error fetching student list:", error);
-          setStudents(mockStudents);
         }
       }
     };
 
     fetchStudents();
-  }, [id]);
+  }, []);
 
+  // File Download Handler
   const handleDownload = async (contentId, fileName) => {
     try {
       const response = await axios.get(
@@ -163,6 +109,7 @@ function TeacherClassroomDetail() {
     }
   };
 
+  // Format Date to Vietnamese
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString("vi-VN", {
       year: "numeric",
@@ -173,28 +120,28 @@ function TeacherClassroomDetail() {
     });
   };
 
-  const handleAddAssignment = () => {
-    const newEntry = {
-      id: String(classroomData.length + 1),
-      ...newAssignment,
-      teacher: { name: newAssignment.teacher },
-      createdAt: new Date().toISOString(),
-      materials: newAssignment.materials.split(",").map((m) => m.trim()),
-      topics: newAssignment.topics.split(",").map((t) => t.trim()),
-    };
+  // Handle Add Assignment
+  const handleAddAssignment = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API}/classroom-content/assign-assignment`,
+        newAssignment
+      );
 
-    setClassroomData([...classroomData, newEntry]);
-    setShowAddModal(false);
-    setNewAssignment({
-      title: "",
-      content: "",
-      teacher: "",
-      deadline: "",
-      materials: "",
-      topics: "",
-      instructions: "",
-      maxPoints: 100,
-    });
+      // Update classroomData locally to reflect the new assignment
+      setClassroomData((prevData) => [...prevData, response.data]);
+
+      // Reset form and close modal
+      setNewAssignment((prev) => ({
+        ...prev,
+        title: "",
+        content: "",
+      }));
+      setShowAddModal(false);
+    } catch (error) {
+      console.error("Error creating assignment:", error);
+      alert("Failed to create assignment.");
+    }
   };
 
   return (
@@ -207,12 +154,11 @@ function TeacherClassroomDetail() {
             style={{ marginBottom: "20px", cursor: "pointer" }}
             onClick={() => navigate(-1)}
           />
-          <h1 style={{ marginBottom: "20px", marginLeft: "20px" }}>
-            Classroom
-          </h1>
+          <h1 style={{ marginBottom: "20px", marginLeft: "20px" }}>Lớp học</h1>
         </div>
         <div></div>
       </div>
+
       <Container>
         {/* Tab Navigation */}
         <Tabs
@@ -220,6 +166,7 @@ function TeacherClassroomDetail() {
           id="classroom-tabs"
           className="mb-4"
         >
+          {/* Classroom Tab */}
           <Tab eventKey="classroom-data" title="Lớp học">
             <Container className="px-0">
               <Row className="mb-4 align-items-center">
@@ -274,18 +221,21 @@ function TeacherClassroomDetail() {
                             className="me-2 text-primary"
                           />
                           <span className="fw-medium">
-                            {assignment.teacher.name} đã thêm một bài tập mới
+                            Giáo viên đã thêm một bài tập mới
                           </span>
                         </div>
                       </Card.Header>
                       <Card.Body>
                         <Card.Title className="mb-3">
-                          {assignment.title}
+                          Tiêu đề: {assignment.title}
                         </Card.Title>
+                        <Card.Text className="mb-3">
+                          <strong>Nội dung:</strong> {assignment.content}
+                        </Card.Text>
                         <div className="text-muted small">
                           <div className="mb-2">
                             <FontAwesomeIcon icon={faClock} className="me-2" />
-                            Posted: {formatDate(assignment.createdAt)}
+                            Posted: {formatDate(assignment.createdDate)}
                           </div>
                         </div>
                       </Card.Body>
@@ -296,6 +246,7 @@ function TeacherClassroomDetail() {
             </Container>
           </Tab>
 
+          {/* Students Tab */}
           <Tab eventKey="students" title="Danh sách học sinh">
             <Container className="px-0">
               <div className="students-list-container">
@@ -310,9 +261,9 @@ function TeacherClassroomDetail() {
                     </thead>
                     <tbody>
                       {students.map((student, index) => (
-                        <tr key={student.id}>
+                        <tr key={student.accountId}>
                           <td>{index + 1}</td>
-                          <td>{student.name}</td>
+                          <td>{`${student.firstName} ${student.lastName}`}</td>
                           <td>{student.email}</td>
                         </tr>
                       ))}
@@ -362,9 +313,11 @@ function TeacherClassroomDetail() {
           </>
         )}
       </Modal>
+
+      {/* Add Assignment Modal */}
       <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Assignment</Modal.Title>
+          <Modal.Title>Thêm bài tập</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -384,7 +337,7 @@ function TeacherClassroomDetail() {
                 onChange={(e) =>
                   setNewAssignment({
                     ...newAssignment,
-                    instructions: e.target.value,
+                    content: e.target.value,
                   })
                 }
               />
@@ -392,7 +345,7 @@ function TeacherClassroomDetail() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleAddAssignment}>Add</Button>
+          <Button onClick={handleAddAssignment}>Thêm</Button>
         </Modal.Footer>
       </Modal>
     </div>

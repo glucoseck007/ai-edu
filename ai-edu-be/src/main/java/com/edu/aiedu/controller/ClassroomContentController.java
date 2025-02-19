@@ -25,10 +25,12 @@ public class ClassroomContentController {
     private static final Logger logger = LoggerFactory.getLogger(ClassroomContentController.class);
 
     private final ClassroomContentService contentService;
+    private final ClassroomContentService classroomContentService;
 
     @Autowired
-    public ClassroomContentController(ClassroomContentService contentService) {
+    public ClassroomContentController(ClassroomContentService contentService, ClassroomContentService classroomContentService) {
         this.contentService = contentService;
+        this.classroomContentService = classroomContentService;
     }
 
     @PostMapping("/upload")
@@ -55,6 +57,12 @@ public class ClassroomContentController {
         }
     }
 
+    @PostMapping("/assign-assignment")
+    public ResponseEntity<ClassroomContent> createClassroomContent(@RequestBody ClassroomContentDTO dto) {
+        ClassroomContent savedContent = classroomContentService.saveClassroomContent(dto);
+        return ResponseEntity.ok(savedContent);
+    }
+
     @GetMapping("/download/{contentId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String contentId) {
         ClassroomContent content = contentService.getContentById(contentId)
@@ -71,6 +79,13 @@ public class ClassroomContentController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .body(new ByteArrayResource(fileData));
+    }
+
+    @GetMapping("/by-classcode/{classroomCode}")
+    public ResponseEntity<List<ClassroomContentDTO>> getClassroomContentsByClassCode(
+            @PathVariable String classroomCode) {
+        List<ClassroomContentDTO> contents = classroomContentService.getClassroomContentByClassroomCode(classroomCode);
+        return ResponseEntity.ok(contents);
     }
 
     @GetMapping("/classroom")

@@ -109,8 +109,7 @@ const UploadQuiz: React.FC = () => {
       const doc = new Docxtemplater(zip);
 
       // Remove unused metadata
-      doc.setOptions({ paragraphLoop: true, linebreaks: true });
-
+      // doc.setOptions({ paragraphLoop: true, linebreaks: true });
       const compressedDocBytes = doc.getZip().generate({ type: "uint8array" });
 
       return new File([compressedDocBytes], file.name, {

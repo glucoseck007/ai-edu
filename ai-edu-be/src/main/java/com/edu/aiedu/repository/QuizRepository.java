@@ -1,5 +1,6 @@
 package com.edu.aiedu.repository;
 
+import com.edu.aiedu.dto.ai.QuizAttempt;
 import com.edu.aiedu.dto.ai.QuizDTO;
 import com.edu.aiedu.entity.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;

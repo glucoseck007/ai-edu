@@ -22,7 +22,10 @@ public class Question {
     private List<String> answers;
 
     private String correctAnswer;
+
+    @Lob
     private String reference;
+
     private String questionType; // MCQ or TF
 
     @ManyToOne

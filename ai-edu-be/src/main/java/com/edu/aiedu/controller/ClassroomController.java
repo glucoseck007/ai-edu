@@ -1,11 +1,13 @@
 package com.edu.aiedu.controller;
 
 import com.edu.aiedu.dto.ai.AIClassroomDTO;
+import com.edu.aiedu.dto.ai.ListClassMembersDTO;
 import com.edu.aiedu.dto.ai.TeacherClassDTO;
 import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.dto.request.JoinClassroomRequest;
 import com.edu.aiedu.dto.response.ApiResponse;
 import com.edu.aiedu.entity.Classroom;
+import com.edu.aiedu.service.AccountClassroomService;
 import com.edu.aiedu.service.AccountService;
 import com.edu.aiedu.service.ClassroomService;
 import com.edu.aiedu.service.ExternalApiService;
@@ -26,12 +28,14 @@ public class ClassroomController {
 
     private final AccountService accountService;
     private final ClassroomService classroomService;
+    private final AccountClassroomService accountClassroomService;
     @Autowired
     private ExternalApiService externalApiService;
 
-    public ClassroomController(ClassroomService classroomService, AccountService accountService) {
+    public ClassroomController(ClassroomService classroomService, AccountService accountService, AccountClassroomService accountClassroomService) {
         this.classroomService = classroomService;
         this.accountService = accountService;
+        this.accountClassroomService = accountClassroomService;
     }
 
     @PostMapping("/add_class")
@@ -119,4 +123,9 @@ public class ClassroomController {
 //        List<ClassroomDTO> classrooms = classroomService.getClassroomsByAccountId(accountId);
 //        return ResponseEntity.ok(classrooms);
 //    }
+    @GetMapping("/members/{classroomCode}")
+    public ResponseEntity<List<ListClassMembersDTO>> getClassMembers(@PathVariable String classroomCode) {
+        List<ListClassMembersDTO> members = accountClassroomService.getClassMembers(classroomCode);
+        return ResponseEntity.ok(members);
+    }
 }

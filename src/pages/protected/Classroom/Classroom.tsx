@@ -44,24 +44,6 @@ const Classroom = () => {
     fetchClasses();
   }, []);
 
-  // const handleViewDetails = async (classroomId: string) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${import.meta.env.VITE_API}/classroom-content/classroom`,
-  //       {
-  //         params: { classroomId: classroomId },
-  //       }
-  //     );
-
-  //     // Navigate to ClassroomDetail with data
-  //     navigate("/classroom/classroom-detail", {
-  //       state: { classroomData: response.data },
-  //     });
-  //   } catch (error) {
-  //     console.error("Error fetching classroom details:", error);
-  //   }
-  // };
-
   return (
     <div className="classroom-container">
       <h2 className="header-classroom text-2xl font-bold">Lớp học của bạn</h2>
@@ -88,7 +70,7 @@ const Classroom = () => {
                       {classroom.classroomCode || "Mã lớp học."}
                     </Card.Text>
                     <LoadingLink
-                      to={`/${auth.user?.roles[0]}/class-detail?classroomId=${classroom.id}`}
+                      to={`/${auth.user?.roles[0]}/class-detail?classroomId=${classroom.id}&&classroomCode=${classroom.classroomCode}`}
                     >
                       <Button variant="warning" style={{ color: "white" }}>
                         Xem chi tiết

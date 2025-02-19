@@ -60,6 +60,7 @@ public class SecurityConfig {
                                 "/api/classroom/**",
                                 "api/quiz/account/**",
                                 "api/quiz/**",
+                                "/api/classroom/list_classes_owner",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**").permitAll()

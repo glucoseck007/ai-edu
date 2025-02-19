@@ -1,6 +1,7 @@
 package com.edu.aiedu.repository;
 
 import com.edu.aiedu.entity.Account;
+import com.edu.aiedu.entity.Classroom;
 import io.micrometer.common.lang.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,6 +15,7 @@ public interface AccountRepository extends JpaRepository<Account, String>, Pagin
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     Optional<Account> findByUsername(String username);
+    @NonNull Optional<Account> findById(@NonNull String id);
     Optional<Account> findByEmail(String email);
     void deleteById(@NonNull String id);
 }

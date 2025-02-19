@@ -1,6 +1,7 @@
 package com.edu.aiedu.service;
 
 import com.edu.aiedu.dto.ai.AccountClassroomQuizDTO;
+import com.edu.aiedu.dto.ai.ListClassMembersDTO;
 import com.edu.aiedu.repository.AccountClassroomRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -25,6 +26,10 @@ public class AccountClassroomService {
                         (String) obj[1],
                         (String) obj[2]))
                 .collect(Collectors.toList());
+    }
+
+    public List<ListClassMembersDTO> getClassMembers(String classroomCode) {
+        return repository.findClassMembersByClassroomCode(classroomCode);
     }
 }
 

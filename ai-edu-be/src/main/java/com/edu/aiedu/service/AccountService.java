@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,10 @@ public class AccountService {
     AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
     EmailService emailService;
+
+    public Optional<Account> getAccountById(String id) {
+        return accountRepository.findById(id);
+    }
 
     public void verifyAccount(AccountVerificationRequest request) {
         Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
