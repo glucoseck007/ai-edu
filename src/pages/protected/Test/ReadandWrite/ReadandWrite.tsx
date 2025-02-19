@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { numberToLetter } from "../../../../utils/Converters";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { use } from "i18next";
 
 interface ReadingWritingModuleProps {
   testId: string;
@@ -14,7 +15,7 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
   const [isRunning, setIsRunning] = useState(true);
   const [time, setTime] = useState(3600);
   const [selectedOption, setSelectedOption] = useState<{
-    [key: number]: number | null;
+    [key: number]: string | null;
   }>({});
   const target = useRef(null);
   const navigate = useNavigate();
@@ -44,7 +45,6 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
     if (isRunning) {
       interval = window.setInterval(() => {
         setTime((prevTime) => prevTime - 1);
-        setTime((prevTime) => prevTime - 1);
       }, 1000);
     }
 
@@ -59,13 +59,16 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
       .padStart(2, "0")}`;
   };
 
-  const handleOptionClick = (questionIndex: number, optionIndex: number) => {
+  const handleOptionClick = (questionIndex: number, optionValue: string) => {
     setSelectedOption((prev) => ({
       ...prev,
-      [questionIndex]: optionIndex,
-      [questionIndex]: optionIndex,
+      [questionIndex]: optionValue,
     }));
   };
+
+  useEffect(() => {
+    console.log(selectedOption);
+  }, [selectedOption]);
 
   return (
     <div className="min-vh-100 d-flex flex-column">
@@ -104,7 +107,7 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
 
       {/* Main Content */}
       <Container className="flex-grow-1">
-        {data.quiz.map((value, index) => {
+        {data.map((value, index) => {
           return (
             <Row className="py-4" key={index}>
               <Col md={6} className="border-end">
@@ -133,10 +136,10 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
                         style={{ cursor: "pointer" }}
                         key={Answerindex}
                         className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
-                        onClick={() => handleOptionClick(index, Answerindex)}
+                        onClick={() => handleOptionClick(index, option)}
                       >
                         <div
-                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${selectedOption[index] === Answerindex
+                          className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2 ${selectedOption[index] === option
                             ? "border-primary"
                             : "border-secondary"
                             }`}

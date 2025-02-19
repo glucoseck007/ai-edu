@@ -88,7 +88,7 @@ const UserList: React.FC = () => {
 
     return (
         <div>
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="d-flex justify-content-between align-items-center">
                 <h2>User List</h2>
 
                 <div className="d-flex gap-1">

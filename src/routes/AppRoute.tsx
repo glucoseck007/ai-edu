@@ -48,27 +48,13 @@ const AppRoute: React.FC = () => {
         <Route path="/tests" element={<TestList />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/upload-quiz" element={<UploadQuiz />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/upload-quiz" element={<UploadQuiz />} />
         <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/classroom" element={<Classroom />} />
-        <Route path="/teacher/review-test" element={<ReviewTest />} />
         <Route path="/student/profile/:id" element={<StudentProfile />} />
         <Route path="/teacher/profile/:id" element={<TeacherProfile />} />
         <Route
           path="/student/class-detail"
           element={<StudentClassroomDetail />}
-        />
-        <Route path="/teacher/review-test" element={<ReviewTest />} />
-        <Route path="/student/profile/:id" element={<StudentProfile />} />
-        <Route path="/teacher/profile/:id" element={<TeacherProfile />} />
-        <Route
-          path="/student/class-detail"
-          element={<StudentClassroomDetail />}
-        />
-        <Route
-          path="/teacher/class-detail"
-          element={<TeacherClassroomDetail />}
         />
         <Route
           path="/teacher/class-detail"
@@ -76,8 +62,7 @@ const AppRoute: React.FC = () => {
         />
         <Route path="/add-class" element={<AddClass />} />
         <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
-        <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
-        <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
+
         <Route path="/student/test-result/:id" element={<ResultTest />} />
         <Route path="/teacher/test-result/:id" element={<ClassResultTest />} />
         <Route
@@ -91,11 +76,12 @@ const AppRoute: React.FC = () => {
         <Route path="/test/:id" element={<TestScreen />} />
         <Route path="student/chat-bot" element={<StudentChatBot />}></Route>
         <Route path="teacher/chat-bot" element={<TeacherChatBot />} />
+        <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
       </Route>
 
-      <Route element={<ChatLayouts />}></Route>
-
-      <Route element={<ChatLayouts />}></Route>
+      <Route element={<ChatLayouts />}>
+        
+      </Route>
     </Routes>
   );
 };
