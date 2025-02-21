@@ -91,11 +91,13 @@ const TeacherProfile = () => {
     totalStudents: 25,
     classes: classrooms,
     tests: testHistory,
-    recent_class: [
-      { id: 1, name: "SE1", time: "2022-2023" },
-      { id: 2, name: "SE2", time: "2021-2022" },
-      { id: 3, name: "SE3", time: "2020-2021" },
-    ],
+    recent_class: classrooms.map((classroom, index) => ({
+      id: classroom.id, // or use index if id is missing
+      name: classroom.title, // assuming title is the class name
+      time: classroom.updatedAt
+        ? new Date(classroom.updatedAt).toLocaleDateString()
+        : "N/A",
+    }))
   };
 
   return (
@@ -207,7 +209,6 @@ const TeacherProfile = () => {
               {instructor.recent_class.map((notif) => (
                 <ListGroup.Item key={notif.id} className="class-item">
                   <p className="mb-1">{notif.name}</p>
-                  <small className="text-muted">{notif.time}</small>
                 </ListGroup.Item>
               ))}
             </ListGroup>

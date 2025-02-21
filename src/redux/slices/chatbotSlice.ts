@@ -69,6 +69,8 @@ export const fetchTeacherChatbotResponse = createAsyncThunk(
       );
 
       const chatbotResponse = response.data.message;
+      console.log(chatbotResponse);
+      
       if (chatbotResponse) return chatbotResponse;
 
       return rejectWithValue({

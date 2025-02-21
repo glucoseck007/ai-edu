@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
 import Latex from "react-latex-next";
 import { fetchTeacherChatbotResponse } from "../../../../redux/slices/chatbotSlice"; // Keeping API call
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/store";
 
 interface Message {
   id: number;
@@ -30,6 +32,9 @@ const TeacherChatBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const auth = useSelector((state: RootState) => state.auth);
+  const [loadingResponse, setLoadingResponse] = useState<boolean>(false);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -51,30 +56,38 @@ const TeacherChatBot: React.FC = () => {
       e.preventDefault();
       if (!input.trim()) return;
 
-      const newMessage: Message = {
-        id: messages.length + 1,
-        content: input,
-        isBot: false,
-      };
-
-      setMessages((prev) => [...prev, newMessage]);
-      setInput("");
-
-      const loadingMessage: Message = {
-        id: messages.length + 2,
-        content: "Loading...",
-        isBot: true,
-        isLoading: true,
-      };
-
-      setMessages((prev) => [...prev, loadingMessage]);
-      setLoadingMessageId(loadingMessage.id);
-
       try {
+        const teacher_code = auth.user?.id ? auth.user.id.substring(0, 5) : "";
+
+        const newMessage: Message = {
+          id: messages.length + 1,
+          content: input,
+          isBot: false,
+        };
+
+        setMessages((prev) => [...prev, newMessage]);
+        setInput("");
+
+        const loadingMessage: Message = {
+          id: messages.length + 2,
+          content: "Loading...",
+          isBot: true,
+          isLoading: true,
+        };
+        
+        setMessages((prev) => [...prev, loadingMessage]);
+        setLoadingMessageId(loadingMessage.id);
+
         setTimeout(async () => {
-          const response = await fetchTeacherChatbotResponse({
+          const response = await dispatch(
+            fetchTeacherChatbotResponse({
+            teacher_code:teacher_code,
             question: input,
-          });
+          })
+        );
+
+          console.log(response);
+          
 
           setMessages((prev) =>
             prev.filter((msg) => msg.id !== loadingMessage.id)
@@ -89,7 +102,8 @@ const TeacherChatBot: React.FC = () => {
           };
           setMessages((prev) => [...prev, botResponse]);
         }, 5000);
-      } catch (error: any) {
+
+      } catch (error) {
         setMessages((prev) => [
           ...prev,
           {
@@ -102,8 +116,78 @@ const TeacherChatBot: React.FC = () => {
         setLoadingMessageId(null);
       }
     },
-    [input, messages]
+    [input, messages,auth.user?.id, dispatch]
   );
+
+  const handleRetry = useCallback(
+      async (messageToRetry: Message) => {
+        const teacher_code = auth.user?.id ? auth.user.id.substring(0, 5) : "";
+  
+        // Remove the error message
+        setMessages((prev) => prev.filter((msg) => msg.id !== messageToRetry.id));
+  
+        // Add a new loading message
+        const loadingMessage: Message = {
+          id: Date.now(),
+          content: "Loading...",
+          isBot: true,
+          isLoading: true,
+        };
+  
+        setMessages((prev) => [...prev, loadingMessage]);
+        setLoadingMessageId(loadingMessage.id);
+  
+        try {
+          setTimeout(async () => {
+            const response = await dispatch(
+              fetchTeacherChatbotResponse({     
+                teacher_code:teacher_code,         
+                question: messageToRetry.content,
+              })
+            );
+  
+            setMessages((prev) =>
+              prev.filter((msg) => msg.id !== loadingMessage.id)
+            );
+            setLoadingMessageId(null);
+  
+            if (response.error) {
+              const errorData = response.payload as {
+                message: string;
+                status: number;
+              };
+              const botResponse: Message = {
+                id: Date.now(),
+                content: errorData.message,
+                isBot: true,
+                isError: true,
+              };
+              setMessages((prev) => [...prev, botResponse]);
+            } else {
+              const botResponse: Message = {
+                id: Date.now(),
+                content: response.payload,
+                isBot: true,
+              };
+              setMessages((prev) => [...prev, botResponse]);
+            }
+          }, 5000);
+        } catch (error: any) {
+          const errorMessage =
+            error?.message || "An error occurred while retrying the message";
+          const botResponse: Message = {
+            id: Date.now(),
+            content: errorMessage,
+            isBot: true,
+            isError: true,
+          };
+          setMessages((prev) => [...prev, botResponse]);
+          setLoadingMessageId(null);
+        }
+      },
+      [auth.user?.id, dispatch]
+    );
+
 
   return (
     <Container
@@ -121,53 +205,44 @@ const TeacherChatBot: React.FC = () => {
                 &nbsp;Teacher Chat Bot
               </h4>
             </Card.Header>
-            <Card.Body className="chat-body">
-              <div
-                className="messages-container"
-                style={{ overflowY: "auto", maxHeight: "calc(100vh - 150px)" }}
-              >
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`message ${message.isBot ? "bot" : "user"}`}
+            <Card.Body className="chat-body" style={{ height: "calc(100vh - 250px)", overflow: "hidden" }}>
+  <div className="messages-container" style={{ overflowY: "auto", height: "100%" }}>
+    {messages.map((message) => (
+      <div key={message.id} className={`message ${message.isBot ? "bot" : "user"}`}>
+        <div className="avatar">
+          <Image roundedCircle src={message.isBot ? ChatBotImg : TeacherImg} />
+        </div>
+        <div className="content">
+          {message.isLoading ? (
+            <span className="text-secondary">Waiting for response...</span>
+          ) : (
+            <div>
+              {message.content?.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                  <Latex>{line}</Latex>
+                  <br />
+                </React.Fragment>
+              ))}
+              {message.isError && (
+                <div>
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => handleRetry(message)}
+                    style={{ width: "20%" }}
                   >
-                    <div className="avatar">
-                      <Image
-                        roundedCircle
-                        src={message.isBot ? ChatBotImg : TeacherImg}
-                      />
-                    </div>
-                    <div className="content">
-                      {message.isLoading ? (
-                        <span className="text-secondary">
-                          Waiting for response...
-                        </span>
-                      ) : (
-                        <div className="align-items-center">
-                          <span
-                            className={
-                              message.isError
-                                ? "ps-2 text-danger"
-                                : message.isBot
-                                ? "ps-2 text-black"
-                                : "ps-2 text-white"
-                            }
-                          >
-                            {message.content.split("\n").map((line, index) => (
-                              <React.Fragment key={index}>
-                                <Latex>{line}</Latex>
-                                <br />
-                              </React.Fragment>
-                            ))}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-            </Card.Body>
+                    Retry
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+    <div ref={messagesEndRef} />
+  </div>
+</Card.Body>
             <Card.Footer>
               <Form onSubmit={handleSubmit}>
                 <Row className="align-items-center">

@@ -32,7 +32,7 @@ const StudentProfile = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API}/accounts/${accountId}`
       );
-      console.log(response.data); // Logs the fetched data to the console
+      console.log("Check profile",response.data.result??"No response"); // Logs the fetched data to the console
       const profile = response.data.result;
       setProfile(profile);
     } catch (error) {
@@ -80,7 +80,7 @@ const StudentProfile = () => {
   }, [accountId]);
 
   const student = {
-    name: profile.firstName + " " + profile.lastName,
+    name: profile?profile.firstName + " " + profile.lastName:"Null Data",
     // grade: "Lớp 1",
     classes: classrooms,
     testHistory: testHistory,

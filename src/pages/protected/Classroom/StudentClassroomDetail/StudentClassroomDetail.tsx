@@ -114,9 +114,6 @@ function StudentClassroomDetail() {
       </div>
 
       <Container className="px-0">
-        <Alert variant="info" className="mb-3">
-          Chưa có thông báo mới
-        </Alert>
         <Row>
           <Col>
             {classroomData.map((assignment) => (
@@ -136,22 +133,23 @@ function StudentClassroomDetail() {
                       className="me-2 text-primary"
                     />
                     <span className="fw-medium">
-                      {assignment.teacher.name} posted a new assignment
+                      Giáo viên đã thêm một thông báo mới
                     </span>
                   </div>
                 </Card.Header>
                 <Card.Body>
-                  <Card.Title className="mb-3">{assignment.title}</Card.Title>
-                  <div className="text-muted small">
-                    <div className="mb-2">
-                      <FontAwesomeIcon icon={faClock} className="me-2" />
-                      Posted: {formatDate(assignment.createdAt)}
-                    </div>
-                    <div>
-                      <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
-                      Due: {formatDate(assignment.deadline)}
-                    </div>
-                  </div>
+                <Card.Title className="mb-3">
+                          Tiêu đề: {assignment.title}
+                        </Card.Title>
+                        <Card.Text className="mb-3">
+                          <strong>Nội dung:</strong> {assignment.content}
+                        </Card.Text>
+                        <div className="text-muted small">
+                          <div className="mb-2">
+                            <FontAwesomeIcon icon={faClock} className="me-2" />
+                            Thời gian đăng: {formatDate(assignment.createdDate)}
+                          </div>
+                        </div>
                 </Card.Body>
               </Card>
             ))}
@@ -173,48 +171,15 @@ function StudentClassroomDetail() {
                 {selectedAssignment.title}
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-              <div className="mb-3">
-                <strong>Giáo viên:</strong> {selectedAssignment.teacher.name}
+            <Modal.Body>            
+            <div className="mb-3">
+                <strong>Nội dung: </strong>
+                <span>{selectedAssignment.content}</span>
               </div>
               <div className="mb-3">
                 <strong>Thời gian đăng:</strong>{" "}
-                {formatDate(selectedAssignment.createdAt)}
-              </div>
-              <div className="mb-3">
-                <strong>Hạn nộp:</strong>{" "}
-                {formatDate(selectedAssignment.deadline)}
-              </div>
-              <div className="mb-3">
-                <strong>Điểm tối đa:</strong> {selectedAssignment.maxPoints}{" "}
-                điểm
-              </div>
-              <div className="mb-3">
-                <strong>Chủ đề:</strong> {selectedAssignment.topics.join(", ")}
-              </div>
-              <div className="mb-3">
-                <strong>Hướng dẫn:</strong>
-                <p>{selectedAssignment.instructions}</p>
-              </div>
-              <div className="mb-3">
-                <strong>Tài liệu:</strong>
-                <ul className="list-unstyled mt-2">
-                  {selectedAssignment.materials.map((material) => (
-                    <li key={material.id} className="mb-2">
-                      <FontAwesomeIcon icon={faFileAlt} className="me-2" />
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleDownload(material.id, material.name);
-                        }}
-                      >
-                        {material.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                {formatDate(selectedAssignment?.createdDate)}
+              </div>       
             </Modal.Body>
           </>
         )}

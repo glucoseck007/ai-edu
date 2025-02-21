@@ -81,12 +81,22 @@ function Header() {
 
         setSuccessMessage("Tham gia thành công!");
         setCode("");
-        setTimeout(() => setShowModal(false), 2000);
+        setTimeout(() => {
+          setShowModal(false);
+          setSuccessMessage("");
+        }, 2000);
+
+        setTimeout(()=>{
+          window.location.reload();
+        },200);
+        
       } catch (err: any) {
         console.error("Failed to join classroom:", err);
         setError(err.response?.data || "An unexpected error occurred.");
       } finally {
         setIsLoading(false);
+        setSuccessMessage("");
+        setError("");
       }
     }
   };
