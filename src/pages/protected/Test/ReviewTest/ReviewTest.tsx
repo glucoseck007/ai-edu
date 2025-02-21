@@ -269,7 +269,7 @@ const ReviewTest: React.FC = () => {
             <Form.Group>
               <Form.Label>Answers</Form.Label>
               {Array.isArray(editQuiz.Answers) &&
-                editQuiz.Answers.map((answer, i) => (
+                editQuiz.Answers.map((answer: any, i: any) => (
                   <div key={i} className="d-flex align-items-center mb-2">
                     {editAnswer.id === i ? (
                       <>
