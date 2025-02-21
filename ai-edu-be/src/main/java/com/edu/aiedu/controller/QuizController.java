@@ -4,6 +4,7 @@ import com.edu.aiedu.dto.ai.ClassCodesRequest;
 import com.edu.aiedu.dto.ai.QuizAttempt;
 import com.edu.aiedu.dto.ai.QuizDTO;
 import com.edu.aiedu.dto.request.AssignQuizRequest;
+import com.edu.aiedu.dto.request.ListQuizRequest;
 import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Question;
 import com.edu.aiedu.entity.Quiz;
@@ -112,12 +113,14 @@ public class QuizController {
     }
 
     @PostMapping("/student/list-quiz")
-    public ResponseEntity<?> getQuizzesByClassCodes(@RequestBody ClassCodesRequest classCodes) {
-        List<QuizDTO> a = quizService.getListQuizzesByClassCode(classCodes.getClassCodes());
-        return ResponseEntity.ok(a);
+    public ResponseEntity<?> getQuizzesByClassCodes(@RequestBody ListQuizRequest listQuizRequest) {
+        List<QuizDTO> quizzes = quizService.getListQuizzesByClassCode(listQuizRequest.getClassCodes(), listQuizRequest.getAccountId());
+        return ResponseEntity.ok(quizzes);
     }
 
-//    @GetMapping("/get/{quizId}")
+
+
+    //    @GetMapping("/get/{quizId}")
 //    public ResponseEntity<Map<String, Object>> getQuizById(@PathVariable Long quizId) {
 //        Optional<Quiz> quizOptional = quizService.getQuizzesById(quizId);
 //

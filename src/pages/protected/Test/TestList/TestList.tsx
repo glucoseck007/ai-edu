@@ -25,6 +25,7 @@ const TestList: React.FC = () => {
 
   // Initialize state as an empty array instead of a Promise
   const [tests, setTests] = useState<any[]>([]);
+  const [completed, setCompleted] = useState(false);
   const navigate = useNavigate();
 
   const isTeacher = auth.user?.roles.includes("teacher"); // Check if user is a teacher
@@ -56,7 +57,7 @@ const TestList: React.FC = () => {
         // console.log(payload);
         response = await axios.post(
           `${import.meta.env.VITE_API}/quiz/student/list-quiz`,
-          { classCodes: body }
+          { classCodes: body, accountId: id }
         );
       }
 
@@ -159,7 +160,7 @@ const TestList: React.FC = () => {
                         <strong>Môn học:</strong> {test.subject}
                       </div>
                     </Card.Text>
-                    <div className="d-flex justify-content-betwween">
+                    <div className="d-flex justify-content-between">
                       {auth.user?.roles[0] === "teacher" ? (
                         <>
                           <Button
@@ -182,10 +183,19 @@ const TestList: React.FC = () => {
                         </>
                       ) : (
                         <Button
-                          style={{ backgroundColor: "rgb(45, 100, 159)" }}
-                          onClick={() => navigate(`/test/${test.id}`)}
+                          style={
+                            test.completed
+                              ? { backgroundColor: "green" }
+                              : { backgroundColor: "rgb(45, 100, 159)" }
+                          }
+                          onClick={
+                            () =>
+                              test.completed
+                                ? navigate(`/student/test-result/${test.id}`) // Navigate to history page
+                                : navigate(`/test/${test.id}`) // Navigate to test page if not completed
+                          }
                         >
-                          Tham gia
+                          {test.completed ? "Đã làm" : "Tham gia"}
                         </Button>
                       )}
                     </div>
@@ -194,7 +204,7 @@ const TestList: React.FC = () => {
               </Col>
             ))
           ) : (
-            <p className="text-center"></p>
+            <p className="text-center">No tests available</p>
           )}
         </Row>
       </Container>
