@@ -20,12 +20,11 @@ const ClassResultTest: React.FC = () => {
   //   };
 
   const [testHistory, setTestHistory] = React.useState<any[]>([]);
-  const quizId = useParams().testId;
-
+  const { testId } = useParams();
   const fetchTestHistory = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API}/quiz-attempt/${quizId}`
+        `${import.meta.env.VITE_API}/quiz-attempt/${testId}`
       );
       setTestHistory(response.data);
     } catch (error) {
@@ -96,7 +95,7 @@ const ClassResultTest: React.FC = () => {
               </td>
               <td className="text-center">
                 <a
-                  href={`/teacher/test-result/1/${student.id}`}
+                  href={`/teacher/class-teacher-result/${testId}/${student.accountId}`}
                   className="text-decoration-none"
                 >
                   Xem chi tiết

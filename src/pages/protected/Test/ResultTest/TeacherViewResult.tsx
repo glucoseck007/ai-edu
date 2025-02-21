@@ -2,23 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Container, Card, Spinner, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 
-const ResultTest: React.FC = () => {
-  const { testId } = useParams(); // Get testId from URL
+const TeacherViewResult: React.FC = () => {
+  const { quizId, studentId } = useParams(); // Get testId from URL
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const auth = useSelector((state: RootState) => state.auth);
-  const accountId = auth.user?.id;
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API}/quiz/attempt/${testId}/${accountId}`
+          `${import.meta.env.VITE_API}/quiz/attempt/${quizId}/${studentId}`
         );
 
         if (response.status === 200) {
@@ -35,7 +31,7 @@ const ResultTest: React.FC = () => {
     };
 
     fetchResults();
-  }, [testId, accountId]);
+  }, [quizId, studentId]);
 
   if (loading)
     return <Spinner animation="border" className="d-block mx-auto mt-4" />;
@@ -128,4 +124,4 @@ const ResultTest: React.FC = () => {
   );
 };
 
-export default ResultTest;
+export default TeacherViewResult;

@@ -66,7 +66,8 @@ public class QuizService {
                         quiz.getSubject(), // Include subject
                         quiz.getQuestions().stream()
                                 .map(q -> new QuestionDTO(q.getId(), q.getQuestionText(), q.getQuestionType()))
-                                .collect(Collectors.toList())
+                                .collect(Collectors.toList()),
+                        quiz.getCreatedDate()
                 ))
                 .collect(Collectors.toList());
     }

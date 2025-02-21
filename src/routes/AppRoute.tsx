@@ -28,6 +28,7 @@ import TeacherClassroomDetail from "../pages/protected/Classroom/TeacherClassroo
 import ResultTest from "../pages/protected/Test/ResultTest/ResultTest";
 import ClassResultTest from "../pages/protected/Test/ClassTestResult/ClassResultTest";
 import HeaderLayout from "../layouts/headerLayout/headerLayout";
+import TeacherViewResult from "../pages/protected/Test/ResultTest/TeacherViewResult";
 
 const AppRoute: React.FC = () => {
   return (
@@ -64,6 +65,10 @@ const AppRoute: React.FC = () => {
         <Route
           path="/teacher/test-result/:id/:studentid"
           element={<ResultTest />}
+        />
+        <Route
+          path="/teacher/class-teacher-result/:quizId/:studentId"
+          element={<TeacherViewResult />}
         />
       </Route>
 

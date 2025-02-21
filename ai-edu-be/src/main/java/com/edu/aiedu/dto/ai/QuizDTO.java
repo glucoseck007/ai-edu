@@ -3,6 +3,7 @@ package com.edu.aiedu.dto.ai;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -14,6 +15,7 @@ public class QuizDTO {
     private List<QuestionDTO> questions;
     private String classCode;
     private boolean isCompleted;
+    private LocalDateTime date;
 
     public QuizDTO(Long id, String title, String classCode) {
         this.id = id;
@@ -26,6 +28,14 @@ public class QuizDTO {
         this.title = title;
         this.questions = questions;
         this.subject = subject;
+    }
+
+    public QuizDTO(Long id, String title, String subject, List<QuestionDTO> questions, LocalDateTime date) {
+        this.id = id;
+        this.title = title;
+        this.questions = questions;
+        this.subject = subject;
+        this.date = date;
     }
 
     public QuizDTO(Long id, String title, String subject, List<QuestionDTO> questions, boolean isCompleted) {
