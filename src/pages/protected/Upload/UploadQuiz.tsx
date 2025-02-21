@@ -8,7 +8,7 @@ import { faGoogleDrive } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Modal, Row } from "react-bootstrap";
 import axios from "axios";
 import {
   Book,
@@ -27,6 +27,13 @@ const UploadQuiz: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [subject, setSubject] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationAction, setNotificationAction] = useState<(() => void) | null>(null);
+
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   const classroomId = query.get("classroomId");
@@ -140,9 +147,14 @@ const UploadQuiz: React.FC = () => {
     e.preventDefault();
 
     if (!selectedFile) {
-      alert("Please select a file to upload.");
+      setNotificationTitle("File Required");
+      setNotificationMessage("Please select a file to upload.");
+      setNotificationAction(null);
+      setShowNotification(true);
       return;
     }
+
+    setIsSubmitting(true);
 
     const formData = new FormData();
     const compressedFile = await compressFile(selectedFile);
@@ -165,13 +177,23 @@ const UploadQuiz: React.FC = () => {
 
       localStorage.setItem("quiz", JSON.stringify(response.data));
       localStorage.setItem("subject", subject);
-      alert("File uploaded successfully.");
+
+      // Set notification modal for success and navigate after user clicks OK
+      setNotificationTitle("Success");
+      setNotificationMessage("File uploaded successfully.");
+      setNotificationAction(() => {
+        navigate("/teacher/review-test");
+      });
+      setShowNotification(true);
       setSelectedFile(null);
-      navigate("/teacher/review-test");
-      console.log("Check response:", response.data);
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("There was an error uploading the file.");
+      setNotificationTitle("Error");
+      setNotificationMessage("There was an error uploading the file.");
+      setNotificationAction(null);
+      setShowNotification(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -275,7 +297,7 @@ const UploadQuiz: React.FC = () => {
                   style={{ backgroundColor: "rgb(45, 100, 159)" }}
                   type="submit"
                   className="mt-3"
-                  disabled={!selectedFile}
+                  disabled={!selectedFile || isSubmitting}
                 >
                   Tải Lên
                 </Button>
@@ -284,6 +306,42 @@ const UploadQuiz: React.FC = () => {
           </Col>
         </Row>
       </Container>
+      <Modal show={isSubmitting} backdrop="static" keyboard={false} centered>
+        <Modal.Header>
+          <Modal.Title>Uploading File</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Please wait while your file is being uploaded...
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={showNotification}
+        onHide={() => {
+          setShowNotification(false);
+          if (notificationAction) {
+            notificationAction();
+          }
+        }}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{notificationTitle}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{notificationMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setShowNotification(false);
+              if (notificationAction) {
+                notificationAction();
+              }
+            }}
+          >
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 };
