@@ -74,7 +74,6 @@ const AppRoute: React.FC = () => {
         <Route path="teacher/chat-bot" element={<TeacherChatBot />} />
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
       </Route>
-
       <Route element={<HeaderLayout />}>
         <Route
           path="/student/class-detail"
