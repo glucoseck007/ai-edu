@@ -61,7 +61,11 @@ function LoginPage() {
         setToastMessage("Login successful!");
         setShowToast(true);
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        navigate("/");
+        if (resultAction.payload.user?.roles?.includes("Admin")){
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       } else {
         throw new Error(resultAction.payload as string);
       }
