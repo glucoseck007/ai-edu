@@ -61,7 +61,7 @@ function LoginPage() {
         setToastMessage("Login successful!");
         setShowToast(true);
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        if (resultAction.payload.user?.roles?.includes("Admin")){
+        if (resultAction.payload.user?.roles?.includes("ADMIN")) {
           navigate("/admin/dashboard");
         } else {
           navigate("/");
@@ -101,28 +101,28 @@ function LoginPage() {
     }
   };
 
-    return (
-      <div className="login-container">
-        <ToastComponent
-          status={toastStatus}
-          message={toastMessage}
-          show={showToast}
-          onClose={() => setShowToast(false)}
-        />
+  return (
+    <div className="login-container">
+      <ToastComponent
+        status={toastStatus}
+        message={toastMessage}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+      />
 
-        <div className="login-left">
-          <div className="login-left-inner">
-            <div className="arrow-left">
-              <LoadingLink to="/">
-                <FontAwesomeIcon icon={faArrowLeft} color="white" />
-              </LoadingLink>
-            </div>
-            <h2 className="login-left-header">
-              {t("auth.header.createAccount")}
-            </h2>
-            <div className="padding-text">
-              <p className="paragraph">{t("auth.paragraph.lorem-login-page")}</p>
-              <LoadingLink to="/register">
+      <div className="login-left">
+        <div className="login-left-inner">
+          <div className="arrow-left">
+            <LoadingLink to="/">
+              <FontAwesomeIcon icon={faArrowLeft} color="white" />
+            </LoadingLink>
+          </div>
+          <h2 className="login-left-header">
+            {t("auth.header.createAccount")}
+          </h2>
+          <div className="padding-text">
+            <p className="paragraph">{t("auth.paragraph.lorem-login-page")}</p>
+            <LoadingLink to="/register">
               <LoadingButton
                 isLoading={isSubmitting}
                 style={{
@@ -137,71 +137,71 @@ function LoginPage() {
                 {t("auth.buttonTitle.register")}
               </LoadingButton>
             </LoadingLink>
-            </div>
-            <div className="login-background">
-              <img src={images.loginBackground} alt="Login Background" />
-            </div>
           </div>
-        </div>
-
-        <div className="login-right">
-          <div className="login-right-inner">
-            <h2 className="login-right-header">{t("auth.header.login")}</h2>
-
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className="input-field-container">
-                <EmailInput
-                  value={email}
-                  onChange={(value) => setEmail(value)}
-                  isRequired
-                />
-                <PasswordInput
-                  value={password}
-                  onChange={(value) => setPassword(value)}
-                  isRequired
-                />
-
-                <Form.Check
-                  className="remember-me"
-                  type="checkbox"
-                  id="default-checkbox"
-                  label={t("auth.checkboxTitle.rememberMe")}
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                />
-
-                <LoadingButton
-                  isLoading={isSubmitting}
-                  onClick={handleLogin}
-                  style={{
-                    width: "100%",
-                    height: "48px",
-                    backgroundColor: "#001568",
-                    border: "none",
-                    fontWeight: 600,
-                    marginTop: "12px",
-                  }}
-                >
-                  {t("auth.buttonTitle.login")}
-                </LoadingButton>
-
-                <p
-                  style={{
-                    marginTop: 12,
-                    textAlign: "center",
-                    fontSize: 14,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => navigate("/forgot-password")}
-                >
-                  {t("auth.buttonTitle.forgotPass")}
-                </p>
-              </div>
-            </form>
+          <div className="login-background">
+            <img src={images.loginBackground} alt="Login Background" />
           </div>
         </div>
       </div>
-    );
-  }
+
+      <div className="login-right">
+        <div className="login-right-inner">
+          <h2 className="login-right-header">{t("auth.header.login")}</h2>
+
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div className="input-field-container">
+              <EmailInput
+                value={email}
+                onChange={(value) => setEmail(value)}
+                isRequired
+              />
+              <PasswordInput
+                value={password}
+                onChange={(value) => setPassword(value)}
+                isRequired
+              />
+
+              <Form.Check
+                className="remember-me"
+                type="checkbox"
+                id="default-checkbox"
+                label={t("auth.checkboxTitle.rememberMe")}
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+
+              <LoadingButton
+                isLoading={isSubmitting}
+                onClick={handleLogin}
+                style={{
+                  width: "100%",
+                  height: "48px",
+                  backgroundColor: "#001568",
+                  border: "none",
+                  fontWeight: 600,
+                  marginTop: "12px",
+                }}
+              >
+                {t("auth.buttonTitle.login")}
+              </LoadingButton>
+
+              <p
+                style={{
+                  marginTop: 12,
+                  textAlign: "center",
+                  fontSize: 14,
+                  cursor: "pointer",
+                }}
+                onClick={() => navigate("/forgot-password")}
+              >
+                {t("auth.buttonTitle.forgotPass")}
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default LoginPage;

@@ -284,8 +284,14 @@ const StudentChatBot: React.FC = () => {
                 </Nav.Item>
               ))}
             </Nav>
-            <Card.Body className="chat-body" style={{ height: "calc(100vh - 250px)", overflow: "hidden" }}>
-              <div className="messages-container" style={{ height: "100%", overflowY: "auto" }}>
+            <Card.Body
+              className="chat-body"
+              style={{ height: "calc(100vh - 250px)", overflow: "hidden" }}
+            >
+              <div
+                className="messages-container"
+                style={{ height: "100%", overflowY: "auto" }}
+              >
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -498,6 +504,7 @@ const AudioRecorderPopover: React.FC<AudioRecorderPopoverProps> = ({
 
         socket.send(messagePayload);
         // socket.send(audioBlob);
+        console.log("Audio message sent:", audioBlob);
         uploadWavFile(audioBlob, socket);
 
         // Lắng nghe phản hồi từ WebSocket
