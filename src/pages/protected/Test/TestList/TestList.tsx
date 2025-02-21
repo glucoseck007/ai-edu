@@ -8,6 +8,7 @@ import {
   Button,
   InputGroup,
   Form,
+  Modal,
 } from "react-bootstrap";
 import CustomButton from "../../../../components/common/button/custom-button/Custom-Button";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,15 +24,22 @@ const TestList: React.FC = () => {
   const id = auth.user?.id;
   const [loading, setLoading] = useState(false);
 
-  // Initialize state as an empty array instead of a Promise
+  // Initialize state as an empty array
   const [tests, setTests] = useState<any[]>([]);
   const [completed, setCompleted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const isTeacher = auth.user?.roles.includes("teacher"); // Check if user is a teacher
 
   // Placeholder for classCode (you might need to fetch this)
   const [classCode, setClassCode] = useState<string | null>(null);
+
+  // --- States for the assign test modal ---
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assignTestId, setAssignTestId] = useState<string | null>(null);
+  const [assignClassCode, setAssignClassCode] = useState("");
+  const [assignModalMessage, setAssignModalMessage] = useState<string | null>(null);
 
   const fetchTests = async () => {
     if (!id) return;
@@ -49,12 +57,11 @@ const TestList: React.FC = () => {
           { params: { accountId: id, classCode } }
         );
       } else {
-        // console.warn("Class code is missing for student role.");
+        // Fallback: fetch classCodes and then tests
         const classCodes = await axios.get(
           `${import.meta.env.VITE_API}/classroom/classroomcode/${id}`
         );
         const body = classCodes.data;
-        // console.log(payload);
         response = await axios.post(
           `${import.meta.env.VITE_API}/quiz/student/list-quiz`,
           { classCodes: body, accountId: id }
@@ -77,25 +84,38 @@ const TestList: React.FC = () => {
     navigate("/upload-quiz");
   };
 
+  // Instead of prompt, we open a modal for assigning a test.
   const handleAssignTest = (testId: string) => {
-    const classCode = prompt("Nhập mã lớp để giao bài:"); // Lấy mã lớp từ người dùng
-    if (!classCode) return; // Nếu không nhập thì dừng lại
+    setAssignTestId(testId);
+    setAssignClassCode("");
+    setAssignModalMessage(null);
+    setShowAssignModal(true);
+  };
 
-    axios
-      .post(
+  // This function is called when the user confirms the class code in the modal.
+  const handleConfirmAssignTest = async () => {
+    if (!assignTestId || !assignClassCode) return;
+    try {
+      await axios.post(
         `${import.meta.env.VITE_API}/quiz/assign-quiz`,
         {
-          quizId: testId, // Match backend DTO field name
-          classCode: classCode,
+          quizId: assignTestId, // Match backend DTO field name
+          classCode: assignClassCode,
         },
         {
           headers: {
             "Content-Type": "application/json",
           },
         }
-      )
-      .then(() => alert("Giao bài thành công!"))
-      .catch((error) => console.error("Lỗi khi giao bài:", error));
+      );
+      setAssignModalMessage("Giao bài thành công!");
+    } catch (error: any) {
+      console.error("Lỗi khi giao bài:", error);
+      setAssignModalMessage(
+        "Lỗi khi giao bài: " +
+          (error.response?.data?.message || error.message)
+      );
+    }
   };
 
   const handleEnterClassCode = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -208,6 +228,54 @@ const TestList: React.FC = () => {
           )}
         </Row>
       </Container>
+
+      {/* Assign Test Modal */}
+      <Modal
+        show={showAssignModal}
+        onHide={() => setShowAssignModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Giao bài</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {assignModalMessage ? (
+            <p>{assignModalMessage}</p>
+          ) : (
+            <>
+              <p>Nhập mã lớp để giao bài:</p>
+              <Form.Control
+                type="text"
+                placeholder="Mã lớp"
+                value={assignClassCode}
+                onChange={(e) => setAssignClassCode(e.target.value)}
+              />
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          {assignModalMessage ? (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setShowAssignModal(false);
+                setAssignModalMessage(null);
+              }}
+            >
+              OK
+            </Button>
+          ) : (
+            <>
+              <Button variant="secondary" onClick={() => setShowAssignModal(false)}>
+                Hủy
+              </Button>
+              <Button variant="primary" onClick={handleConfirmAssignTest}>
+                Xác nhận
+              </Button>
+            </>
+          )}
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
