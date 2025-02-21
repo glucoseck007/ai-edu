@@ -274,7 +274,7 @@ const StudentChatBot: React.FC = () => {
             <Nav
               variant="tabs"
               activeKey={selectedSubject}
-              onSelect={(k) => setSelectedSubject(k ?? "math")}
+              onSelect={(k) => setSelectedSubject(k ?? "history")}
             >
               {subjects.map((subject) => (
                 <Nav.Item key={subject.id}>
