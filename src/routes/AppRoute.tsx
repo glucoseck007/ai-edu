@@ -13,7 +13,6 @@ import ExamList from "../pages/protected/Exam/ExamList";
 import TestScreen from "../pages/protected/Test/Test";
 import QuestionBank from "../pages/protected/QuestionBank/QuestionBank";
 import StudentChatBot from "../pages/protected/ChatBot/Chatbot";
-import ChatLayouts from "../layouts/chatLayouts/ChatLayouts";
 import Upload from "../pages/protected/Upload/Upload";
 import UploadQuiz from "../pages/protected/Upload/UploadQuiz";
 import AddClass from "../pages/protected/AddClass/AddClass";
@@ -28,6 +27,7 @@ import TeacherProfile from "../pages/protected/User/Teacher/TeacherProfile";
 import TeacherClassroomDetail from "../pages/protected/Classroom/TeacherClassroomDetail/TeacherClassroomDetail";
 import ResultTest from "../pages/protected/Test/ResultTest/ResultTest";
 import ClassResultTest from "../pages/protected/Test/ClassTestResult/ClassResultTest";
+import HeaderLayout from "../layouts/headerLayout/headerLayout";
 
 const AppRoute: React.FC = () => {
   return (
@@ -52,14 +52,7 @@ const AppRoute: React.FC = () => {
         <Route path="/classroom" element={<Classroom />} />
         <Route path="/student/profile/:id" element={<StudentProfile />} />
         <Route path="/teacher/profile/:id" element={<TeacherProfile />} />
-        <Route
-          path="/student/class-detail"
-          element={<StudentClassroomDetail />}
-        />
-        <Route
-          path="/teacher/class-detail"
-          element={<TeacherClassroomDetail />}
-        />
+
         <Route path="/add-class" element={<AddClass />} />
         <Route path="/teacher/test-review/:id" element={<ReviewTest />} />
         <Route path="/teacher/review-test" element={<ReviewTest />} />
@@ -82,7 +75,20 @@ const AppRoute: React.FC = () => {
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
       </Route>
 
+<<<<<<< HEAD
       <Route element={<ChatLayouts />}></Route>
+=======
+      <Route element={<HeaderLayout />}>
+        <Route
+          path="/student/class-detail"
+          element={<StudentClassroomDetail />}
+        />
+        <Route
+          path="/teacher/class-detail"
+          element={<TeacherClassroomDetail />}
+        />
+      </Route>
+>>>>>>> 61b6a10bf6aaf488f6ec52574c434ff3a091ba50
     </Routes>
   );
 };
