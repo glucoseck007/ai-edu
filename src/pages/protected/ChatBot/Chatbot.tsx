@@ -50,12 +50,12 @@ const StudentChatBot: React.FC = () => {
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
   const subjects = [
-    { id: "math", name: "Toán", icon: <Calculator /> },
     { id: "history", name: "Lịch sử", icon: <Landmark /> },
     { id: "english", name: "Tiếng Anh", icon: <Book /> },
     { id: "geography", name: "Địa lý", icon: <Globe /> },
     { id: "physics", name: "Khoa học", icon: <FlaskConical /> },
     { id: "literature", name: "Văn học", icon: <Library /> },
+    { id: "math", name: "Toán", icon: <Calculator /> },
   ];
 
   useEffect(() => {
@@ -274,7 +274,7 @@ const StudentChatBot: React.FC = () => {
             <Nav
               variant="tabs"
               activeKey={selectedSubject}
-              onSelect={(k) => setSelectedSubject(k ?? "math")}
+              onSelect={(k) => setSelectedSubject(k ?? "history")}
             >
               {subjects.map((subject) => (
                 <Nav.Item key={subject.id}>
@@ -284,8 +284,8 @@ const StudentChatBot: React.FC = () => {
                 </Nav.Item>
               ))}
             </Nav>
-            <Card.Body className="chat-body">
-              <div className="messages-container">
+            <Card.Body className="chat-body" style={{ height: "calc(100vh - 250px)", overflow: "hidden" }}>
+              <div className="messages-container" style={{ height: "100%", overflowY: "auto" }}>
                 {messages.map((message) => (
                   <div
                     key={message.id}

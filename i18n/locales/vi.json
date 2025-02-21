@@ -128,7 +128,8 @@
       "invalidPhone": "Số điện thoại không hợp lệ",
       "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
       "passwordUppercase": "Mật khẩu phải có ít nhất 1 chữ cái viết hoa",
-      "passwordSpecial": "Mật khẩu phải có ít nhất 1 ký tự đặc biệt"
+      "passwordSpecial": "Mật khẩu phải có ít nhất 1 ký tự đặc biệt",
+      "passwordNumber":"Mật khẩu phải có ít nhất 1 số"
     },
     "paragraph": {
       "lorem-login-page": "Hãy cùng Smart Kids đồng hành để giúp trẻ học tập hiệu quả hơn!",

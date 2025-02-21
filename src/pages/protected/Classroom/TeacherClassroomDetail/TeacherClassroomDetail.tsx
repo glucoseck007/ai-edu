@@ -184,7 +184,7 @@ function TeacherClassroomDetail() {
                     onClick={() => setShowAddModal(true)}
                   >
                     <FontAwesomeIcon icon={faPlus} className="me-2" />
-                    Thêm bài tập
+                    Thêm thông báo
                   </Button>
                 </Col>
                 <Col xs={12} sm="auto">
@@ -237,7 +237,7 @@ function TeacherClassroomDetail() {
                         <div className="text-muted small">
                           <div className="mb-2">
                             <FontAwesomeIcon icon={faClock} className="me-2" />
-                            Posted: {formatDate(assignment.createdDate)}
+                            Thời gian đăng: {formatDate(assignment.createdDate)}
                           </div>
                         </div>
                       </Card.Body>
@@ -296,16 +296,14 @@ function TeacherClassroomDetail() {
             </Modal.Header>
             <Modal.Body>
               <div className="mb-3">
-                <strong>Giáo viên:</strong> {selectedAssignment.teacher.name}
+                <strong>Nội dung: </strong>
+                <span>{selectedAssignment.content}</span>
               </div>
               <div className="mb-3">
                 <strong>Thời gian đăng:</strong>{" "}
-                {formatDate(selectedAssignment.createdAt)}
+                {formatDate(selectedAssignment?.createdDate)}
               </div>
-              <div className="mb-3">
-                <strong>Hướng dẫn:</strong>
-                <p>{selectedAssignment.instructions}</p>
-              </div>
+              
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
