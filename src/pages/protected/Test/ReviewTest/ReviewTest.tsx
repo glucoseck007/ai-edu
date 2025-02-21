@@ -1,4 +1,4 @@
-import { Pencil } from "lucide-react";
+import { Pencil, Plus, Save } from "lucide-react";
 import { useState } from "react";
 import {
   Button,
@@ -14,6 +14,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ToastComponent from "../../../../components/common/toast/Toast";
+import "./ReviewTest.scss";
 
 const ReviewTest: React.FC = () => {
   const storedData = JSON.parse(localStorage.getItem("quiz") || "{}");
@@ -42,9 +43,7 @@ const ReviewTest: React.FC = () => {
 
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [toastStatus, setToastStatus] = useState<
-    "success" | "warning" | "error"
-  >("success");
+  const [toastStatus, setToastStatus] = useState<"success" | "warning" | "error">("success");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleEdit = (index: number) => {
@@ -79,10 +78,8 @@ const ReviewTest: React.FC = () => {
       const updatedQuizList = [...quizs];
       const updatedQuiz = { ...editQuiz };
 
-      // Lọc bỏ các chuỗi rỗng trong mảng Answers
-      updatedQuiz.Answers = updatedQuiz.Answers.filter(
-        (answer: string) => answer !== ""
-      );
+      // Filter out empty strings from Answers
+      updatedQuiz.Answers = updatedQuiz.Answers.filter((answer: string) => answer !== "");
 
       updatedQuizList[editIndex] = updatedQuiz;
       setQuizs(updatedQuizList);
@@ -103,10 +100,7 @@ const ReviewTest: React.FC = () => {
 
     if (newQuiz["Question Type"] === "TF") {
       setNewQuiz({ ...newQuiz, Answers: ["Có", "Không"] });
-    } else if (
-      newQuiz["Question Type"] === "MCQ" &&
-      newQuiz.Answers.length < 2
-    ) {
+    } else if (newQuiz["Question Type"] === "MCQ" && newQuiz.Answers.length < 2) {
       alert("Multiple choice questions must have at least two answers");
       return;
     }
@@ -151,10 +145,10 @@ const ReviewTest: React.FC = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API}/quiz/save`,
-        quizDataToSave, // Ensure correct JSON format
+        quizDataToSave,
         {
           headers: {
-            "Content-Type": "application/json", // Set the correct content type
+            "Content-Type": "application/json",
           },
         }
       );
@@ -166,16 +160,14 @@ const ReviewTest: React.FC = () => {
     } catch (error: any) {
       console.error("Error:", error);
       setToastStatus("error");
-      setToastMessage(
-        error.message || "An error occurred while saving the quiz"
-      );
+      setToastMessage(error.message || "An error occurred while saving the quiz");
       setShowToast(true);
     }
     setTitleModal(false);
   };
 
   return (
-    <Container>
+    <Container className="review-container">
       <ToastComponent
         status={toastStatus}
         message={toastMessage}
@@ -183,92 +175,34 @@ const ReviewTest: React.FC = () => {
         onClose={() => setShowToast(false)}
       />
       <Row className="d-flex justify-content-center">
-        <h1 className="text-bold text-center">Review Quiz</h1>
-        <div className="d-flex justify-content-end my-3">
-          <Button
-            style={{ width: "20%", backgroundColor: "#07294d" }}
-            onClick={() => handleAddNewQuestion()}
-          >
-            Add new question
+        <h1 className="review-title text-center">Review Quiz</h1>
+        <div className="d-flex justify-content-end my-3 w-100">
+          <Button className="add-question-btn" onClick={handleAddNewQuestion}>
+            <Plus size={18} className="me-2" /> Add new question
           </Button>
         </div>
-        <Col
-          md={{ span: 12 }}
-          style={{
-            minWidth: "80%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <Col md={12} className="d-flex flex-column align-items-center">
           {quizs.map((quiz: any, index: number) => (
-            <Card
-              key={index}
-              className="mb-3 pe-3"
-              style={{
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                width: "100%", // Hoặc bạn có thể đặt width cụ thể như "80%" tùy vào yêu cầu
-                maxWidth: "1200px", // Để giới hạn độ rộng tối đa của Card
-              }}
-            >
+            <Card key={index} className="quiz-card">
               <Card.Body>
-                <Container className="d-flex flex-grow-1">
-                  <Col md={6} className="border-end">
-                    <div className="d-flex justify-content-between align-items-center mb-3 bg-secondary-subtle rounded-pill px-3 py-2">
-                      <div className="d-flex align-items-center gap-2">
-                        <div
-                          className="d-flex align-items-center justify-content-center rounded-circle bg-dark text-white"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            fontSize: "14px",
-                          }}
-                        >
-                          {index + 1}
-                        </div>
-                        <span className="text-dark">{quiz.Question}</span>
+                <div className="question-header">
+                  <div className="d-flex align-items-center">
+                    <div className="question-number">{index + 1}</div>
+                    <span className="question-text">{quiz.Question}</span>
+                  </div>
+                </div>
+                <div className="answers-section">
+                  {quiz.Answers.map((option: string, answerIndex: number) => (
+                    <div key={answerIndex} className="answer-item">
+                      <div className="answer-letter">
+                        {numberToLetter(answerIndex + 1)}
                       </div>
+                      <span>{option}</span>
                     </div>
-                  </Col>
-                  <Col md={6} className="px-4 d-flex flex-column">
-                    {/* Main Question Content */}
-                    <div className="flex-grow-1">
-                      <div className="mb-3 px-2">
-                        {quiz.Answers.map((option, Answerindex) => (
-                          <div
-                            style={{ cursor: "pointer" }}
-                            key={Answerindex}
-                            className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
-                          >
-                            <div
-                              className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2`}
-                            >
-                              <div className="d-flex align-items-center gap-2">
-                                <div
-                                  className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-dark"
-                                  style={{
-                                    width: "28px",
-                                    height: "28px",
-                                    fontSize: "14px",
-                                  }}
-                                >
-                                  {numberToLetter(Answerindex + 1)}
-                                </div>
-                                <span className="text-black">{option}</span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </Col>
-                </Container>
-                <Button
-                  className="ms-4"
-                  onClick={() => handleEdit(index)}
-                  style={{ width: "20%", backgroundColor: "#07294d" }}
-                >
-                  Edit
+                  ))}
+                </div>
+                <Button className="edit-btn" onClick={() => handleEdit(index)}>
+                  <Pencil size={16} className="me-1" /> Edit
                 </Button>
               </Card.Body>
             </Card>
@@ -277,17 +211,13 @@ const ReviewTest: React.FC = () => {
       </Row>
       <Row>
         <div className="d-flex justify-content-center my-3">
-          <Button
-            type="submit"
-            onClick={() => setTitleModal(true)}
-            style={{ width: "20%", backgroundColor: "#ffd98e", color: "black" }}
-          >
-            Save quiz
+          <Button className="save-quiz-btn" onClick={() => setTitleModal(true)}>
+            <Save size={16} className="me-1" /> Save quiz
           </Button>
         </div>
       </Row>
       <Modal show={titleModal} onHide={() => setTitleModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="modal-header">
           <Modal.Title>Add Quiz Title</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -304,16 +234,13 @@ const ReviewTest: React.FC = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            style={{ backgroundColor: "#07294d" }}
-            onClick={handleSaveQuiz}
-          >
-            Save Title
+          <Button className="save-quiz-btn" onClick={handleSaveQuiz}>
+            <Save size={16} className="me-1" /> Save Title
           </Button>
         </Modal.Footer>
       </Modal>
       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="modal-header">
           <Modal.Title>Edit Quiz</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -340,66 +267,60 @@ const ReviewTest: React.FC = () => {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Group>
-                <Form.Label>Answers</Form.Label>
-                {Array.isArray(editQuiz.Answers) &&
-                  editQuiz.Answers.map((answer, i) => (
-                    <div key={i} className="d-flex align-items-center">
-                      {editAnswer.id === i ? (
-                        <>
-                          <Form.Control
-                            type="text"
-                            value={editAnswer.value}
-                            onChange={(e) =>
-                              handleAnswerChange(i, e.target.value)
-                            }
-                          />
+              <Form.Label>Answers</Form.Label>
+              {Array.isArray(editQuiz.Answers) &&
+                editQuiz.Answers.map((answer, i) => (
+                  <div key={i} className="d-flex align-items-center mb-2">
+                    {editAnswer.id === i ? (
+                      <>
+                        <Form.Control
+                          type="text"
+                          value={editAnswer.value}
+                          onChange={(e) =>
+                            handleAnswerChange(i, e.target.value)
+                          }
+                        />
+                        <Button
+                          variant="success"
+                          onClick={() => handleSaveAnswer(i)}
+                          className="ms-2"
+                        >
+                          <Save size={16} />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Form.Check
+                          type="radio"
+                          id={`radio-${i}`}
+                          label={answer}
+                          name="quiz-answer"
+                          checked={editQuiz["Correct Answer"] === answer}
+                          onChange={() =>
+                            setEditQuiz({
+                              ...editQuiz,
+                              "Correct Answer": answer,
+                            })
+                          }
+                        />
+                        {editQuiz["Question Type"] !== "TF" && (
                           <Button
-                            variant="success"
-                            onClick={() => handleSaveAnswer(i)}
+                            variant="white"
                             className="ms-2"
+                            onClick={() => handleAnswerChange(i, answer)}
                           >
-                            Submit
+                            <Pencil size={16} />
                           </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Form.Check
-                            type="radio"
-                            id={`radio-${i}`}
-                            label={answer}
-                            name="quiz-answer"
-                            checked={editQuiz["Correct Answer"] === answer}
-                            onChange={() =>
-                              setEditQuiz({
-                                ...editQuiz,
-                                "Correct Answer": answer,
-                              })
-                            }
-                          />
-                          {editQuiz["Question Type"] !== "TF" && (
-                            <Button
-                              variant="white"
-                              className="ms-2"
-                              style={{ width: "2%" }}
-                              onClick={() => handleAnswerChange(i, answer)}
-                            >
-                              <Pencil />
-                            </Button>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  ))}
-                {editQuiz["Question Type"] !== "TF" && (
-                  <Button
-                    style={{ backgroundColor: "#07294d" }}
-                    onClick={handleAddAnswer}
-                  >
-                    Add answer
-                  </Button>
-                )}
-              </Form.Group>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              {editQuiz["Question Type"] !== "TF" && (
+                <Button className="add-question-btn mt-2" onClick={handleAddAnswer}>
+                  <Plus size={16} className="me-1" /> Add answer
+                </Button>
+              )}
             </Form.Group>
             <Form.Group>
               <Form.Label>Correct Answer</Form.Label>
@@ -424,17 +345,13 @@ const ReviewTest: React.FC = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button style={{ backgroundColor: "#07294d" }} onClick={handleSave}>
-            Save changes
+          <Button className="save-quiz-btn" onClick={handleSave}>
+            <Save size={16} className="me-1" /> Save changes
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal
-        size="lg"
-        show={showAddModal}
-        onHide={() => setShowAddModal(false)}
-      >
-        <Modal.Header closeButton>
+      <Modal size="lg" show={showAddModal} onHide={() => setShowAddModal(false)}>
+        <Modal.Header closeButton className="modal-header">
           <Modal.Title>Add New Question</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -467,10 +384,7 @@ const ReviewTest: React.FC = () => {
                 <Form.Group>
                   <Form.Label>Answers</Form.Label>
                   {newQuiz.Answers.map((answer: string, i: number) => (
-                    <div
-                      key={`answer-${answer}-${i}`}
-                      className="d-flex align-items-center gap-2 mb-2"
-                    >
+                    <div key={`answer-${i}`} className="d-flex align-items-center gap-2 mb-2">
                       <div className="ps-3">
                         <Form.Check
                           type="radio"
@@ -493,7 +407,7 @@ const ReviewTest: React.FC = () => {
                     </div>
                   ))}
                   <Button
-                    style={{ backgroundColor: "#07294d" }}
+                    className="add-question-btn"
                     onClick={() =>
                       setNewQuiz({
                         ...newQuiz,
@@ -501,17 +415,14 @@ const ReviewTest: React.FC = () => {
                       })
                     }
                   >
-                    Add Answer
+                    <Plus size={16} className="me-1" /> Add Answer
                   </Button>
                 </Form.Group>
               ) : (
                 <Form.Group>
                   <Form.Label>Answers</Form.Label>
                   {["Có", "Không"].map((answer: string, i: number) => (
-                    <div
-                      key={`answer-${answer}-${i}`}
-                      className="d-flex align-items-center gap-2 mb-2"
-                    >
+                    <div key={`answer-${i}`} className="d-flex align-items-center gap-2 mb-2">
                       <div className="ps-3">
                         <Form.Check
                           type="radio"
@@ -559,11 +470,8 @@ const ReviewTest: React.FC = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            style={{ backgroundColor: "#07294d" }}
-            onClick={handleSaveNewQuestion}
-          >
-            Save Question
+          <Button className="save-quiz-btn" onClick={handleSaveNewQuestion}>
+            <Save size={16} className="me-1" /> Save Question
           </Button>
         </Modal.Footer>
       </Modal>
