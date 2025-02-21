@@ -41,7 +41,7 @@ interface Message {
 const StudentChatBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState<string>("math");
+  const [selectedSubject, setSelectedSubject] = useState<string>("history");
   const [showAudioRecorder, setShowAudioRecorder] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
