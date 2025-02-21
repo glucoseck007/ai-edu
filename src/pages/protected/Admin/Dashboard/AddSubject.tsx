@@ -91,7 +91,7 @@ const AddSubject: React.FC = () => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Add School
+          Add Subject
         </Button>
       </Form>
 
