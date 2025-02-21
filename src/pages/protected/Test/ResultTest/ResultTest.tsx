@@ -114,7 +114,7 @@ const ResultTest: React.FC = () => {
 
       {/* Button to Return */}
       <div className="text-center mt-4">
-        <Button variant="primary" onClick={() => navigate("/student/tests")}>
+        <Button variant="primary" onClick={() => navigate("/tests")}>
           Quay lại danh sách bài thi
         </Button>
       </div>

@@ -1,20 +1,23 @@
 package com.edu.aiedu.dto.ai;
 
 import com.edu.aiedu.entity.Account;
+import com.edu.aiedu.entity.BaseEntity;
 import com.edu.aiedu.entity.Quiz;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+
 import java.util.Map;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class QuizAttempt {
+public class QuizAttempt extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

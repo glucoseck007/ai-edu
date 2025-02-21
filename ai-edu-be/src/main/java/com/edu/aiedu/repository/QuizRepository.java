@@ -1,6 +1,5 @@
 package com.edu.aiedu.repository;
 
-import com.edu.aiedu.dto.ai.QuizAttempt;
 import com.edu.aiedu.dto.ai.QuizDTO;
 import com.edu.aiedu.entity.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +15,7 @@ public interface QuizRepository extends JpaRepository<Quiz, String> {
     Optional<Quiz> findById(Long id);
     List<Quiz> findByAccountId(String accountId);
     List<Quiz> findByClassCode(String classCode);
+//    List<List<Quiz>> findByClassCodeIn(List<String> classCodes);
     List<Quiz> findByAccountIdAndClassCode(String accountId, String classCode);
     List<Quiz> findByAccountIdAndClassCodeIsNull(String accountId);
     @Query("SELECT new com.edu.aiedu.dto.ai.QuizDTO(q.id, q.title, q.classCode) " +

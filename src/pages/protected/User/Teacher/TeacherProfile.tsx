@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -13,6 +13,9 @@ import { Users, BookOpen, Calendar, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./TeacherProfile.scss";
 import TeacherImg from "../../../../assets/images/teacher.jpg";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const instructor = {
   name: "Nguyễn Thị A",
@@ -75,6 +78,61 @@ const TeacherProfile = () => {
     (id) => navigate(`/teacher/class-detail?classroomId=${id}`),
     [navigate]
   );
+  const auth = useSelector((state: RootState) => state.auth);
+  const accountId = auth.user?.id || "";
+  const [testHistory, setTestHistory] = useState([]);
+  const [classrooms, setClassrooms] = useState([]);
+  const [profile, setProfile] = useState<any | null>(null);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/accounts/${accountId}`
+      );
+      console.log(response.data); // Logs the fetched data to the console
+      const profile = response.data.result;
+      setProfile(profile);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+  const fetchClassrooms = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/classroom/profile/list-class`,
+        {
+          params: {
+            accountId: accountId,
+          },
+        }
+      );
+      const classrooms = response.data;
+      setClassrooms(classrooms);
+    } catch (error) {
+      console.error("Error fetching classrooms:", error);
+      return [];
+    }
+  };
+
+  const fetchTestHistory = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/quiz/attempts/${accountId}`
+      );
+      const testHistory = response.data;
+      // return testHistory;
+      setTestHistory(testHistory);
+    } catch (error) {
+      console.error("Error fetching test history:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+    fetchClassrooms();
+    fetchTestHistory();
+  }, []);
 
   return (
     <Container className="py-4">

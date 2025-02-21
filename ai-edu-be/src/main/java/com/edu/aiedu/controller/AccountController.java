@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,13 @@ public class AccountController {
     AccountService accountService;
     private final ExternalApiService externalApiService;
     private final Logger logger = LoggerFactory.getLogger(AccountController.class);
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<AccountResponse>> getAllAccounts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(accountService.getAllAccounts(page, size));
+    }
 
     @PostMapping("/create-account")
     ApiResponse<AccountResponse> createAccount(@RequestBody @Valid AccountCreationRequest request) {
@@ -63,6 +71,28 @@ public class AccountController {
                 .result(accountResponse)
                 .build();
     }
+
+    @PostMapping("/resend-verification")
+    public ApiResponse<String> resendVerificationCode(@RequestBody ResendVerificationRequest request) {
+        try {
+            boolean success = accountService.resendVerificationCode(request.getEmail());
+            if (success) {
+                return ApiResponse.<String>builder()
+                        .result("Verification code sent successfully.")
+                        .build();
+            } else {
+                return ApiResponse.<String>builder()
+                        .result("Failed to resend verification code. Please check the email and try again.")
+                        .build();
+            }
+        } catch (Exception e) {
+            logger.error("Error while resending verification code: " + e.getMessage());
+            return ApiResponse.<String>builder()
+                    .result("An unexpected error occurred.")
+                    .build();
+        }
+    }
+
 
     @PostMapping("/verify-account")
     ApiResponse<Void> verifyAccount(@RequestBody @Valid AccountVerificationRequest request) {

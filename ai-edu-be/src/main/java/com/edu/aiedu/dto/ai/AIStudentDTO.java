@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AIStudentDTO {
-
     String student_name;
     String student_code;
     String student_gender;

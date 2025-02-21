@@ -80,6 +80,12 @@ public class QuizService {
                 .collect(Collectors.toList());
     }
 
+    public List<QuizDTO> getListQuizzesByClassCode(List<String> classCodes) {
+        return classCodes.stream()
+                .flatMap(classCode -> getQuizzesByClassCode(classCode).stream()) // Flatten the lists
+                .collect(Collectors.toList());
+    }
+
     public List<QuizDTO> getQuizzesByAccountIdAndClassCode(String accountId, String classCode) {
         List<Quiz> quizzes;
         if (classCode == null || classCode.isEmpty()) {

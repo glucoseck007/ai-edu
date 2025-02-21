@@ -1,38 +1,41 @@
-import { Row, Col, Container } from "react-bootstrap"
-import { useLocation } from "react-router-dom";
-import UserList from "./UserList";
-import Courses from "./Courses";
-import HomeDashboard from "./Home";
-import SidebarComponent from "../../../../components/sidebar/AdminSideBar";
+import { Container, Row, Col } from 'react-bootstrap';
+import Sidebar from "../../../../components/sidebar/AdminSideBar"
+// import DashboardCards from '../components/DashboardCards';
+// import Chart from '../components/Chart';
+import './Dashoard.scss'
+import { useLocation } from 'react-router-dom';
+import UserList from './UserList';
+import AddSchool from './AddSchool';
 
-const SuperAdminDashboard: React.FC = () => {
+const Dashboard = () => {
     const location = useLocation();
-    const part = location.pathname.split("/").pop()
+    
 
+    const path = location.pathname.split("/")[3];
+    console.log(path);
     const renderContent = () => {
-        switch (part) {
-            case "users":
-                return <UserList />
-            case "courses":
-                return <Courses />
+        switch (path) {
+            case 'users':
+                return <UserList />;
+            case 'add-school':
+                return <AddSchool />;
             default:
-                return <HomeDashboard />
+                return <div>Dashboard Overview</div>;
         }
     };
-
     return (
-        <Container fluid>
+        <Container fluid className="p-0" style={{ overflow: 'hidden' }}>
             <Row>
-                <Col md={3} lg={2} className="sidebar">
-                    <SidebarComponent />
+                <Col md={3} lg={2} className="sidebar-container">
+                    <Sidebar />
                 </Col>
                 <Col md={9} lg={10} className="main-content">
+
                     {renderContent()}
                 </Col>
             </Row>
         </Container>
-    )
+    );
 };
 
-export default SuperAdminDashboard;
-
+export default Dashboard;

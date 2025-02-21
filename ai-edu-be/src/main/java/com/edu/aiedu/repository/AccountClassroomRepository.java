@@ -37,4 +37,7 @@ public interface AccountClassroomRepository extends JpaRepository<AccountClassro
         WHERE c.classroomCode = :classroomCode
     """)
     List<ListClassMembersDTO> findClassMembersByClassroomCode(@Param("classroomCode") String classroomCode);
+
+    List<Classroom> findAllByAccountId(String accountId);
+    List<String> findAllClassroomCodesByAccountId(String accountId);
 }

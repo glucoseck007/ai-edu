@@ -221,7 +221,7 @@ function TeacherClassroomDetail() {
                             className="me-2 text-primary"
                           />
                           <span className="fw-medium">
-                            Giáo viên đã thêm một bài tập mới
+                            Giáo viên đã thêm một thông báo mới
                           </span>
                         </div>
                       </Card.Header>

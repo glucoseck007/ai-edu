@@ -48,75 +48,20 @@ function StudentClassroomDetail() {
   const [showModal, setShowModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
 
-  const mockClassroomData = [
-    {
-      id: "1",
-      title: "Math Homework",
-      content: "Complete algebra exercises from chapter 5.",
-      fileName: "algebra_homework.pdf",
-      teacher: {
-        name: "Dr. Smith",
-        avatar: "https://example.com/avatar.jpg",
-      },
-      createdAt: "2024-02-05T14:30:00",
-      deadline: "2024-02-12T23:59:59",
-      materials: [
-        { id: "m1", name: "Chapter 5 Exercises.pdf", type: "pdf" },
-        { id: "m2", name: "Formula Sheet.docx", type: "document" },
-      ],
-      maxPoints: 100,
-      topics: ["Algebra", "Equations"],
-      instructions:
-        "Please complete all exercises from 5.1 to 5.4. Show all your work and submit as a single PDF file.",
-    },
-    {
-      id: "2",
-      title: "Science Project",
-      content: "Prepare a presentation on the Solar System.",
-      fileName: "solar_system.pptx",
-      teacher: {
-        name: "Mrs. Johnson",
-        avatar: "https://example.com/avatar2.jpg",
-      },
-      createdAt: "2024-02-08T10:15:00",
-      deadline: "2024-02-20T23:59:59",
-      materials: [
-        { id: "m3", name: "Project Guidelines.pdf", type: "pdf" },
-        { id: "m4", name: "Template.pptx", type: "presentation" },
-      ],
-      maxPoints: 150,
-      topics: ["Solar System", "Astronomy"],
-      instructions:
-        "Create a 10-minute presentation about one planet in our solar system. Include at least 5 interesting facts and 3 images.",
-    },
-  ];
-
   useEffect(() => {
     const fetchClassroomDetails = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const classroomId = urlParams.get("classroomId");
-      console.log("Classroom ID:", classroomId);
-
       if (classroomId) {
-        setId(classroomId);
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_API}/api/classroom/members/${classroomId}`
-            // http://localhost:8080/api/classroom/members/dfo3lq
-            // {
-            //   params: { classroomId: classroomId },
-            // }
+            `${import.meta.env.VITE_API}/classroom-content/classroom`,
+            { params: { classroomId: classroomId } }
           );
-          console.log("Response:", response.data);
-          setClassroomData(
-            response.data.length > 0 ? response.data : mockClassroomData
-          );
+          setClassroomData(response.data);
         } catch (error) {
           console.error("Error fetching classroom details:", error);
-          setClassroomData(mockClassroomData);
         }
-      } else {
-        setClassroomData(mockClassroomData);
       }
     };
 
@@ -175,10 +120,6 @@ function StudentClassroomDetail() {
               <Card
                 key={assignment.id}
                 className="mb-3 shadow-sm"
-                onClick={() => {
-                  setSelectedAssignment(assignment);
-                  setShowModal(true);
-                }}
                 style={{ cursor: "pointer" }}
               >
                 <Card.Header className="bg-light">
@@ -188,20 +129,21 @@ function StudentClassroomDetail() {
                       className="me-2 text-primary"
                     />
                     <span className="fw-medium">
-                      {assignment.teacher.name} posted a new assignment
+                      Giáo viên đã thêm một thông báo mới
                     </span>
                   </div>
                 </Card.Header>
                 <Card.Body>
-                  <Card.Title className="mb-3">{assignment.title}</Card.Title>
+                  <Card.Title className="mb-3">
+                    Tiêu đề: {assignment.title}
+                  </Card.Title>
+                  <Card.Text className="mb-3">
+                    <strong>Nội dung:</strong> {assignment.content}
+                  </Card.Text>
                   <div className="text-muted small">
                     <div className="mb-2">
                       <FontAwesomeIcon icon={faClock} className="me-2" />
-                      Posted: {formatDate(assignment.createdAt)}
-                    </div>
-                    <div>
-                      <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
-                      Due: {formatDate(assignment.deadline)}
+                      Posted: {formatDate(assignment.createdDate)}
                     </div>
                   </div>
                 </Card.Body>

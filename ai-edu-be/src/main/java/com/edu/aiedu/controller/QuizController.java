@@ -1,14 +1,13 @@
 package com.edu.aiedu.controller;
 
+import com.edu.aiedu.dto.ai.ClassCodesRequest;
 import com.edu.aiedu.dto.ai.QuizAttempt;
 import com.edu.aiedu.dto.ai.QuizDTO;
-import com.edu.aiedu.dto.ai.QuizResponseDTO;
 import com.edu.aiedu.dto.request.AssignQuizRequest;
 import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Question;
 import com.edu.aiedu.entity.Quiz;
 import com.edu.aiedu.repository.QuizAttemptRepository;
-import com.edu.aiedu.repository.QuizRepository;
 import com.edu.aiedu.service.AccountService;
 import com.edu.aiedu.service.QuizService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -111,6 +111,12 @@ public class QuizController {
         return ResponseEntity.ok(quizzes);
     }
 
+    @PostMapping("/student/list-quiz")
+    public ResponseEntity<?> getQuizzesByClassCodes(@RequestBody ClassCodesRequest classCodes) {
+        List<QuizDTO> a = quizService.getListQuizzesByClassCode(classCodes.getClassCodes());
+        return ResponseEntity.ok(a);
+    }
+
 //    @GetMapping("/get/{quizId}")
 //    public ResponseEntity<Map<String, Object>> getQuizById(@PathVariable Long quizId) {
 //        Optional<Quiz> quizOptional = quizService.getQuizzesById(quizId);
@@ -141,33 +147,33 @@ public class QuizController {
 //
 //        return ResponseEntity.ok(response);
 //    }
-@GetMapping("/get/{quizId}")
-public ResponseEntity<Map<String, Object>> getQuizById(@PathVariable Long quizId) {
-    Optional<Quiz> quizOptional = quizService.getQuizzesById(quizId);
+    @GetMapping("/get/{quizId}")
+    public ResponseEntity<Map<String, Object>> getQuizById(@PathVariable Long quizId) {
+        Optional<Quiz> quizOptional = quizService.getQuizzesById(quizId);
 
-    if (quizOptional.isEmpty()) {
-        return ResponseEntity.notFound().build();
+        if (quizOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Quiz quiz = quizOptional.get();
+
+        List<Map<String, Object>> quizData = new ArrayList<>();
+        for (Question question : quiz.getQuestions()) {
+            Map<String, Object> questionMap = new HashMap<>();
+            questionMap.put("Question", question.getQuestionText());
+            questionMap.put("Answers", question.getAnswers());
+            questionMap.put("Correct Answer", question.getCorrectAnswer());
+            questionMap.put("Reference", question.getReference());
+            questionMap.put("Question Type", question.getQuestionType());
+
+            quizData.add(questionMap);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("quiz", quizData); // Only return quiz questions
+
+        return ResponseEntity.ok(response);
     }
-
-    Quiz quiz = quizOptional.get();
-
-    List<Map<String, Object>> quizData = new ArrayList<>();
-    for (Question question : quiz.getQuestions()) {
-        Map<String, Object> questionMap = new HashMap<>();
-        questionMap.put("Question", question.getQuestionText());
-        questionMap.put("Answers", question.getAnswers());
-        questionMap.put("Correct Answer", question.getCorrectAnswer());
-        questionMap.put("Reference", question.getReference());
-        questionMap.put("Question Type", question.getQuestionType());
-
-        quizData.add(questionMap);
-    }
-
-    Map<String, Object> response = new HashMap<>();
-    response.put("quiz", quizData); // Only return quiz questions
-
-    return ResponseEntity.ok(response);
-}
 
     @PostMapping("/evaluate/{quizId}")
     public ResponseEntity<Map<String, Object>> evaluateQuiz(
@@ -264,6 +270,7 @@ public ResponseEntity<Map<String, Object>> getQuizById(@PathVariable Long quizId
                 .selectedAnswers(userAnswers)
                 .score(score)
                 .totalQuestions(questions.size())
+                .createdDate(LocalDateTime.now())
                 .build();
 
         quizAttemptRepository.save(quizAttempt);
@@ -327,6 +334,37 @@ public ResponseEntity<Map<String, Object>> getQuizById(@PathVariable Long quizId
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/attempts/{accountId}")
+    public ResponseEntity<?> getQuizAttemptsByAccountId(@PathVariable String accountId) {
+        List<QuizAttempt> quizAttempts = quizAttemptRepository.findByAccountId(accountId);
+
+        if (quizAttempts.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "No quiz attempts found for this user"));
+        }
+
+        // Preparing response list
+        List<Map<String, Object>> responseList = new ArrayList<>();
+
+        for (QuizAttempt attempt : quizAttempts) {
+            Quiz quiz = attempt.getQuiz();
+            List<Question> questions = quiz.getQuestions();
+            Map<Integer, String> selectedAnswers = attempt.getSelectedAnswers();
+
+            // Building attempt data
+            Map<String, Object> attemptData = new HashMap<>();
+
+            attemptData.put("subject", quiz.getSubject());
+            attemptData.put("testName", quiz.getTitle());
+            attemptData.put("score", attempt.getScore() * 10);
+            attemptData.put("date", attempt.getCreatedDate());
+
+            // List to store question results
+            responseList.add(attemptData);
+        }
+
+        return ResponseEntity.ok(responseList);
+    }
 
 
     @PostMapping("/assign-quiz")

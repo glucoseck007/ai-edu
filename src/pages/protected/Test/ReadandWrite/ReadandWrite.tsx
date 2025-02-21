@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import axios from "axios";
+import { use } from "i18next";
 
 interface ReadingWritingModuleProps {
   testId: string;
@@ -47,7 +48,6 @@ const ReadingWritingModule: React.FC<ReadingWritingModuleProps> = ({
     if (isRunning) {
       interval = window.setInterval(() => {
         setTime((prevTime) => prevTime - 1);
-        // Remove the duplicate setTime call if you intend to decrease by 1 each second.
       }, 1000);
     }
 

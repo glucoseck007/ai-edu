@@ -194,23 +194,29 @@ function RegisterPage() {
     }
   };
 
-  const sendVerificationCode = async () => {
+  const resendVerificationCode = async () => {
     setShowVerificationModal(true);
-    // try {
-
-    //   await axios.post(`${import.meta.env.VITE_API}/accounts/send-verification`, {
-    //     email
-    //   });
-
-    //   setShowVerificationModal(true);
-    //   setTimeRemaining(VERIFICATION_TIMEOUT);
-    // } catch (error: any) {
-    //   setToastStatus("error");
-    //   setToastMessage(error.response?.data?.message || "Failed to send verification code");
-    //   setShowToast(true);
-    // } finally {
-    //   setShowVerificationModal(false);
-    // }
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API}/accounts/resend-verification`,
+        {
+          email,
+        }
+      );
+      if (response.status === 200) {
+        setToastStatus("success");
+        setToastMessage(t("Verification code sent successfully"));
+        setShowToast(true);
+        // setShowVerificationModal(false);
+      }
+      setTimeRemaining(VERIFICATION_TIMEOUT);
+    } catch (error: any) {
+      setToastStatus("error");
+      setToastMessage(
+        error.response?.data?.message || "Failed to send verification code"
+      );
+      setShowToast(true);
+    }
   };
 
   const verifyCode = async () => {
@@ -412,7 +418,7 @@ function RegisterPage() {
             </div>
             <Button
               variant="primary"
-              onClick={verifyCode}
+              onClick={resendVerificationCode}
               className="col-3"
               style={{
                 whiteSpace: "nowrap",
@@ -420,7 +426,7 @@ function RegisterPage() {
                 marginTop: "30px",
               }}
             >
-              Send Again
+              Gửi lại
             </Button>
           </div>
         </Modal.Body>

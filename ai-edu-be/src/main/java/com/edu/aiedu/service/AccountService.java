@@ -15,6 +15,8 @@ import com.edu.aiedu.repository.AccountRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -25,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +43,47 @@ public class AccountService {
     public Optional<Account> getAccountById(String id) {
         return accountRepository.findById(id);
     }
+
+//    public List<AccountResponse> getAllAccounts(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        return accountRepository.findAll(pageable).stream()
+//                .map(accountMapper::toUserResponse)
+//                .collect(Collectors.toList());
+//    }
+    public Page<AccountResponse> getAllAccounts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Account> accountsPage = accountRepository.findAll(pageable);
+
+        // Filter out ADMIN users before converting to response
+        List<AccountResponse> filteredAccounts = accountsPage.getContent().stream()
+                .filter(account -> !account.getRoles().contains("ADMIN"))  // Exclude ADMINs
+                .map(accountMapper::toUserResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(filteredAccounts, pageable, filteredAccounts.size());
+    }
+
+    public boolean resendVerificationCode(String email) {
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            if (account.isVerified()) {
+                throw new IllegalStateException("Account is already verified.");
+            }
+
+            String newCode = generateVerificationCode();
+            account.setVerificationCode(newCode);
+            accountRepository.save(account);
+
+            emailService.sendVerificationEmail(account.getEmail(), newCode);
+            return true;
+        }
+
+        return false;
+    }
+
 
     public void verifyAccount(AccountVerificationRequest request) {
         Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

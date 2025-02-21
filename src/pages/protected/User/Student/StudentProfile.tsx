@@ -14,41 +14,76 @@ import { format } from "date-fns";
 import "./StudentProfile.scss";
 import { useNavigate } from "react-router-dom";
 import StudentImg from "../../../../assets/images/student.jpg";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { useState, useEffect } from "react";
 
 const StudentProfile = () => {
   const navigate = useNavigate();
+  const auth = useSelector((state: RootState) => state.auth);
+  const accountId = auth.user?.id || "";
+  const [testHistory, setTestHistory] = useState([]);
+  const [classrooms, setClassrooms] = useState([]);
+  const [profile, setProfile] = useState<any | null>(null);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/accounts/${accountId}`
+      );
+      console.log(response.data); // Logs the fetched data to the console
+      const profile = response.data.result;
+      setProfile(profile);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+  const fetchClassrooms = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/classroom/profile/list-class`,
+        {
+          params: {
+            accountId: accountId,
+          },
+        }
+      );
+      const classrooms = response.data;
+      setClassrooms(classrooms);
+    } catch (error) {
+      console.error("Error fetching classrooms:", error);
+      return [];
+    }
+  };
+
+  const fetchTestHistory = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/quiz/attempts/${accountId}`
+      );
+      const testHistory = response.data;
+      // return testHistory;
+      setTestHistory(testHistory);
+    } catch (error) {
+      console.error("Error fetching test history:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!accountId) return;
+    fetchProfile();
+    // console.log("Profile:", profile);
+    fetchTestHistory();
+    fetchClassrooms();
+  }, [accountId]);
+
   const student = {
-    name: "Trần Đức Trung",
-    grade: "Lớp 1",
-    classes: [
-      { id: 1, title: "Toán", teacher: "Mrs. Emily Johnson" },
-      { id: 2, title: "Tiếng Anh", teacher: "Mr. John Smith" },
-      { id: 3, title: "Khoa Học", teacher: "Ms. Olivia Brown" },
-      { id: 4, title: "Lịch Sử", teacher: "Dr. Robert Davis" },
-    ],
-    testHistory: [
-      {
-        id: 1,
-        subject: "Toán",
-        testName: "Toán 1",
-        score: 85,
-        date: "2024-01-15",
-      },
-      {
-        id: 2,
-        subject: "Tiếng Anh",
-        testName: "Thì hiện tại",
-        score: 78,
-        date: "2024-01-20",
-      },
-      {
-        id: 3,
-        subject: "Khoa Học",
-        testName: "Cơ quan cơ thể",
-        score: 92,
-        date: "2024-02-01",
-      },
-    ],
+    name: profile.firstName + " " + profile.lastName,
+    // grade: "Lớp 1",
+    classes: classrooms,
+    testHistory: testHistory,
   };
 
   return (
@@ -101,7 +136,7 @@ const StudentProfile = () => {
                   className="mb-3 class-card"
                   onClick={() => {
                     navigate(
-                      `/student/class-detail?classroomId=${classItem.id}`
+                      `/student/class-detail?classroomId=${classItem.classId}&&classCode=${classItem.classCode}`
                     );
                   }}
                 >

@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../redux/store";
-import {
-  closeWebSocket,
-  fetchChatbotResponse,
-  initializeWebSocket,
-} from "../../../redux/slices/chatbotSlice";
+import { fetchChatbotResponse } from "../../../redux/slices/chatbotSlice";
 import { Book, Globe, Library, Mic, Send, Square } from "lucide-react";
 import {
   Container,
@@ -30,7 +26,7 @@ import {
 import ChatBotSidebarComponent from "../../../components/sidebar/ChatbotSideBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
-import Latex from 'react-latex-next';
+import Latex from "react-latex-next";
 
 interface Message {
   id: number;
@@ -54,7 +50,7 @@ const StudentChatBot: React.FC = () => {
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
   const subjects = [
-    { id: "math", name: "Toán học", icon: <Calculator /> },
+    { id: "math", name: "Toán", icon: <Calculator /> },
     { id: "history", name: "Lịch sử", icon: <Landmark /> },
     { id: "english", name: "Tiếng Anh", icon: <Book /> },
     { id: "geography", name: "Địa lý", icon: <Globe /> },
@@ -63,18 +59,34 @@ const StudentChatBot: React.FC = () => {
   ];
 
   useEffect(() => {
-    dispatch(initializeWebSocket());
+    scrollToBottom();
+  }, []); //Corrected dependency array
+
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    const ws = new WebSocket(`${import.meta.env.VITE_WS_API}/process_audio_ws`); // Thay thế bằng URL WebSocket thực tế
+
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    // ws.onclose = () => {
+    //   console.log("WebSocket disconnected");
+    // };
+
+    setSocket(ws);
+  }, []);
+
+  useEffect(() => {
     setMessages([
       { id: 0, content: "Tôi có thể giúp gì cho bạn?", isBot: true },
     ]);
-    return () => {
-      dispatch(closeWebSocket());
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, []); //Corrected dependency array
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -299,7 +311,7 @@ const StudentChatBot: React.FC = () => {
                         </span>
                       ) : (
                         <div>
-                          {message.content.split("\n").map((line, index) => (
+                          {message.content?.split("\n").map((line, index) => (
                             <React.Fragment key={index}>
                               <Latex>{line}</Latex>
                               <br />
@@ -362,6 +374,7 @@ const StudentChatBot: React.FC = () => {
       </Row>
       {showAudioRecorder && (
         <AudioRecorderPopover
+          socket={socket}
           setShowAudioRecorder={setShowAudioRecorder}
           setMessages={setMessages}
           selectedSubject={selectedSubject}
@@ -373,6 +386,7 @@ const StudentChatBot: React.FC = () => {
 };
 
 interface AudioRecorderPopoverProps {
+  socket: WebSocket | null;
   setShowAudioRecorder: React.Dispatch<React.SetStateAction<boolean>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   selectedSubject: string;
@@ -381,13 +395,14 @@ interface AudioRecorderPopoverProps {
 
 interface Message {
   id: number;
-  content: string;
+  content: string | null;
   subject?: string;
   isBot: boolean;
   isAudio?: boolean;
 }
 
 const AudioRecorderPopover: React.FC<AudioRecorderPopoverProps> = ({
+  socket,
   setShowAudioRecorder,
   setMessages,
   selectedSubject,
@@ -438,60 +453,82 @@ const AudioRecorderPopover: React.FC<AudioRecorderPopoverProps> = ({
     }
   };
 
+  const uploadWavFile = async (file: Blob, socket: WebSocket) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        const arrayBuffer = event.target.result as ArrayBuffer;
+        socket.send(arrayBuffer);
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
   const handleSendAudio = async () => {
-    if (audioURL && selectedSubject) {
+    if (audioURL && selectedSubject && socket) {
       const selectedSubjectName = subjects.find(
         (s) => s.id === selectedSubject
       )?.name;
       const student_code = auth.user?.id;
 
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-
-      const audioMessage: Message = {
-        id: Date.now(),
-        content: audioURL,
-        subject: selectedSubjectName,
-        isBot: false,
-        isAudio: true,
-      };
-
-      setMessages((prev) => [...prev, audioMessage]);
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setAudioURL(audioUrl);
 
       try {
-        const response = await dispatch(
-          fetchChatbotResponse({
-            student_code,
-            question: audioBlob,
-            subject: selectedSubjectName ?? "",
-          })
-        );
-
-        if (response.error) {
-          const errorData = response.payload as {
-            message: string;
-            status: number;
-          };
-          const botResponse: Message = {
-            id: Date.now() + 1,
-            content: errorData.message,
-            subject: selectedSubjectName,
-            isBot: true,
-            isError: true,
-          };
-          setMessages((prev) => [...prev, botResponse]);
-          return;
-        }
-
-        const botResponse: Message = {
-          id: Date.now() + 1,
-          content: response.payload,
+        const audioMessage: Message = {
+          type: "audio",
+          student_id: student_code?.substring(0, 5),
+          // data: audioBlob,
           subject: selectedSubjectName,
-          isBot: true,
+          content: audioURL,
+          isAudio: true,
         };
 
-        setMessages((prev) => [...prev, botResponse]);
+        setMessages((prev) => [...prev, audioMessage]);
+
+        const messagePayload = JSON.stringify({
+          type: "audio",
+          student_id: student_code.substring(0, 5),
+          // data: audioBlob,
+          subject: selectedSubjectName ?? "",
+        });
+
+        socket.send(messagePayload);
+        // socket.send(audioBlob);
+        uploadWavFile(audioBlob, socket);
+
+        // Lắng nghe phản hồi từ WebSocket
+        socket.onmessage = (event) => {
+          try {
+            const responseData = event.data;
+            console.log("WebSocket response:", responseData);
+
+            if (responseData instanceof Blob) {
+              const audioBlob = responseData;
+              const audioUrl = URL.createObjectURL(audioBlob);
+              const audio = new Audio(audioUrl);
+              audio
+                .play()
+                .then(() => {
+                  console.log("Audio played successfully");
+                })
+                .catch((error) => {
+                  console.error("Error playing audio:", error);
+                });
+            } else if (typeof responseData === "string") {
+              console.log("WebSocket response:", responseData);
+            } else {
+              console.error("Invalid response data from WebSocket");
+            }
+          } catch (error) {
+            console.error("Error parsing WebSocket response:", error);
+          }
+        };
       } catch (error) {
-        console.error("Error sending audio message:", error);
+        console.error("Error converting audio to Base64:", error);
       }
 
       setShowAudioRecorder(false);

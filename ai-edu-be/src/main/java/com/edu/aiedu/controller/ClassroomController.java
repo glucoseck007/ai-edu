@@ -2,11 +2,14 @@ package com.edu.aiedu.controller;
 
 import com.edu.aiedu.dto.ai.AIClassroomDTO;
 import com.edu.aiedu.dto.ai.ListClassMembersDTO;
+import com.edu.aiedu.dto.ai.ProfileClassDTO;
 import com.edu.aiedu.dto.ai.TeacherClassDTO;
 import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.dto.request.JoinClassroomRequest;
 import com.edu.aiedu.dto.response.ApiResponse;
+import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Classroom;
+import com.edu.aiedu.repository.AccountRepository;
 import com.edu.aiedu.service.AccountClassroomService;
 import com.edu.aiedu.service.AccountService;
 import com.edu.aiedu.service.ClassroomService;
@@ -18,7 +21,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/classroom")
@@ -31,6 +36,8 @@ public class ClassroomController {
     private final AccountClassroomService accountClassroomService;
     @Autowired
     private ExternalApiService externalApiService;
+    @Autowired
+    private AccountRepository accountRepository;
 
     public ClassroomController(ClassroomService classroomService, AccountService accountService, AccountClassroomService accountClassroomService) {
         this.classroomService = classroomService;
@@ -97,6 +104,22 @@ public class ClassroomController {
         return ResponseEntity.ok(classrooms);
     }
 
+    @GetMapping("/profile/list-class")
+    public ResponseEntity<List<ProfileClassDTO>> getListClassForProfile(@RequestParam String accountId) {
+        List<ClassroomDTO> classrooms = accountService.getClassesForAccount(accountId);
+        List<ProfileClassDTO> result = new ArrayList<>();
+        for (ClassroomDTO classroomDTO : classrooms) {
+            Optional<Account> account = accountRepository.findById(classroomDTO.getAccountId());
+            ProfileClassDTO profileClassDTO = new ProfileClassDTO();
+            profileClassDTO.setTeacher(account.get().getFirstName() + " " + account.get().getLastName());
+            profileClassDTO.setTitle(classroomDTO.getName());
+            profileClassDTO.setClassId(classroomDTO.getId());
+            profileClassDTO.setClassCode(classroomDTO.getClassroomCode());
+            result.add(profileClassDTO);
+        }
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/classroom-detail")
     public ResponseEntity<ClassroomDTO> getClassDetail(@RequestParam String id) {
         ClassroomDTO classroomDTO = classroomService.getClassById(id);
@@ -127,5 +150,21 @@ public class ClassroomController {
     public ResponseEntity<List<ListClassMembersDTO>> getClassMembers(@PathVariable String classroomCode) {
         List<ListClassMembersDTO> members = accountClassroomService.getClassMembers(classroomCode);
         return ResponseEntity.ok(members);
+    }
+
+    @GetMapping("/{accountId}")
+    public ResponseEntity<List<Classroom>> getListClass(@PathVariable String accountId) {
+        List<Classroom> a = accountClassroomService.getClassrooms(accountId);
+        return ResponseEntity.ok(a);
+    }
+
+    @GetMapping("/classroomcode/{accountId}")
+    public ResponseEntity<List<String>> getAllClassCode(@PathVariable String accountId) {
+        List<Classroom> a = accountClassroomService.getClassrooms(accountId);
+        List<String> result = new ArrayList<>();
+        for (Classroom classroom : a) {
+            result.add(classroom.getClassroomCode());
+        }
+        return ResponseEntity.ok(result);
     }
 }

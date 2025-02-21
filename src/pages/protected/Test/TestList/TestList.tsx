@@ -48,8 +48,16 @@ const TestList: React.FC = () => {
           { params: { accountId: id, classCode } }
         );
       } else {
-        console.warn("Class code is missing for student role.");
-        return;
+        // console.warn("Class code is missing for student role.");
+        const classCodes = await axios.get(
+          `${import.meta.env.VITE_API}/classroom/classroomcode/${id}`
+        );
+        const body = classCodes.data;
+        // console.log(payload);
+        response = await axios.post(
+          `${import.meta.env.VITE_API}/quiz/student/list-quiz`,
+          { classCodes: body }
+        );
       }
 
       setTests(response.data); // Ensure response.data is an array

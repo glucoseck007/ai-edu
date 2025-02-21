@@ -189,7 +189,7 @@ const ReviewTest: React.FC = () => {
             style={{ width: "20%", backgroundColor: "#07294d" }}
             onClick={() => handleAddNewQuestion()}
           >
-            Add new question
+            Thêm câu hỏi
           </Button>
         </div>
         <Col
@@ -234,31 +234,34 @@ const ReviewTest: React.FC = () => {
                     {/* Main Question Content */}
                     <div className="flex-grow-1">
                       <div className="mb-3 px-2">
-                        {quiz.Answers.map((option, Answerindex) => (
-                          <div
-                            style={{ cursor: "pointer" }}
-                            key={Answerindex}
-                            className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
-                          >
-                            <div
-                              className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2`}
-                            >
-                              <div className="d-flex align-items-center gap-2">
+                        {quiz.Answers &&
+                          quiz.Answers.map(
+                            (option: string, Answerindex: number) => (
+                              <div
+                                style={{ cursor: "pointer" }}
+                                key={Answerindex}
+                                className={`d-flex align-items-center gap-3 mb-3 hover-effect`}
+                              >
                                 <div
-                                  className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-dark"
-                                  style={{
-                                    width: "28px",
-                                    height: "28px",
-                                    fontSize: "14px",
-                                  }}
+                                  className={`flex-grow-1 d-flex justify-content-between align-items-center border border-3 rounded-pill px-3 py-2`}
                                 >
-                                  {numberToLetter(Answerindex + 1)}
+                                  <div className="d-flex align-items-center gap-2">
+                                    <div
+                                      className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-dark"
+                                      style={{
+                                        width: "28px",
+                                        height: "28px",
+                                        fontSize: "14px",
+                                      }}
+                                    >
+                                      {numberToLetter(Answerindex + 1)}
+                                    </div>
+                                    <span className="text-black">{option}</span>
+                                  </div>
                                 </div>
-                                <span className="text-black">{option}</span>
                               </div>
-                            </div>
-                          </div>
-                        ))}
+                            )
+                          )}
                       </div>
                     </div>
                   </Col>
@@ -268,7 +271,7 @@ const ReviewTest: React.FC = () => {
                   onClick={() => handleEdit(index)}
                   style={{ width: "20%", backgroundColor: "#07294d" }}
                 >
-                  Edit
+                  Sửa
                 </Button>
               </Card.Body>
             </Card>
@@ -282,21 +285,21 @@ const ReviewTest: React.FC = () => {
             onClick={() => setTitleModal(true)}
             style={{ width: "20%", backgroundColor: "#ffd98e", color: "black" }}
           >
-            Save quiz
+            Lưu bài kiểm tra
           </Button>
         </div>
       </Row>
       <Modal show={titleModal} onHide={() => setTitleModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Quiz Title</Modal.Title>
+          <Modal.Title>Thêm tiêu đề</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Quiz Title</Form.Label>
+              <Form.Label>Tên đề thi</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter quiz title"
+                placeholder="Nhập tên đề thi"
                 value={quizTitle}
                 onChange={(e) => setQuizTitle(e.target.value)}
               />
@@ -308,18 +311,18 @@ const ReviewTest: React.FC = () => {
             style={{ backgroundColor: "#07294d" }}
             onClick={handleSaveQuiz}
           >
-            Save Title
+            Lưu
           </Button>
         </Modal.Footer>
       </Modal>
       <Modal size="lg" show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Quiz</Modal.Title>
+          <Modal.Title>Sửa câu hỏi</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Question Type</Form.Label>
+              <Form.Label>Kiểu câu hỏi</Form.Label>
               <Form.Control
                 type="text"
                 value={editQuiz["Question Type"] || ""}
@@ -341,7 +344,7 @@ const ReviewTest: React.FC = () => {
             </Form.Group>
             <Form.Group>
               <Form.Group>
-                <Form.Label>Answers</Form.Label>
+                <Form.Label>Đáp án</Form.Label>
                 {Array.isArray(editQuiz.Answers) &&
                   editQuiz.Answers.map((answer, i) => (
                     <div key={i} className="d-flex align-items-center">
@@ -396,13 +399,13 @@ const ReviewTest: React.FC = () => {
                     style={{ backgroundColor: "#07294d" }}
                     onClick={handleAddAnswer}
                   >
-                    Add answer
+                    Thêm đáp án
                   </Button>
                 )}
               </Form.Group>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Correct Answer</Form.Label>
+              <Form.Label>Đáp án đúng</Form.Label>
               <Form.Control
                 type="text"
                 value={editQuiz["Correct Answer"] || ""}
@@ -412,7 +415,7 @@ const ReviewTest: React.FC = () => {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Reference</Form.Label>
+              <Form.Label>Tham khảo</Form.Label>
               <Form.Control
                 type="text"
                 value={editQuiz.Reference || ""}
@@ -425,7 +428,7 @@ const ReviewTest: React.FC = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button style={{ backgroundColor: "#07294d" }} onClick={handleSave}>
-            Save changes
+            Lưu thay đổi
           </Button>
         </Modal.Footer>
       </Modal>
@@ -435,25 +438,25 @@ const ReviewTest: React.FC = () => {
         onHide={() => setShowAddModal(false)}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add New Question</Modal.Title>
+          <Modal.Title>Thêm câu hỏi</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Question Type</Form.Label>
+              <Form.Label>Loại câu hỏi</Form.Label>
               <Form.Select
                 value={newQuiz["Question Type"]}
                 onChange={(e) =>
                   setNewQuiz({ ...newQuiz, "Question Type": e.target.value })
                 }
               >
-                <option value="">Select question type</option>
-                <option value="MCQ">Multiple Choice</option>
-                <option value="TF">True False</option>
+                <option value="">Chọn kiểu câu hỏi</option>
+                <option value="MCQ">Trắc nghiệm</option>
+                <option value="TF">Đúng sai</option>
               </Form.Select>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Question</Form.Label>
+              <Form.Label>Câu hỏi</Form.Label>
               <Form.Control
                 type="text"
                 value={newQuiz.Question}
@@ -465,7 +468,7 @@ const ReviewTest: React.FC = () => {
             <Form.Group>
               {newQuiz["Question Type"] === "MCQ" ? (
                 <Form.Group>
-                  <Form.Label>Answers</Form.Label>
+                  <Form.Label>Đáp án</Form.Label>
                   {newQuiz.Answers.map((answer: string, i: number) => (
                     <div
                       key={`answer-${answer}-${i}`}
@@ -501,12 +504,12 @@ const ReviewTest: React.FC = () => {
                       })
                     }
                   >
-                    Add Answer
+                    Thêm đáp án
                   </Button>
                 </Form.Group>
               ) : (
                 <Form.Group>
-                  <Form.Label>Answers</Form.Label>
+                  <Form.Label>Đáp án</Form.Label>
                   {["Có", "Không"].map((answer: string, i: number) => (
                     <div
                       key={`answer-${answer}-${i}`}
@@ -537,7 +540,7 @@ const ReviewTest: React.FC = () => {
               )}
             </Form.Group>
             <Form.Group>
-              <Form.Label>Correct Answer</Form.Label>
+              <Form.Label>Đáp án đúng</Form.Label>
               <Form.Control
                 type="text"
                 value={newQuiz["Correct Answer"]}
@@ -547,7 +550,7 @@ const ReviewTest: React.FC = () => {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Reference</Form.Label>
+              <Form.Label>Tham khảo</Form.Label>
               <Form.Control
                 type="text"
                 value={newQuiz.Reference}
@@ -563,7 +566,7 @@ const ReviewTest: React.FC = () => {
             style={{ backgroundColor: "#07294d" }}
             onClick={handleSaveNewQuestion}
           >
-            Save Question
+            Lưu câu hỏi
           </Button>
         </Modal.Footer>
       </Modal>

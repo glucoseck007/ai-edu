@@ -1,10 +1,7 @@
 import { MouseEventHandler } from "react";
-import { Button, Spinner } from "react-bootstrap";
-
-import "./custom-button.css";
+import { Button } from "react-bootstrap";
 
 interface ButtonProps {
-  type?: "button" | "submit" | "reset";
   width?: string;
   height?: string;
   color?: string;
@@ -14,26 +11,21 @@ interface ButtonProps {
   iconHeight?: string;
   backgroundColor?: string;
   border?: string;
-  borderRadius?: string;
   marginTop?: string;
   onClick?: MouseEventHandler | undefined;
-  isLoading?: boolean;
 }
 
 function CustomButton({
-  type = "button",
   width,
   height,
   color,
   title,
   icon,
   border,
-  borderRadius,
   marginTop,
   backgroundColor,
   iconWidth = "24px",
   iconHeight = "24px",
-  isLoading = false,
   onClick,
 }: ButtonProps) {
   const buttonStyle: React.CSSProperties = {
@@ -44,10 +36,6 @@ function CustomButton({
     fontWeight: 600,
     marginTop: icon ? "0" : marginTop,
     border: border || "none",
-    borderRadius: borderRadius || "20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   };
 
   const iconStyle: React.CSSProperties = {
@@ -56,37 +44,10 @@ function CustomButton({
     marginRight: "12px",
   };
 
-  const spinnerStyle: React.CSSProperties = {
-    width: "20px",
-    height: "20px",
-  };
-
   return (
-    <Button
-      type={type || "button"}
-      onClick={onClick}
-      style={buttonStyle}
-      variant="primary"
-      disabled={isLoading}
-    >
-      {isLoading ? (
-        <>
-          <Spinner
-            as="span"
-            animation="border"
-            size="sm"
-            role="status"
-            aria-hidden="true"
-            style={spinnerStyle}
-          />
-          <span>Loading...</span>
-        </>
-      ) : (
-        <>
-          {icon && <img src={icon} alt="icon" style={iconStyle} />}
-          {title ?? "Click Me"}
-        </>
-      )}
+    <Button onClick={onClick} style={buttonStyle} variant="primary">
+      {icon && <img src={icon} alt="icon" style={iconStyle} />}
+      {title || "Click Me"}
     </Button>
   );
 }

@@ -5,7 +5,6 @@ interface ChatbotState {
   response: string | null;
   loading: boolean;
   error: string | null;
-  ws: WebSocket | null;
   errorStatus: number | null;
 }
 
@@ -13,11 +12,10 @@ const initialState: ChatbotState = {
   response: null,
   loading: false,
   error: null,
-  ws: null,
   errorStatus: null,
 };
 
-// Async Thunk for Text-Based Chat
+// Async Thunk for Text-Based Chat (Student)
 export const fetchChatbotResponse = createAsyncThunk(
   "chatbot/fetchResponse",
   async (
@@ -33,35 +31,30 @@ export const fetchChatbotResponse = createAsyncThunk(
         `${import.meta.env.VITE_AI_API}/student_ask_question`,
         { student_code, question, subject },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
       const chatbotResponse = response.data.message;
+      if (chatbotResponse) return chatbotResponse;
 
-      if (chatbotResponse) {
-        return chatbotResponse;
-      } else {
-        return rejectWithValue({
-          message: "No response from chatbot",
-          status: 404,
-        });
-      }
+      return rejectWithValue({
+        message: "No response from chatbot",
+        status: 404,
+      });
     } catch (error: any) {
       return rejectWithValue({
         message:
-          error?.response?.data?.message ||
-          "An error occurred while fetching chatbot response",
+          error?.response?.data?.message || "Error fetching chatbot response",
         status: error?.response?.status || 500,
       });
     }
   }
 );
 
+// Async Thunk for Text-Based Chat (Teacher)
 export const fetchTeacherChatbotResponse = createAsyncThunk(
-  "chatbot/fetchResponse",
+  "chatbot/fetchTeacherResponse",
   async (
     { teacher_code, question }: { teacher_code: any; question: string | Blob },
     { rejectWithValue }
@@ -71,108 +64,72 @@ export const fetchTeacherChatbotResponse = createAsyncThunk(
         `${import.meta.env.VITE_AI_API}/teacher_ask_question`,
         { teacher_code, question },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
       const chatbotResponse = response.data.message;
+      if (chatbotResponse) return chatbotResponse;
 
-      if (chatbotResponse) {
-        return chatbotResponse;
-      } else {
-        return rejectWithValue({
-          message: "No response from chatbot",
-          status: 404,
-        });
-      }
+      return rejectWithValue({
+        message: "No response from chatbot",
+        status: 404,
+      });
     } catch (error: any) {
       return rejectWithValue({
         message:
-          error?.response?.data?.message ||
-          "An error occurred while fetching chatbot response",
+          error?.response?.data?.message || "Error fetching chatbot response",
         status: error?.response?.status || 500,
       });
     }
   }
 );
 
-// WebSocket Handling
 const chatbotSlice = createSlice({
   name: "chatbot",
   initialState,
-  reducers: {
-    initializeWebSocket: (state) => {
-      if (!state.ws) {
-        const ws = new WebSocket(
-          `${import.meta.env.VITE_WS_API}/process_audio_ws`
-        );
-
-        ws.onopen = () => {
-          console.log("WebSocket connected");
-        };
-
-        ws.onmessage = (event) => {
-          console.log("WebSocket Message Received:", event.data);
-          state.response = event.data; // Store response
-        };
-
-        ws.onerror = (error) => {
-          console.error("WebSocket Error:", error);
-          state.error = "WebSocket error occurred";
-          state.errorStatus = 1006;
-        };
-
-        ws.onclose = () => {
-          console.log("WebSocket closed");
-          state.ws = null;
-        };
-
-        state.ws = ws;
-      }
-    },
-    sendAudioMessage: (state, action: PayloadAction<Blob>) => {
-      if (state.ws && state.ws.readyState === WebSocket.OPEN) {
-        state.ws.send(action.payload);
-        console.log("Audio message sent via WebSocket");
-      } else {
-        console.error("WebSocket not connected");
-        state.error = "WebSocket not connected";
-        state.errorStatus = 1015;
-      }
-    },
-    closeWebSocket: (state) => {
-      if (state.ws) {
-        state.ws.close();
-        state.ws = null;
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchChatbotResponse.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.errorStatus = null;
       })
       .addCase(
         fetchChatbotResponse.fulfilled,
         (state, action: PayloadAction<string>) => {
-          console.log("Bot Response Received:", action.payload);
           state.loading = false;
           state.response = action.payload;
-          state.errorStatus = null;
         }
       )
-      .addCase(fetchChatbotResponse.rejected, (state, action) => {
-        console.error("Chatbot API Error:", action.payload);
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      .addCase(
+        fetchChatbotResponse.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload.message;
+          state.errorStatus = action.payload.status;
+        }
+      )
+      .addCase(fetchTeacherChatbotResponse.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchTeacherChatbotResponse.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.loading = false;
+          state.response = action.payload;
+        }
+      )
+      .addCase(
+        fetchTeacherChatbotResponse.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload.message;
+          state.errorStatus = action.payload.status;
+        }
+      );
   },
 });
 
-export const { initializeWebSocket, sendAudioMessage, closeWebSocket } =
-  chatbotSlice.actions;
 export default chatbotSlice.reducer;

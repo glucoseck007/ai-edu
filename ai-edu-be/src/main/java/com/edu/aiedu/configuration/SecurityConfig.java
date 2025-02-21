@@ -29,11 +29,13 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/api/auth/token",
+            "/api/accounts/**",
             "/api/auth/introspect",
             "/api/auth/logout",
             "/api/auth/outbound/authentication",
             "/api/accounts/create-account",
             "/api/accounts/verify-account",
+            "/api/quiz/student/list-quiz",
             "/api/ask_question",
             "/api/**",
             "/api/school/add_school",
@@ -56,6 +58,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/school/remove_school/**", "/api/classroom/remove_class/**", "/api/accounts/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/quiz/assign-quiz/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
+                                "/api/accounts/**",
+                                "/api/accounts/list",
+                                "/api/classroom/**",
+                                "/api/school/list",
+                                "api/quiz/student/list-quiz",
                                 "/api/classroom-content/**",
                                 "/api/classroom/**",
                                 "api/quiz/account/**",
