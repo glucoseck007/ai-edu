@@ -309,7 +309,7 @@ public class QuizController {
             attemptData.put("attemptId", quizAttempt.getId()); // Include attempt ID
             attemptData.put("quizId", quiz.getId());
             attemptData.put("accountId", quizAttempt.getAccount().getId());
-            attemptData.put("score", quizAttempt.getScore());
+            attemptData.put("score", (quizAttempt.getScore()/quizAttempt.getTotalQuestions()));
             attemptData.put("totalQuestions", quizAttempt.getTotalQuestions());
             attemptData.put("selectedAnswers", selectedAnswers);
 
