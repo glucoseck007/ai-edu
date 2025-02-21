@@ -13,6 +13,7 @@ public class QuizDTO {
     private String subject;
     private List<QuestionDTO> questions;
     private String classCode;
+    private boolean isCompleted;
 
     public QuizDTO(Long id, String title, String classCode) {
         this.id = id;
@@ -26,6 +27,13 @@ public class QuizDTO {
         this.questions = questions;
         this.subject = subject;
     }
-    // Getters and Setters
+
+    public QuizDTO(Long id, String title, String subject, List<QuestionDTO> questions, boolean isCompleted) {
+        this.id = id;
+        this.title = title;
+        this.questions = questions;
+        this.subject = subject;
+        this.isCompleted = isCompleted;
+    }
 }
 

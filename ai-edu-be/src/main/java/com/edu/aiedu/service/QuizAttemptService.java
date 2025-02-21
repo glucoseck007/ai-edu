@@ -2,6 +2,7 @@ package com.edu.aiedu.service;
 
 import com.edu.aiedu.dto.ai.QuizAttempt;
 import com.edu.aiedu.dto.ai.QuizAttemptDTO;
+import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Quiz;
 import com.edu.aiedu.repository.QuizAttemptRepository;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,16 @@ public class QuizAttemptService {
 
     public QuizAttemptService(QuizAttemptRepository quizAttemptRepository) {
         this.quizAttemptRepository = quizAttemptRepository;
+    }
+
+    public boolean checkQuizAttempt(Long quizId, String accountId) {
+        List<QuizAttempt> quizAttempt = quizAttemptRepository.findByQuizId(quizId);
+        for (QuizAttempt quizAttemptDTO : quizAttempt) {
+            if (quizAttemptDTO.getAccount().getId().equals(accountId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<QuizAttempt> findAll() {
