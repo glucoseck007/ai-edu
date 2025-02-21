@@ -7,8 +7,15 @@ import {
 import { faGoogleDrive } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
+import {
+  Button,
+  Col,
+  Container,
+  Dropdown,
+  Row,
+  Modal,
+} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Compressor from "compressorjs";
 import { PDFDocument } from "pdf-lib";
@@ -22,6 +29,16 @@ const Upload: React.FC = () => {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // States for notification modal
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationAction, setNotificationAction] = useState<
+    (() => void) | null
+  >(null);
+
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   console.log(query);
@@ -29,6 +46,7 @@ const Upload: React.FC = () => {
   const classroomCode = query.get("classroomCode");
   const auth = useSelector((state: RootState) => state.auth);
   const teacher_code = auth.user?.id.substring(0, 5);
+
   const school_code = async () => {
     try {
       const response = await axios.get(
@@ -106,8 +124,6 @@ const Upload: React.FC = () => {
       const zip = new PizZip(docBytes);
       const doc = new Docxtemplater(zip);
 
-      // Remove unused metadata
-      // doc.setOptions({ paragraphLoop: true, linebreaks: true });
       const compressedDocBytes = doc.getZip().generate({ type: "uint8array" });
 
       return new File([compressedDocBytes], file.name, {
@@ -138,17 +154,26 @@ const Upload: React.FC = () => {
     e.preventDefault();
 
     if (!selectedFile) {
-      alert("Please select a file to upload.");
+      setNotificationTitle("File Required");
+      setNotificationMessage("Please select a file to upload.");
+      setNotificationAction(null);
+      setShowNotification(true);
       return;
     }
 
-    // First, compress the file if needed
+    setIsSubmitting(true);
+
+    // Compress the file if needed
     const compressedFile = await compressFile(selectedFile);
 
     // Fetch the school code first
     const schoolCode = await school_code();
     if (!schoolCode) {
-      alert("Failed to retrieve school code");
+      setIsSubmitting(false);
+      setNotificationTitle("Error");
+      setNotificationMessage("Failed to retrieve school code.");
+      setNotificationAction(null);
+      setShowNotification(true);
       return;
     }
 
@@ -167,69 +192,32 @@ const Upload: React.FC = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_AI_API}/upload_for_chatbot`,
         formData
-        // Do not manually set the Content-Type header; axios will set it automatically.
       );
 
       console.log("File uploaded successfully:", response.data);
-      alert("File uploaded successfully.");
-      setSelectedFile(null);
-    } catch (error) {
+      // Show notification modal for success
+      setNotificationTitle("Success");
+      setNotificationMessage("File uploaded successfully.");
+      setNotificationAction(() => {
+        setSelectedFile(null);
+      });
+      setShowNotification(true);
+    } catch (error: any) {
       console.error(
         "Error uploading file:",
         error.response?.data || error.message
       );
-      alert(
-        "Error: " + (error.response?.data?.detail || "File upload failed.")
+      setNotificationTitle("Error");
+      setNotificationMessage(
+        "Error: " +
+          (error.response?.data?.detail || "File upload failed.")
       );
+      setNotificationAction(null);
+      setShowNotification(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  // Convert file to Base64
-  //   const fileToBase64 = (file: File) => {
-  //     return new Promise<string>((resolve, reject) => {
-  //       const reader = new FileReader();
-  //       reader.readAsDataURL(file);
-  //       reader.onload = () => resolve(reader.result as string);
-  //       reader.onerror = (error) => reject(error);
-  //     });
-  //   };
-
-  //   const base64File = await fileToBase64(selectedFile);
-  //   const base64Data = base64File.split(",")[1]; // Remove the data URL prefix
-
-  //   const requestBody = {
-  //     class_name: classroomCode,
-  //     title: title,
-  //     teacher_code,
-  //     description,
-  //     file: atob(base64Data)
-  //       .split("")
-  //       .map((char) => char.charCodeAt(0)), // Convert Base64 to byte[]
-  //     document_name: selectedFile.name,
-  //     fileType: selectedFile.type,
-  //     upload_date: new Date().toISOString(),
-  //     school_code: await school_code(),
-  //   };
-
-  //   try {
-  //     const response = await axios.post(
-  //       `${import.meta.env.VITE_AI_API}/upload_for_chatbot`,
-  //       requestBody,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-
-  //     console.log("File uploaded successfully:", response.data);
-  //     alert("File uploaded successfully.");
-  //     setSelectedFile(null);
-  //   } catch (error) {
-  //     console.error("Error uploading file:", error);
-  //     alert("There was an error uploading the file.");
-  //   }
-  // };
 
   return (
     <section id="exam-list">
@@ -291,11 +279,17 @@ const Upload: React.FC = () => {
 
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={handleFileSelect}>
-                      <FontAwesomeIcon icon={faFolderClosed} className="me-2" />
+                      <FontAwesomeIcon
+                        icon={faFolderClosed}
+                        className="me-2"
+                      />
                       Tải tệp lên
                     </Dropdown.Item>
                     <Dropdown.Item href="#">
-                      <FontAwesomeIcon icon={faGoogleDrive} className="me-2" />
+                      <FontAwesomeIcon
+                        icon={faGoogleDrive}
+                        className="me-2"
+                      />
                       Google Drive
                     </Dropdown.Item>
                     <Dropdown.Item href="#">
@@ -342,6 +336,46 @@ const Upload: React.FC = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Modal shown during file upload */}
+      <Modal show={isSubmitting} backdrop="static" keyboard={false} centered>
+        <Modal.Header>
+          <Modal.Title>Uploading File</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Please wait while your file is being uploaded...
+        </Modal.Body>
+      </Modal>
+
+      {/* Notification Modal */}
+      <Modal
+        show={showNotification}
+        onHide={() => {
+          setShowNotification(false);
+          if (notificationAction) {
+            notificationAction();
+          }
+        }}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{notificationTitle}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{notificationMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setShowNotification(false);
+              if (notificationAction) {
+                notificationAction();
+              }
+            }}
+          >
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 };
