@@ -161,18 +161,6 @@ function RegisterPage() {
       });
 
       setShowVerificationModal(true);
-
-      // Show success toast and navigate to login page after scroll
-      // setTimeout(() => {
-      //   setToastStatus("success");
-      //   setToastMessage(t("Registration successful! Please login."));
-      //   setShowToast(true);
-
-      //   // Navigate after showing toast
-      //   setTimeout(() => {
-      //     navigate("/login");
-      //   }, 2000);
-      // }, 300);
     } catch (error: any) {
       // Scroll to top first
       window.scrollTo({ top: 0, behavior: "smooth" });

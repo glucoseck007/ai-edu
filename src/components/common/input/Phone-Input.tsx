@@ -24,7 +24,7 @@ function PhoneInput({ isRequired, value, onChange }: PhoneInputProps) {
     onChange?.(e.target.value);
 
     const phonePattern = /^[0-9]{7,15}$/;
-    if (!phonePattern.test(value)) {
+    if (phonePattern.test(value)) {
       setError(t("auth.error.invalidPhone"));
     } else {
       setError(null);
