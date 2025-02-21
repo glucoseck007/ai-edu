@@ -75,9 +75,6 @@ const AppRoute: React.FC = () => {
         <Route path="/admin/dashboard/*" element={<SuperAdminDashboard />} />
       </Route>
 
-<<<<<<< HEAD
-      <Route element={<ChatLayouts />}></Route>
-=======
       <Route element={<HeaderLayout />}>
         <Route
           path="/student/class-detail"
@@ -88,7 +85,6 @@ const AppRoute: React.FC = () => {
           element={<TeacherClassroomDetail />}
         />
       </Route>
->>>>>>> 61b6a10bf6aaf488f6ec52574c434ff3a091ba50
     </Routes>
   );
 };

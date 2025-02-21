@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Card,
   Tabs,
@@ -39,6 +39,8 @@ function TeacherClassroomDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const classroomId = urlParams.get("classroomId");
   const classroomCode = urlParams.get("classroomCode");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [newAssignment, setNewAssignment] = useState({
     classroomId: classroomId,
     title: "",
@@ -188,7 +190,7 @@ function TeacherClassroomDetail() {
                 <Col xs={12} sm="auto">
                   <LoadingLink
                     className="btn btn-secondary"
-                    to={`/upload?classroomId=${id}`}
+                    to={`/upload?classroomId=${id}&&classroomCode=${classroomCode}`}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",

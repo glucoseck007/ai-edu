@@ -9,17 +9,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { Button, Col, Container, Dropdown, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import Compressor from "compressorjs";
+import { PDFDocument } from "pdf-lib";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
 import axios from "axios";
 
 const Upload: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
+  const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   console.log(query);
-  const classroomId = query.get("classroomId");
+  // const classroomId = query.get("classroomId");
+  const classroomCode = query.get("classroomCode");
+  const auth = useSelector((state: RootState) => state.auth);
+  const teacher_code = auth.user?.id.substring(0, 5);
+  const school_code = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/classroom/school_code`,
+        { params: { classroomCode } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching school code:", error);
+    }
+  };
 
   const handleFileSelect = () => {
     if (fileInputRef.current) {
@@ -41,6 +61,79 @@ const Upload: React.FC = () => {
     }
   };
 
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      new Compressor(file, {
+        quality: 0.6, // Adjust compression quality
+        success: (result) => {
+          resolve(
+            new File([result], file.name, {
+              type: file.type,
+              lastModified: Date.now(),
+            })
+          );
+        },
+        error: (err) => {
+          reject(err);
+        },
+      });
+    });
+  };
+
+  const compressPDF = async (file: File): Promise<File> => {
+    try {
+      const pdfBytes = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes);
+
+      pdfDoc.setTitle("Optimized PDF");
+      pdfDoc.setAuthor("Your App");
+
+      const compressedPdfBytes = await pdfDoc.save({ useObjectStreams: false });
+
+      return new File([compressedPdfBytes], file.name, {
+        type: file.type,
+        lastModified: Date.now(),
+      });
+    } catch (error) {
+      console.error("PDF compression error:", error);
+      return file; // If error occurs, return original file
+    }
+  };
+
+  const compressDOCX = async (file: File): Promise<File> => {
+    try {
+      const docBytes = await file.arrayBuffer();
+      const zip = new PizZip(docBytes);
+      const doc = new Docxtemplater(zip);
+
+      // Remove unused metadata
+      // doc.setOptions({ paragraphLoop: true, linebreaks: true });
+      const compressedDocBytes = doc.getZip().generate({ type: "uint8array" });
+
+      return new File([compressedDocBytes], file.name, {
+        type: file.type,
+        lastModified: Date.now(),
+      });
+    } catch (error) {
+      console.error("DOCX compression error:", error);
+      return file; // If error occurs, return original file
+    }
+  };
+
+  const compressFile = async (file: File): Promise<File> => {
+    if (file.type.startsWith("image/")) {
+      return await compressImage(file);
+    } else if (file.type === "application/pdf") {
+      return await compressPDF(file);
+    } else if (
+      file.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      return await compressDOCX(file);
+    }
+    return file; // If file type is not supported, return original file
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -49,49 +142,94 @@ const Upload: React.FC = () => {
       return;
     }
 
-    // Convert file to Base64
-    const fileToBase64 = (file: File) => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-      });
-    };
+    // First, compress the file if needed
+    const compressedFile = await compressFile(selectedFile);
 
-    const base64File = await fileToBase64(selectedFile);
-    const base64Data = base64File.split(",")[1]; // Remove the data URL prefix
+    // Fetch the school code first
+    const schoolCode = await school_code();
+    if (!schoolCode) {
+      alert("Failed to retrieve school code");
+      return;
+    }
 
-    const requestBody = {
-      classroomId: classroomId, // Replace with actual classroom ID
-      title: title,
-      content: description,
-      fileData: atob(base64Data)
-        .split("")
-        .map((char) => char.charCodeAt(0)), // Convert Base64 to byte[]
-      fileName: selectedFile.name,
-      fileType: selectedFile.type,
-    };
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append("file", compressedFile); // The file
+    formData.append("document_name", selectedFile.name); // Document name
+    formData.append("description", description);
+    formData.append("school_code", schoolCode);
+    formData.append("class_name", classroomCode || ""); // Using classroomCode for class_name
+    formData.append("subject", subject);
+    formData.append("teacher_code", teacher_code);
+    formData.append("upload_date", new Date().toISOString());
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API}/classroom-content/upload`,
-        requestBody,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        `${import.meta.env.VITE_AI_API}/upload_for_chatbot`,
+        formData
+        // Do not manually set the Content-Type header; axios will set it automatically.
       );
 
       console.log("File uploaded successfully:", response.data);
       alert("File uploaded successfully.");
       setSelectedFile(null);
     } catch (error) {
-      console.error("Error uploading file:", error);
-      alert("There was an error uploading the file.");
+      console.error(
+        "Error uploading file:",
+        error.response?.data || error.message
+      );
+      alert(
+        "Error: " + (error.response?.data?.detail || "File upload failed.")
+      );
     }
   };
+
+  // Convert file to Base64
+  //   const fileToBase64 = (file: File) => {
+  //     return new Promise<string>((resolve, reject) => {
+  //       const reader = new FileReader();
+  //       reader.readAsDataURL(file);
+  //       reader.onload = () => resolve(reader.result as string);
+  //       reader.onerror = (error) => reject(error);
+  //     });
+  //   };
+
+  //   const base64File = await fileToBase64(selectedFile);
+  //   const base64Data = base64File.split(",")[1]; // Remove the data URL prefix
+
+  //   const requestBody = {
+  //     class_name: classroomCode,
+  //     title: title,
+  //     teacher_code,
+  //     description,
+  //     file: atob(base64Data)
+  //       .split("")
+  //       .map((char) => char.charCodeAt(0)), // Convert Base64 to byte[]
+  //     document_name: selectedFile.name,
+  //     fileType: selectedFile.type,
+  //     upload_date: new Date().toISOString(),
+  //     school_code: await school_code(),
+  //   };
+
+  //   try {
+  //     const response = await axios.post(
+  //       `${import.meta.env.VITE_AI_API}/upload_for_chatbot`,
+  //       requestBody,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     console.log("File uploaded successfully:", response.data);
+  //     alert("File uploaded successfully.");
+  //     setSelectedFile(null);
+  //   } catch (error) {
+  //     console.error("Error uploading file:", error);
+  //     alert("There was an error uploading the file.");
+  //   }
+  // };
 
   return (
     <section id="exam-list">
@@ -131,8 +269,22 @@ const Upload: React.FC = () => {
                   />
                 </div>
 
+                <div className="form-group">
+                  <label htmlFor="subject">Môn học</label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                  />
+                </div>
+
                 <Dropdown>
-                  <Dropdown.Toggle style={{backgroundColor:"rgb(45, 100, 159)"}} id="dropdown-basic">
+                  <Dropdown.Toggle
+                    style={{ backgroundColor: "rgb(45, 100, 159)" }}
+                    id="dropdown-basic"
+                  >
                     <FontAwesomeIcon icon={faPaperclip} className="me-2" />
                     Chọn Tệp
                   </Dropdown.Toggle>
@@ -178,7 +330,7 @@ const Upload: React.FC = () => {
                 )}
 
                 <Button
-                  style={{backgroundColor:"rgb(45, 100, 159)"}}
+                  style={{ backgroundColor: "rgb(45, 100, 159)" }}
                   type="submit"
                   className="mt-3"
                   disabled={!selectedFile}

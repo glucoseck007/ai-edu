@@ -59,8 +59,8 @@ public class AccountController {
                     String student_gender = Math.random() < 0.5 ? "male" : "female";
                     String school_code = request.getSchool_code();
                     String class_level = request.getClass_level();
-                    String class_name = request.getClass_name();
-                    externalApiService.callExternalAddStudent(new AIStudentDTO(student_name, student_code, student_gender, school_code, class_level, class_name));
+//                    String class_name = request.getClass_name();
+                    externalApiService.callExternalAddStudent(new AIStudentDTO(student_name, student_code, student_gender, school_code, class_level));
                 }
             } catch (Exception e) {
                 logger.error("Failed to call external API: " + e.getMessage());

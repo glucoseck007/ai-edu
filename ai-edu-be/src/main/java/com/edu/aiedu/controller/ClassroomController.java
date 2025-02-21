@@ -1,15 +1,15 @@
 package com.edu.aiedu.controller;
 
-import com.edu.aiedu.dto.ai.AIClassroomDTO;
-import com.edu.aiedu.dto.ai.ListClassMembersDTO;
-import com.edu.aiedu.dto.ai.ProfileClassDTO;
-import com.edu.aiedu.dto.ai.TeacherClassDTO;
+import com.edu.aiedu.dto.ai.*;
 import com.edu.aiedu.dto.request.ClassroomDTO;
 import com.edu.aiedu.dto.request.JoinClassroomRequest;
 import com.edu.aiedu.dto.response.ApiResponse;
 import com.edu.aiedu.entity.Account;
 import com.edu.aiedu.entity.Classroom;
+import com.edu.aiedu.entity.School;
 import com.edu.aiedu.repository.AccountRepository;
+import com.edu.aiedu.repository.ClassroomRepository;
+import com.edu.aiedu.repository.SchoolRepository;
 import com.edu.aiedu.service.AccountClassroomService;
 import com.edu.aiedu.service.AccountService;
 import com.edu.aiedu.service.ClassroomService;
@@ -21,9 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("/api/classroom")
@@ -38,11 +40,20 @@ public class ClassroomController {
     private ExternalApiService externalApiService;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private SchoolRepository schoolRepository;
+    @Autowired
+    private ClassroomRepository classroomRepository;
 
     public ClassroomController(ClassroomService classroomService, AccountService accountService, AccountClassroomService accountClassroomService) {
         this.classroomService = classroomService;
         this.accountService = accountService;
         this.accountClassroomService = accountClassroomService;
+    }
+
+    @GetMapping("/school_code")
+    public String schoolCode(@RequestParam String classroomCode){
+        return classroomService.getSchoolCodeByClassroomCode(classroomCode).getSchool().getSchoolCode();
     }
 
     @PostMapping("/add_class")
@@ -56,16 +67,18 @@ public class ClassroomController {
                 savedClassroom.getRoom(),
                 savedClassroom.getAccount().getId(), // Only return the Account ID
                 savedClassroom.getClassroomCode(),
-                savedClassroom.getSchool().getSchoolCode()
+                savedClassroom.getSchool().getSchoolCode(),
+                savedClassroom.getCreatedDate()
+
         );
 
         AIClassroomDTO aiClassroomDTO = new AIClassroomDTO();
-        aiClassroomDTO.setClass_name(savedClassroom.getName());
+        aiClassroomDTO.setClass_name(savedClassroom.getClassroomCode());
         aiClassroomDTO.setClass_level(savedClassroom.getSection());
         aiClassroomDTO.setSchool_code(savedClassroom.getSchool().getSchoolCode());
 
         TeacherClassDTO teacherClassDTO = new TeacherClassDTO();
-        teacherClassDTO.setClass_name(savedClassroom.getName());
+        teacherClassDTO.setClass_name(savedClassroom.getClassroomCode());
         teacherClassDTO.setTeacher_code(savedClassroom.getAccount().getId().substring(0, 5));
         teacherClassDTO.setSchool_code(savedClassroom.getSchool().getSchoolCode());
 
@@ -91,7 +104,6 @@ public class ClassroomController {
         }
     }
 
-
     @GetMapping("/list_classes_owner")
     public ResponseEntity<List<ClassroomDTO>> getOwnClassesByAccountId(@RequestParam String accountId) {
         List<ClassroomDTO> classrooms = classroomService.getClassesByAccountId(accountId);
@@ -102,6 +114,34 @@ public class ClassroomController {
     public ResponseEntity<List<ClassroomDTO>> getMemberClassesByAccountId(@RequestParam String accountId) {
         List<ClassroomDTO> classrooms = accountService.getClassesForAccount(accountId);
         return ResponseEntity.ok(classrooms);
+    }
+
+    @GetMapping("/profile/list-class-teacher")
+    public ResponseEntity<List<TeacherProfileDTO>> getListTeacherClassForProfile(@RequestParam String accountId) {
+        List<ClassroomDTO> classrooms = classroomService.getClassesByAccountId(accountId);
+        List<TeacherProfileDTO> result = new ArrayList<>();
+        for (ClassroomDTO classroomDTO : classrooms) {
+//            Optional<Account> account = accountRepository.findById(classroomDTO.getAccountId());
+            Optional<School> school = schoolRepository.findBySchoolCode(classroomDTO.getSchoolCode());
+            String schoolName;
+            if (school.isPresent()) {
+                schoolName = school.get().getSchoolName();
+
+            } else {
+                schoolName = "";
+            }
+            int totalStudent = accountClassroomService.countStudent(classroomDTO.getId());
+            TeacherProfileDTO profileClassDTO = new TeacherProfileDTO();
+            profileClassDTO.setId(classroomDTO.getId());
+            profileClassDTO.setClassCode(classroomDTO.getClassroomCode());
+            profileClassDTO.setTitle(classroomDTO.getName());
+            profileClassDTO.setGrade(classroomDTO.getSection());
+            profileClassDTO.setStudentsCount(totalStudent);
+            profileClassDTO.setTime(classroomDTO.getDate());
+            profileClassDTO.setSchoolName(schoolName);
+            result.add(profileClassDTO);
+        }
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/profile/list-class")
@@ -134,7 +174,15 @@ public class ClassroomController {
     @PostMapping("/join")
     public ResponseEntity<String> joinClassroom(@RequestBody JoinClassroomRequest request) {
         try {
+            Optional<Classroom> classroomOpt = classroomService.getClassroomByClassCode(request.getClassroomCode());
+            Optional<Account> account = accountRepository.findById(request.getAccountId());
+            StudentAddClassDTO studentDTO = new StudentAddClassDTO();
+            studentDTO.setStudent_code(account.get().getId().substring(0, 5));
+            studentDTO.setClass_name(classroomOpt.get().getClassroomCode());
+            studentDTO.setSchool_code(classroomOpt.get().getSchool().getSchoolCode());
             classroomService.addAccountToClassroom(request.getAccountId(), request.getClassroomCode());
+            externalApiService.callExternalJoinClass(studentDTO);
+
             return ResponseEntity.ok("Account added to classroom successfully.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

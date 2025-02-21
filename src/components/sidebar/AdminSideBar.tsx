@@ -22,6 +22,11 @@ const Sidebar = () => {
             <School size={18} /> Add School
           </Nav.Link>
         </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={Link} to="/admin/dashboard/add-subject">
+            <School size={18} /> Add Subject
+          </Nav.Link>
+        </Nav.Item>
       </Nav>
     </div>
   );

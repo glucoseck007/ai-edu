@@ -13,7 +13,9 @@ import java.util.Optional;
 @Repository
 public interface ClassroomRepository extends JpaRepository<Classroom, String> {
     Classroom findClassroomById(String id);
+    Classroom findSchoolCodeByClassroomCode(String classroomCode);
     Optional<Classroom> findClassroomByName(String name);
+    Optional<Classroom> findClassroomByClassroomCode(String classCode);
     Optional<Classroom> findByNameAndSchool(String className, School school);
     List<Classroom> findClassroomByAccountId(String accountId);
     List<Classroom> findByAccount(Account account);

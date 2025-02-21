@@ -40,4 +40,5 @@ public interface AccountClassroomRepository extends JpaRepository<AccountClassro
 
     List<Classroom> findAllByAccountId(String accountId);
     List<String> findAllClassroomCodesByAccountId(String accountId);
+    Integer countAccountIdByClassroom_Id(String classroomId);
 }

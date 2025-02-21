@@ -118,7 +118,7 @@ public class AccountService {
         account.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(15)); // Valid for 15 mins
 
         try {
-            emailService.sendVerificationEmail("khicongkhanh@gmail.com", verificationCode);
+            emailService.sendVerificationEmail(request.getEmail(), verificationCode);
             accountRepository.save(account);
             return accountMapper.toUserResponse(account);
         } catch (Exception e) {

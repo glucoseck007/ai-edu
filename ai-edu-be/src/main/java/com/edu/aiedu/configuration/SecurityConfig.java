@@ -38,6 +38,7 @@ public class SecurityConfig {
             "/api/quiz/student/list-quiz",
             "/api/ask_question",
             "/api/**",
+            "/api/quiz-attempt/**",
             "/api/school/add_school",
             "/api/classroom-content/upload",
             "/api/classroom/add_class",
@@ -59,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/quiz/assign-quiz/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/accounts/**",
+                                "/api/quiz-attempt/**",
                                 "/api/accounts/list",
                                 "/api/classroom/**",
                                 "/api/school/list",
@@ -67,6 +69,7 @@ public class SecurityConfig {
                                 "/api/classroom/**",
                                 "api/quiz/account/**",
                                 "api/quiz/**",
+                                "/api/subject/list",
                                 "/api/classroom/list_classes_owner",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",

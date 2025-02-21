@@ -17,71 +17,20 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
-const instructor = {
-  name: "Nguyễn Thị A",
-  school: "Tiểu học FPT",
-  yearsExperience: 8,
-  totalStudents: 25,
-  classes: [
-    {
-      id: 1,
-      title: "Toán",
-      time: "09:00 AM",
-      grade: "Lớp 3",
-      studentsCount: 22,
-    },
-    {
-      id: 2,
-      title: "Tiếng Việt",
-      time: "10:30 AM",
-      grade: "Lớp 3",
-      studentsCount: 23,
-    },
-    {
-      id: 3,
-      title: "Tự nhiên và xã hội",
-      time: "01:00 PM",
-      grade: "Lớp 3",
-      studentsCount: 21,
-    },
-  ],
-  tests: [
-    {
-      id: 1,
-      subject: "Toán",
-      description: "Phép cộng, phép trừ trong phạm vi 1000",
-      date: "15/02/2025",
-    },
-    {
-      id: 2,
-      subject: "Tiếng Việt",
-      description: "Ngày gặp lại",
-      date: "20/02/2025",
-    },
-    {
-      id: 3,
-      subject: "Tự nhiên và xã hội",
-      description: "Cơ quan thần kinh",
-      date: "25/02/2025",
-    },
-  ],
-  recent_class: [
-    { id: 1, name: "SE1", time: "2022-2023" },
-    { id: 2, name: "SE2", time: "2021-2022" },
-    { id: 3, name: "SE3", time: "2020-2021" },
-  ],
-};
-
 const TeacherProfile = () => {
   const navigate = useNavigate();
   const handleNavigate = useCallback(
-    (id) => navigate(`/teacher/class-detail?classroomId=${id}`),
+    (id, classCode) =>
+      navigate(
+        `/teacher/class-detail?classroomId=${id}&&classCode=${classCode}`
+      ),
     [navigate]
   );
   const auth = useSelector((state: RootState) => state.auth);
   const accountId = auth.user?.id || "";
   const [testHistory, setTestHistory] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
+  const [school, setSchool] = useState("");
   const [profile, setProfile] = useState<any | null>(null);
 
   const fetchProfile = async () => {
@@ -100,7 +49,7 @@ const TeacherProfile = () => {
   const fetchClassrooms = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API}/classroom/profile/list-class`,
+        `${import.meta.env.VITE_API}/classroom/profile/list-class-teacher`,
         {
           params: {
             accountId: accountId,
@@ -108,6 +57,7 @@ const TeacherProfile = () => {
         }
       );
       const classrooms = response.data;
+      setSchool(classrooms[0].schoolName);
       setClassrooms(classrooms);
     } catch (error) {
       console.error("Error fetching classrooms:", error);
@@ -118,7 +68,7 @@ const TeacherProfile = () => {
   const fetchTestHistory = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API}/quiz/attempts/${accountId}`
+        `${import.meta.env.VITE_API}/quiz/account/${accountId}`
       );
       const testHistory = response.data;
       // return testHistory;
@@ -133,6 +83,20 @@ const TeacherProfile = () => {
     fetchClassrooms();
     fetchTestHistory();
   }, []);
+
+  const instructor = {
+    name: profile?.firstName + " " + profile?.lastName,
+    school: school,
+    yearsExperience: 8,
+    totalStudents: 25,
+    classes: classrooms,
+    tests: testHistory,
+    recent_class: [
+      { id: 1, name: "SE1", time: "2022-2023" },
+      { id: 2, name: "SE2", time: "2021-2022" },
+      { id: 3, name: "SE3", time: "2020-2021" },
+    ],
+  };
 
   return (
     <Container className="py-4">
@@ -184,12 +148,16 @@ const TeacherProfile = () => {
                         <ListGroup.Item
                           key={class_.id}
                           className="class-item"
-                          onClick={() => handleNavigate(class_.id)}
+                          onClick={() =>
+                            handleNavigate(class_.id, class_.classCode)
+                          }
                         >
                           <div className="d-flex justify-content-between align-items-center">
                             <div>
                               <h5 className="mb-1">{class_.title}</h5>
-                              <p className="mb-0 text-muted">{class_.grade}</p>
+                              <p className="mb-0 text-muted">
+                                Lớp {class_.grade}
+                              </p>
                             </div>
                             <Badge bg="secondary">
                               <Users size={14} className="me-1" />{" "}

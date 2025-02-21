@@ -81,7 +81,6 @@ function RegisterPage() {
         !phone.trim() ||
         !firstName.trim() ||
         !classCode.trim() ||
-        !className.trim() ||
         !schoolCode.trim()
       ) {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -317,13 +316,6 @@ function RegisterPage() {
                     onChange={(value) => setClassCode(value)}
                     label={t("Khối")}
                     placeholder={t("Nhập khối từ 1-5")}
-                    icon={faSchool}
-                  />
-                  <TextInput
-                    value={className}
-                    onChange={(value) => setClassName(value)}
-                    label={t("Lớp")}
-                    placeholder={t("Nhập lớp")}
                     icon={faSchool}
                   />
                 </>

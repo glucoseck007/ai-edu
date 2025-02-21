@@ -36,6 +36,14 @@ public class ClassroomService {
         this.classroomContentRepository = classroomContentRepository;
     }
 
+    public Classroom getSchoolCodeByClassroomCode(String classroomCode) {
+        return classroomRepository.findSchoolCodeByClassroomCode(classroomCode);
+    }
+
+    public Optional<Classroom> getClassroomByClassCode(String classCode) {
+        return classroomRepository.findClassroomByClassroomCode(classCode);
+    }
+
     public Classroom addClass(ClassroomDTO classroomDTO) {
         Account account = accountRepository.findById(classroomDTO.getAccountId())
                 .orElseThrow(() -> new RuntimeException("Account not found"));
@@ -59,6 +67,7 @@ public class ClassroomService {
 
         return classrooms.stream().map(classroom -> new ClassroomDTO(
                 classroom.getId(),
+                classroom.getSchool().getSchoolCode(),
                 classroom.getName(),
                 classroom.getSection(),
                 classroom.getSubject(),

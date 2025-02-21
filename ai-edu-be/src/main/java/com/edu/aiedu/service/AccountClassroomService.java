@@ -23,6 +23,10 @@ public class AccountClassroomService {
 //        return repository.findAccountClassroomQuizzes();
 //    }
 
+    public Integer countStudent(String classId) {
+        return repository.countAccountIdByClassroom_Id(classId);
+    }
+
     public List<AccountClassroomQuizDTO> getAccountClassroomQuizzesNative() {
         return repository.findAccountClassroomQuizzesNative().stream()
                 .map(obj -> new AccountClassroomQuizDTO(

@@ -114,19 +114,19 @@ function StudentClassroomDetail() {
       </div>
 
       <Container className="px-0">
-<<<<<<< HEAD
-=======
         <Alert variant="info" className="mb-3">
           Chưa có thông báo mới
         </Alert>
->>>>>>> 61b6a10bf6aaf488f6ec52574c434ff3a091ba50
         <Row>
           <Col>
             {classroomData.map((assignment) => (
               <Card
                 key={assignment.id}
                 className="mb-3 shadow-sm"
-<<<<<<< HEAD
+                onClick={() => {
+                  setSelectedAssignment(assignment);
+                  setShowModal(true);
+                }}
                 style={{ cursor: "pointer" }}
               >
                 <Card.Header className="bg-light">
@@ -136,32 +136,8 @@ function StudentClassroomDetail() {
                       className="me-2 text-primary"
                     />
                     <span className="fw-medium">
-                      Giáo viên đã thêm một thông báo mới
+                      {assignment.teacher.name} posted a new assignment
                     </span>
-                  </div>
-                </Card.Header>
-                <Card.Body>
-                  <Card.Title className="mb-3">
-                    Tiêu đề: {assignment.title}
-                  </Card.Title>
-                  <Card.Text className="mb-3">
-                    <strong>Nội dung:</strong> {assignment.content}
-                  </Card.Text>
-                  <div className="text-muted small">
-                    <div className="mb-2">
-                      <FontAwesomeIcon icon={faClock} className="me-2" />
-                      Posted: {formatDate(assignment.createdDate)}
-=======
-                onClick={() => {
-                  setSelectedAssignment(assignment);
-                  setShowModal(true);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                <Card.Header className="bg-light">
-                  <div className="d-flex align-items-center">
-                    <FontAwesomeIcon icon={faUser} className="me-2 text-primary" />
-                    <span className="fw-medium">{assignment.teacher.name} posted a new assignment</span>
                   </div>
                 </Card.Header>
                 <Card.Body>
@@ -174,7 +150,6 @@ function StudentClassroomDetail() {
                     <div>
                       <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
                       Due: {formatDate(assignment.deadline)}
->>>>>>> 61b6a10bf6aaf488f6ec52574c434ff3a091ba50
                     </div>
                   </div>
                 </Card.Body>

@@ -284,55 +284,59 @@ public class QuizController {
     }
 
     @GetMapping("/attempt/{quizId}/{accountId}")
-    public ResponseEntity<Map<String, Object>> getQuizAttempt(
+    public ResponseEntity<?> getQuizAttempts(
             @PathVariable Long quizId,
             @PathVariable String accountId) {
 
-        Optional<QuizAttempt> quizAttemptOptional = quizAttemptRepository
-                .findByQuizIdAndAccountId(quizId, accountId);
+        List<QuizAttempt> quizAttempts = quizAttemptRepository.findByQuizIdAndAccountId(quizId, accountId);
 
-        if (quizAttemptOptional.isEmpty()) {
+        if (quizAttempts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "No attempt found for this quiz and user"));
+                    .body(Map.of("error", "No attempts found for this quiz and user"));
         }
 
-        QuizAttempt quizAttempt = quizAttemptOptional.get();
-        Quiz quiz = quizAttempt.getQuiz();
-        List<Question> questions = quiz.getQuestions();
-        Map<Integer, String> selectedAnswers = quizAttempt.getSelectedAnswers();
+        List<Map<String, Object>> responseList = new ArrayList<>();
 
-        // Preparing response format
-        Map<String, Object> response = new HashMap<>();
-        response.put("quizId", quiz.getId());
-        response.put("accountId", quizAttempt.getAccount().getId());
-        response.put("score", quizAttempt.getScore());
-        response.put("totalQuestions", quizAttempt.getTotalQuestions());
-        response.put("selectedAnswers", selectedAnswers); // User-selected answers
+        for (QuizAttempt quizAttempt : quizAttempts) {
+            Quiz quiz = quizAttempt.getQuiz();
+            List<Question> questions = quiz.getQuestions();
+            Map<Integer, String> selectedAnswers = quizAttempt.getSelectedAnswers();
 
-        // List to store detailed results
-        List<Map<String, Object>> results = new ArrayList<>();
+            Map<String, Object> attemptData = new HashMap<>();
+            attemptData.put("attemptId", quizAttempt.getId()); // Include attempt ID
+            attemptData.put("quizId", quiz.getId());
+            attemptData.put("accountId", quizAttempt.getAccount().getId());
+            attemptData.put("score", quizAttempt.getScore());
+            attemptData.put("totalQuestions", quizAttempt.getTotalQuestions());
+            attemptData.put("selectedAnswers", selectedAnswers);
 
-        for (int i = 0; i < questions.size(); i++) {
-            Question question = questions.get(i);
-            String correctAnswer = question.getCorrectAnswer();
-            String userAnswer = selectedAnswers.get(i);
+            // List to store detailed question results
+            List<Map<String, Object>> results = new ArrayList<>();
 
-            boolean isCorrect = userAnswer != null && userAnswer.equals(correctAnswer);
+            for (int i = 0; i < questions.size(); i++) {
+                Question question = questions.get(i);
+                String correctAnswer = question.getCorrectAnswer();
+                String userAnswer = selectedAnswers.get(i);
 
-            Map<String, Object> questionResult = new HashMap<>();
-            questionResult.put("question", question.getQuestionText());
-            questionResult.put("userAnswer", userAnswer);
-            questionResult.put("correctAnswer", correctAnswer);
-            questionResult.put("isCorrect", isCorrect);
-            questionResult.put("reference", question.getReference());
+                boolean isCorrect = userAnswer != null && userAnswer.equals(correctAnswer);
 
-            results.add(questionResult);
+                Map<String, Object> questionResult = new HashMap<>();
+                questionResult.put("question", question.getQuestionText());
+                questionResult.put("userAnswer", userAnswer);
+                questionResult.put("correctAnswer", correctAnswer);
+                questionResult.put("isCorrect", isCorrect);
+                questionResult.put("reference", question.getReference());
+
+                results.add(questionResult);
+            }
+
+            attemptData.put("results", results);
+            responseList.add(attemptData);
         }
 
-        response.put("results", results); // Adding question-wise results
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(responseList);
     }
+
 
     @GetMapping("/attempts/{accountId}")
     public ResponseEntity<?> getQuizAttemptsByAccountId(@PathVariable String accountId) {

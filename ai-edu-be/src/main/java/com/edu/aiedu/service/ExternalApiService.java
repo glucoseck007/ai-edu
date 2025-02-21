@@ -118,6 +118,28 @@ public class ExternalApiService {
     }
 
     @Async
+    public void callExternalJoinClass(StudentAddClassDTO studentDTO) {
+        try {
+            String externalApiUrl = "http://103.82.25.83:443//add_student_class"; // Replace with the actual IP and port
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<StudentAddClassDTO> requestEntity = new HttpEntity<>(studentDTO, headers);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(externalApiUrl, requestEntity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                System.out.println("Successfully called external /add_student API.");
+            } else {
+                System.err.println("Failed to call external API: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            System.err.println("Error while calling external API: " + e.getMessage());
+        }
+    }
+
+    @Async
     public void callExternalAddClassAPI(AIClassroomDTO classroomDTO) {
         try {
             String externalApiUrl = "http://103.82.25.83:443//add_class"; // Replace with the actual IP and port
